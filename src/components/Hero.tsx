@@ -36,12 +36,17 @@ export const Hero = () => {
       </div>
 
       {/* Dynamic Background */}
-      <div 
-        className="absolute inset-0 z-0"
-      >
-         <div className="absolute inset-0 bg-[url('/img.jpg')] bg-cover bg-center bg-no-repeat opacity-100" />
-         <div className="absolute inset-0 bg-gradient-to-r from-medical-white via-medical-white/90 to-transparent" />
-         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-medical-white via-transparent to-transparent h-64" />
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <Image
+          src="/img.jpg"
+          alt="Paciente segurando caneta aplicadora"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[70%_center] sm:object-[60%_center] md:object-[55%_center] lg:object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-medical-white via-medical-white/90 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-medical-white via-transparent to-transparent h-64" />
       </div>
 
       <Container className="relative z-10">
