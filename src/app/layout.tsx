@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import { AIChatButton } from "@/components/AIChatButton";
+import { ChatProvider } from "@/context/ChatContext";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -30,8 +31,10 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${manrope.variable} antialiased bg-medical-white text-medical-text font-sans`}
       >
-        {children}
-        <AIChatButton />
+        <ChatProvider>
+          {children}
+          <AIChatButton />
+        </ChatProvider>
       </body>
     </html>
   );

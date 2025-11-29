@@ -6,7 +6,7 @@ import { Zap, Activity, ArrowRight } from "lucide-react";
 
 export const Mechanism = () => {
   return (
-    <section className="py-32 bg-gradient-to-b from-medical-white to-[#EFEBE4]">
+    <section id="mechanism" className="py-32 bg-gradient-to-b from-medical-white to-[#EFEBE4]">
       <Container>
         <div className="text-center max-w-3xl mx-auto mb-20">
           <motion.div

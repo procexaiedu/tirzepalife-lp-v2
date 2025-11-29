@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Bot } from 'lucide-react';
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MessageCircle, X, Send, Sparkles, Paperclip } from 'lucide-react';
+import { useChat } from "@/context/ChatContext";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+// --- Types ---
 interface Message {
   id: string;
   content: string;
@@ -17,13 +15,13 @@ interface Message {
 }
 
 export const AIChatButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, openChat, closeChat } = useChat();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Identificador único da sessão do usuário (simulando número de telefone/ID)
+  // Session Management
   const [sessionId] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('chat_session_id');
@@ -40,9 +38,7 @@ export const AIChatButton = () => {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      scrollToBottom();
-    }
+    if (isOpen) scrollToBottom();
   }, [messages, isOpen]);
 
   const handleSendMessage = async () => {
@@ -60,7 +56,6 @@ export const AIChatButton = () => {
     setIsLoading(true);
 
     try {
-      // Payload simulando a estrutura da Evolution API conforme solicitado
       const payload = {
         data: {
           key: {
@@ -80,29 +75,21 @@ export const AIChatButton = () => {
         sender: `${sessionId}@s.whatsapp.net`
       };
 
-      const response = await fetch("https://webh.procexai.tech/webhook/c457fa49-542f-49e3-85e8-96faca1f43f6", {
+      const response = await fetch("https://webh.procexai.tech/webhook/TizerpaLife", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error('Falha na comunicação com a IA');
-      }
+      if (!response.ok) throw new Error('Falha na comunicação');
 
-      // Assume que o n8n retorna a resposta no corpo da requisição (nó "Respond to Webhook")
-      // Se o n8n retornar JSON { text: "..." } ou apenas texto, tentamos parsear
       const responseData = await response.text();
+      let aiText = "Não consegui processar sua resposta.";
       
-      let aiText = "Desculpe, não consegui processar sua resposta.";
       try {
         const json = JSON.parse(responseData);
-        // Tenta encontrar o texto em campos comuns de resposta de IA
         aiText = json.text || json.message || json.output || json.response || (typeof json === 'string' ? json : JSON.stringify(json));
       } catch (e) {
-        // Se não for JSON, usa o texto puro se não estiver vazio
         if (responseData.trim()) aiText = responseData;
       }
 
@@ -116,10 +103,10 @@ export const AIChatButton = () => {
       setMessages(prev => [...prev, aiMsg]);
 
     } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
+      console.error("Erro:", error);
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Desculpe, estou com dificuldades para conectar no momento. Tente novamente mais tarde.",
+        content: "Estou com dificuldades de conexão. Tente novamente em instantes.",
         sender: 'ai',
         timestamp: Date.now()
       };
@@ -149,8 +136,8 @@ export const AIChatButton = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "underline font-medium break-all",
-              sender === 'user' ? "text-blue-200 hover:text-white" : "text-blue-600 hover:text-blue-800"
+              "underline underline-offset-2 transition-opacity hover:opacity-80",
+              sender === 'user' ? "text-white decoration-white/30" : "text-[#1A365D] decoration-[#1A365D]/30"
             )}
           >
             {part}
@@ -162,106 +149,148 @@ export const AIChatButton = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
-      {/* Chat Window */}
-      {isOpen && (
-        <Card className="w-[350px] h-[500px] mb-4 shadow-2xl border-gray-200 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300">
-          <CardHeader className="bg-medical-navy text-white p-4 rounded-t-xl flex flex-row items-center justify-between space-y-0">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8 border-2 border-white/20">
-                <AvatarImage src="/bot-avatar.png" />
-                <AvatarFallback className="bg-medical-sand text-medical-navy font-bold">IA</AvatarFallback>
-              </Avatar>
+    <div className="fixed bottom-6 right-6 z-[9999] font-sans flex flex-col items-end">
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="relative w-[360px] md:w-[400px] h-[600px] max-h-[80vh] flex flex-col bg-[#F9F7F2] shadow-2xl overflow-hidden mb-6 rounded-[2rem] border border-white/50 ring-1 ring-black/5"
+          >
+            {/* --- Header --- */}
+            <div className="relative z-10 shrink-0 px-6 py-5 flex items-center justify-between bg-[#F9F7F2]/80 backdrop-blur-md border-b border-[#1A365D]/5">
               <div>
-                <CardTitle className="text-sm font-bold">TirzepaLife AI</CardTitle>
-                <p className="text-xs text-blue-100">Assistente Virtual</p>
+                <h2 className="font-serif text-[#1A365D] text-lg font-medium tracking-wide">Concierge</h2>
+                <p className="text-xs text-[#1A365D]/60 uppercase tracking-widest font-medium mt-0.5">TirzepaLife</p>
               </div>
+              <button 
+                onClick={closeChat}
+                className="group p-2 rounded-full hover:bg-[#1A365D]/5 transition-colors duration-300"
+              >
+                <X className="w-5 h-5 text-[#1A365D]/60 group-hover:text-[#1A365D] transition-colors" />
+              </button>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="text-white hover:bg-white/20 h-8 w-8"
-              onClick={() => setIsOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </CardHeader>
-          
-          <CardContent className="flex-1 p-0 overflow-hidden bg-gray-50">
-            <ScrollArea className="h-full p-4">
-              {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 mt-20 space-y-4">
-                  <Bot className="h-12 w-12 text-medical-navy/30" />
-                  <p className="text-sm px-6">
-                    Olá! Sou sua assistente virtual. Como posso ajudar você a saber mais sobre o tratamento com Tirzepatida?
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4">
+
+            {/* --- Chat Area --- */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#F9F7F2] to-white scroll-smooth custom-scrollbar">
+               {messages.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center px-4 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]">
+                    <div className="w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-[#1A365D] to-[#2A4A7F] flex items-center justify-center shadow-lg shadow-[#1A365D]/20">
+                      <Sparkles className="w-6 h-6 text-[#F9F7F2]" />
+                    </div>
+                    <h3 className="font-serif text-2xl text-[#1A365D] mb-2">Bem-vindo</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed max-w-[240px]">
+                      Estou à disposição para auxiliar com informações sobre o tratamento e acompanhamento.
+                    </p>
+                  </div>
+               ) : (
+                 <>
                   {messages.map((msg) => (
-                    <div
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
                       key={msg.id}
                       className={cn(
-                        "flex w-max max-w-[80%] flex-col gap-2 rounded-lg px-3 py-2 text-sm shadow-sm whitespace-pre-wrap",
-                        msg.sender === 'user'
-                          ? "ml-auto bg-medical-navy text-white"
-                          : "bg-white text-gray-800 border border-gray-100"
+                        "flex flex-col max-w-[85%]",
+                        msg.sender === 'user' ? "ml-auto items-end" : "items-start"
                       )}
                     >
-                      {renderMessageContent(msg.content, msg.sender)}
-                    </div>
+                      <div className={cn(
+                        "px-5 py-3.5 text-[15px] leading-relaxed shadow-sm",
+                        msg.sender === 'user'
+                          ? "bg-[#1A365D] text-[#F9F7F2] rounded-2xl rounded-tr-sm"
+                          : "bg-white text-[#333] border border-gray-100 rounded-2xl rounded-tl-sm"
+                      )}>
+                        {renderMessageContent(msg.content, msg.sender)}
+                      </div>
+                      <span className="text-[10px] text-gray-300 mt-1.5 px-1 uppercase tracking-wide font-medium opacity-60">
+                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </motion.div>
                   ))}
+                  
                   {isLoading && (
-                    <div className="flex items-center gap-2 bg-white w-max px-3 py-2 rounded-lg border border-gray-100">
-                      <div className="w-2 h-2 bg-medical-navy/50 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                      <div className="w-2 h-2 bg-medical-navy/50 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                      <div className="w-2 h-2 bg-medical-navy/50 rounded-full animate-bounce"></div>
-                    </div>
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex items-start"
+                    >
+                      <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm">
+                        <div className="flex space-x-1.5">
+                          <span className="w-1.5 h-1.5 bg-[#1A365D]/40 rounded-full animate-[bounce_1.4s_infinite_both_-0.32s]"></span>
+                          <span className="w-1.5 h-1.5 bg-[#1A365D]/40 rounded-full animate-[bounce_1.4s_infinite_both_-0.16s]"></span>
+                          <span className="w-1.5 h-1.5 bg-[#1A365D]/40 rounded-full animate-[bounce_1.4s_infinite_both]"></span>
+                        </div>
+                      </div>
+                    </motion.div>
                   )}
                   <div ref={messagesEndRef} />
-                </div>
-              )}
-            </ScrollArea>
-          </CardContent>
-
-          <CardFooter className="p-3 bg-white border-t border-gray-100">
-            <div className="flex w-full items-center gap-2">
-              <Input
-                placeholder="Digite sua pergunta..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="flex-1 focus-visible:ring-medical-navy"
-                disabled={isLoading}
-              />
-              <Button 
-                size="icon" 
-                onClick={handleSendMessage} 
-                disabled={isLoading || !inputText.trim()}
-                className="bg-medical-navy hover:bg-medical-navy-light text-white shrink-0"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+                 </>
+               )}
             </div>
-          </CardFooter>
-        </Card>
-      )}
 
-      {/* Toggle Button */}
-      <div className={cn("transition-all duration-300 flex flex-col items-end group", isOpen ? "scale-0 opacity-0 absolute" : "scale-100 opacity-100")}>
-        {/* Tooltip elegante (aparece no hover) */}
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gray-900 text-white text-xs font-medium py-1.5 px-3 rounded-lg shadow-lg mb-3 relative mr-1 pointer-events-none">
-          <span className="block whitespace-nowrap">Falar com a IA</span>
-          <div className="absolute bottom-0 right-5 translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
-        </div>
+            {/* --- Input Area --- */}
+            <div className="p-5 bg-white border-t border-gray-100">
+              <div className="relative flex items-center bg-[#F5F5F5] rounded-full px-2 py-1.5 transition-all duration-300 focus-within:bg-white focus-within:shadow-md focus-within:ring-1 focus-within:ring-[#1A365D]/10">
+                <button className="p-2 rounded-full text-gray-400 hover:text-[#1A365D] hover:bg-gray-100 transition-colors">
+                  <Paperclip className="w-4 h-4" />
+                </button>
+                
+                <input
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Digite sua mensagem..."
+                  className="flex-1 bg-transparent border-none focus:ring-0 text-sm text-[#1A365D] placeholder:text-gray-400 px-2"
+                  disabled={isLoading}
+                />
+                
+                <button
+                  onClick={() => handleSendMessage()}
+                  disabled={!inputText.trim() || isLoading}
+                  className={cn(
+                    "p-2 rounded-full transition-all duration-300 flex items-center justify-center",
+                    inputText.trim() 
+                      ? "bg-[#1A365D] text-white shadow-lg shadow-[#1A365D]/20 hover:scale-105 active:scale-95" 
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  )}
+                >
+                  <Send className="w-4 h-4 ml-0.5" />
+                </button>
+              </div>
+              <div className="text-center mt-3">
+                <p className="text-[10px] tracking-widest text-gray-300 uppercase font-medium">Powered by ProcEx AI</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="w-14 h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-medical-navy hover:bg-medical-navy/90 hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer"
-        >
-          <MessageCircle className="h-7 w-7 text-white" />
-        </Button>
-      </div>
+      {/* --- Toggle Button --- */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0, rotate: 45 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={openChat}
+            className="relative group flex items-center justify-center w-16 h-16 rounded-full bg-[#1A365D] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10 overflow-hidden"
+          >
+             {/* Subtle sheen effect */}
+             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+             
+             <MessageCircle className="w-7 h-7 text-[#F9F7F2]" />
+             
+             {/* Notification Dot */}
+             <span className="absolute top-3 right-3 w-3 h-3 bg-[#D4AF37] border-2 border-[#1A365D] rounded-full animate-pulse"></span>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
