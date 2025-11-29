@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, MessageCircle, ArrowRight } from "lucide-react";
+import { useChat } from "@/context/ChatContext";
 
 const faqs = [
   {
@@ -26,6 +28,7 @@ const faqs = [
 
 export const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { openChat } = useChat();
 
   return (
     <section className="py-24 bg-white">
@@ -70,6 +73,48 @@ export const FAQ = () => {
             </div>
           ))}
         </div>
+
+        {/* CTA Contextual - Falar com Especialista */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="mt-12 relative"
+        >
+          <div className="bg-gradient-to-r from-medical-navy to-[#2A4A7F] rounded-2xl p-8 md:p-10 text-white overflow-hidden relative">
+            {/* Background pattern */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-5"></div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-7 h-7 text-[#D4AF37]" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl md:text-2xl mb-1">Ainda tem dúvidas?</h3>
+                  <p className="text-medical-sand/80 text-sm md:text-base">
+                    Converse agora com nosso especialista e descubra se o tratamento é para você.
+                  </p>
+                </div>
+              </div>
+              
+              <Button 
+                onClick={openChat}
+                variant="secondary"
+                size="lg"
+                className="whitespace-nowrap bg-white text-medical-navy hover:bg-medical-sand hover:text-medical-navy shadow-lg group"
+              >
+                <span className="relative flex h-2 w-2 mr-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                Falar Agora
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </motion.div>
       </Container>
     </section>
   );

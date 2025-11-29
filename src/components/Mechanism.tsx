@@ -3,8 +3,53 @@
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { Zap, Activity, ArrowRight } from "lucide-react";
+import { useState, useRef } from "react";
 
 export const Mechanism = () => {
+  const [activeCard, setActiveCard] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const cards = [
+    {
+      title: "Saciedade Prolongada",
+      icon: <Activity className="w-8 h-8" />,
+      desc: "Retarda o esvaziamento gástrico, fazendo você se sentir satisfeito com porções muito menores.",
+      color: "bg-blue-50 text-blue-900"
+    },
+    {
+      title: "Silêncio Mental",
+      icon: <Zap className="w-8 h-8" />,
+      desc: "Atua nos centros de recompensa do cérebro, desligando o desejo compulsivo por comida.",
+      color: "bg-indigo-50 text-indigo-900"
+    },
+    {
+      title: "Metabolismo Otimizado",
+      icon: <Activity className="w-8 h-8" />, // Reusing icon for demo
+      desc: "Melhora a sensibilidade à insulina e favorece a queima de gordura como fonte de energia.",
+      color: "bg-amber-50 text-amber-900"
+    }
+  ];
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const scrollPosition = scrollRef.current.scrollLeft;
+      const cardWidth = scrollRef.current.offsetWidth;
+      const newActiveCard = Math.round(scrollPosition / cardWidth);
+      setActiveCard(newActiveCard);
+    }
+  };
+
+  const scrollToCard = (index: number) => {
+    if (scrollRef.current) {
+      const cardWidth = scrollRef.current.offsetWidth;
+      scrollRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth'
+      });
+      setActiveCard(index);
+    }
+  };
+
   return (
     <section id="mechanism" className="py-32 bg-gradient-to-b from-medical-white to-[#EFEBE4]">
       <Container>
@@ -24,50 +69,50 @@ export const Mechanism = () => {
           </motion.div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {[
-            {
-              title: "Saciedade Prolongada",
-              icon: <Activity className="w-8 h-8" />,
-              desc: "Retarda o esvaziamento gástrico, fazendo você se sentir satisfeito com porções muito menores.",
-              color: "bg-blue-50 text-blue-900"
-            },
-            {
-              title: "Silêncio Mental",
-              icon: <Zap className="w-8 h-8" />,
-              desc: "Atua nos centros de recompensa do cérebro, desligando o desejo compulsivo por comida.",
-              color: "bg-indigo-50 text-indigo-900"
-            },
-            {
-              title: "Metabolismo Otimizado",
-              icon: <Activity className="w-8 h-8" />, // Reusing icon for demo
-              desc: "Melhora a sensibilidade à insulina e favorece a queima de gordura como fonte de energia.",
-              color: "bg-amber-50 text-amber-900"
-            }
-          ].map((card, i) => (
+        {/* Mobile Carousel / Desktop Grid */}
+        <div 
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-0 md:gap-8 mb-8 md:mb-16 pb-4 md:pb-0 scrollbar-hide -mx-4 md:mx-0 px-4 md:px-0"
+        >
+          {cards.map((card, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden"
+              className="min-w-full md:min-w-0 snap-center px-2 md:px-0"
             >
-              <div className={`absolute top-0 right-0 w-32 h-32 ${card.color} opacity-10 rounded-bl-[100px] transition-transform group-hover:scale-110`} />
-              
-              <div className={`w-14 h-14 rounded-2xl ${card.color} flex items-center justify-center mb-6`}>
-                {card.icon}
-              </div>
-              
-              <h3 className="font-serif text-2xl text-medical-text mb-4">{card.title}</h3>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                {card.desc}
-              </p>
-              
-              <div className="flex items-center text-medical-navy font-semibold text-sm group-hover:translate-x-2 transition-transform">
-                Saiba mais <ArrowRight className="w-4 h-4 ml-1" />
+              <div className="h-full group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden">
+                <div className={`absolute top-0 right-0 w-32 h-32 ${card.color} opacity-10 rounded-bl-[100px] transition-transform group-hover:scale-110`} />
+                
+                <div className={`w-14 h-14 rounded-2xl ${card.color} flex items-center justify-center mb-6`}>
+                  {card.icon}
+                </div>
+                
+                <h3 className="font-serif text-2xl text-medical-text mb-4">{card.title}</h3>
+                <p className="text-gray-600 leading-relaxed mb-6">
+                  {card.desc}
+                </p>
+                
+                <div className="flex items-center text-medical-navy font-semibold text-sm group-hover:translate-x-2 transition-transform">
+                  Saiba mais <ArrowRight className="w-4 h-4 ml-1" />
+                </div>
               </div>
             </motion.div>
+          ))}
+        </div>
+
+        {/* Mobile Navigation Dots */}
+        <div className="flex justify-center gap-3 mb-12 md:hidden">
+          {cards.map((_, i) => (
+            <button 
+              key={i}
+              onClick={() => scrollToCard(i)}
+              aria-label={`Ir para slide ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 ${activeCard === i ? 'w-8 bg-medical-navy' : 'w-2 bg-gray-300'}`}
+            />
           ))}
         </div>
 

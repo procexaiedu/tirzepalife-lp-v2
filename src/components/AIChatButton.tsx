@@ -1,12 +1,19 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Sparkles, Paperclip } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles, Mic, Zap } from 'lucide-react';
 import { useChat } from "@/context/ChatContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 // --- Types ---
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 interface Message {
   id: string;
   content: string;
@@ -19,7 +26,11 @@ export const AIChatButton = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
   
   // Session Management
   const [sessionId] = useState(() => {
@@ -40,6 +51,67 @@ export const AIChatButton = () => {
   useEffect(() => {
     if (isOpen) scrollToBottom();
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = 'pt-BR';
+
+        recognitionRef.current.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setInputText((prev) => prev + (prev ? " " : "") + transcript);
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onerror = (event: any) => {
+          console.error("Speech recognition error", event.error);
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onend = () => {
+          setIsListening(false);
+        };
+      }
+    }
+  }, []);
+
+  // Tooltip de chamada de atenção após 8 segundos
+  useEffect(() => {
+    if (hasInteracted || isOpen) return;
+    
+    const timer = setTimeout(() => {
+      setShowTooltip(true);
+      // Esconde o tooltip após 6 segundos
+      setTimeout(() => setShowTooltip(false), 6000);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [hasInteracted, isOpen]);
+
+  // Marca que o usuário já interagiu
+  const handleOpenChat = () => {
+    setHasInteracted(true);
+    setShowTooltip(false);
+    openChat();
+  };
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert("Seu navegador não suporta reconhecimento de voz.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -157,7 +229,7 @@ export const AIChatButton = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="relative w-[360px] md:w-[400px] h-[600px] max-h-[80vh] flex flex-col bg-[#F9F7F2] shadow-2xl overflow-hidden mb-6 rounded-[2rem] border border-white/50 ring-1 ring-black/5"
+            className="relative w-[85vw] sm:w-[360px] md:w-[400px] h-[500px] max-h-[70vh] flex flex-col bg-[#F9F7F2] shadow-2xl overflow-hidden mb-4 sm:mb-6 rounded-[2rem] border border-white/50 ring-1 ring-black/5"
           >
             {/* --- Header --- */}
             <div className="relative z-10 shrink-0 px-6 py-5 flex items-center justify-between bg-[#F9F7F2]/80 backdrop-blur-md border-b border-[#1A365D]/5">
@@ -235,8 +307,17 @@ export const AIChatButton = () => {
             {/* --- Input Area --- */}
             <div className="p-5 bg-white border-t border-gray-100">
               <div className="relative flex items-center bg-[#F5F5F5] rounded-full px-2 py-1.5 transition-all duration-300 focus-within:bg-white focus-within:shadow-md focus-within:ring-1 focus-within:ring-[#1A365D]/10">
-                <button className="p-2 rounded-full text-gray-400 hover:text-[#1A365D] hover:bg-gray-100 transition-colors">
-                  <Paperclip className="w-4 h-4" />
+                <button 
+                  onClick={toggleListening}
+                  className={cn(
+                    "p-2 rounded-full transition-colors duration-300",
+                    isListening 
+                      ? "text-red-500 bg-red-50 animate-pulse" 
+                      : "text-gray-400 hover:text-[#1A365D] hover:bg-gray-100"
+                  )}
+                  title="Digitar por voz"
+                >
+                  <Mic className="w-4 h-4" />
                 </button>
                 
                 <input
@@ -244,7 +325,7 @@ export const AIChatButton = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Digite sua mensagem..."
-                  className="flex-1 bg-transparent border-none focus:ring-0 text-sm text-[#1A365D] placeholder:text-gray-400 px-2"
+                  className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm text-[#1A365D] placeholder:text-gray-400 px-2"
                   disabled={isLoading}
                 />
                 
@@ -261,34 +342,78 @@ export const AIChatButton = () => {
                   <Send className="w-4 h-4 ml-0.5" />
                 </button>
               </div>
-              <div className="text-center mt-3">
-                <p className="text-[10px] tracking-widest text-gray-300 uppercase font-medium">Powered by ProcEx AI</p>
-              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* --- Toggle Button --- */}
+      {/* --- Toggle Button com Tooltip --- */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0, rotate: 45 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={openChat}
-            className="relative group flex items-center justify-center w-16 h-16 rounded-full bg-[#1A365D] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10 overflow-hidden"
-          >
-             {/* Subtle sheen effect */}
-             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-             
-             <MessageCircle className="w-7 h-7 text-[#F9F7F2]" />
-             
-             {/* Notification Dot */}
-             <span className="absolute top-3 right-3 w-3 h-3 bg-[#D4AF37] border-2 border-[#1A365D] rounded-full animate-pulse"></span>
-          </motion.button>
+          <div className="flex flex-col items-end gap-3">
+            {/* Tooltip de chamada de atenção */}
+            <AnimatePresence>
+              {showTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="relative bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 max-w-[220px]"
+                >
+                  <button 
+                    onClick={() => setShowTooltip(false)}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xs transition-colors"
+                  >
+                    ✕
+                  </button>
+                  <div className="flex items-start gap-3">
+                    <div className="shrink-0 w-10 h-10 bg-gradient-to-br from-[#1A365D] to-[#2A4A7F] rounded-full flex items-center justify-center">
+                      <Zap className="w-5 h-5 text-[#D4AF37]" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[#1A365D] text-sm mb-1">Resposta em segundos!</p>
+                      <p className="text-xs text-gray-500 leading-relaxed">
+                        Tire suas dúvidas agora com nosso especialista.
+                      </p>
+                    </div>
+                  </div>
+                  {/* Seta do tooltip */}
+                  <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white border-r border-b border-gray-100 transform rotate-45"></div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Botão principal do chat */}
+            <motion.button
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0, rotate: 45 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleOpenChat}
+              className="relative group flex items-center justify-center w-16 h-16 rounded-full bg-[#1A365D] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10"
+            >
+              {/* Container para efeitos de brilho (sheen) */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+
+              {/* Pulse ring animation */}
+              <span className="absolute inset-0 rounded-full bg-[#1A365D] animate-ping opacity-20"></span>
+              
+              <MessageCircle className="w-7 h-7 text-[#F9F7F2] relative z-10" />
+              
+              {/* Badge "Online" */}
+              <span className="absolute -top-2 -right-1 flex items-center gap-1 bg-white text-[10px] font-bold text-green-600 px-2 py-0.5 rounded-full shadow-lg border border-green-100 z-20">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                </span>
+                Online
+              </span>
+            </motion.button>
+          </div>
         )}
       </AnimatePresence>
     </div>

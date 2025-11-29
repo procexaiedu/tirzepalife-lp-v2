@@ -26,13 +26,13 @@ export const Hero = () => {
   return (
     <section ref={ref} className="relative min-h-screen flex items-center overflow-hidden pt-20">
       {/* Logo */}
-      <div className="absolute top-8 left-12 z-20">
+      <div className="absolute top-2 left-2 md:top-8 md:left-12 z-20">
         <Image 
           src="/logo.png" 
           alt="TirzepaLife" 
           width={240} 
           height={80} 
-          className="h-20 md:h-24 w-auto mix-blend-multiply"
+          className="h-16 md:h-24 w-auto mix-blend-multiply"
           priority
         />
       </div>
@@ -41,7 +41,7 @@ export const Hero = () => {
       <div 
         className="absolute inset-0 z-0"
       >
-         <div className="absolute inset-0 bg-[url('/img.jpg')] bg-cover bg-[85%_center] md:bg-center bg-no-repeat opacity-100" />
+         <div className="absolute inset-0 bg-[url('/img.jpg')] bg-cover bg-[70%_center] md:bg-center bg-no-repeat opacity-100" />
          <div className="absolute inset-0 bg-gradient-to-r from-medical-white via-medical-white/90 to-transparent/20" />
          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-medical-white via-transparent to-transparent h-64" />
       </div>
