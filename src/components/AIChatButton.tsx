@@ -21,11 +21,27 @@ interface Message {
   timestamp: number;
 }
 
+// Interface para mensagem do webhook
+interface WebhookMessage {
+  text: string;
+  delay?: number;
+}
+
+// Interface para resposta do webhook
+interface WebhookResponse {
+  messages?: WebhookMessage[];
+  text?: string;
+  message?: string;
+  output?: string;
+  response?: string;
+}
+
 export const AIChatButton = () => {
   const { isOpen, openChat, closeChat } = useChat();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false); // Novo estado para indicador de digitação
   const [isListening, setIsListening] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -113,6 +129,47 @@ export const AIChatButton = () => {
     }
   };
 
+  // Função para processar múltiplas respostas do bot com delays
+  const processarRespostasBot = async (response: WebhookResponse) => {
+    // Normaliza a resposta para um array de mensagens
+    let webhookMessages: WebhookMessage[] = [];
+    
+    if (response.messages && Array.isArray(response.messages)) {
+      // Nova estrutura com array de mensagens
+      webhookMessages = response.messages;
+    } else {
+      // Fallback para resposta única (compatibilidade retroativa)
+      const text = response.text || response.message || response.output || response.response || 
+                   (typeof response === 'string' ? response : JSON.stringify(response));
+      webhookMessages = [{ text, delay: 1000 }];
+    }
+
+    // Processa cada mensagem sequencialmente
+    for (const msg of webhookMessages) {
+      // Mostrar indicador "digitando..."
+      setIsTyping(true);
+      
+      // Aguardar o delay especificado (default 1000ms)
+      await new Promise(resolve => setTimeout(resolve, msg.delay || 1000));
+      
+      // Esconder indicador "digitando..."
+      setIsTyping(false);
+      
+      // Adicionar mensagem ao chat
+      const aiMsg: Message = {
+        id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
+        content: msg.text,
+        sender: 'ai',
+        timestamp: Date.now()
+      };
+      
+      setMessages(prev => [...prev, aiMsg]);
+      
+      // Pequeno delay entre mensagens para evitar atualizações muito rápidas
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -156,26 +213,23 @@ export const AIChatButton = () => {
       if (!response.ok) throw new Error('Falha na comunicação');
 
       const responseData = await response.text();
-      let aiText = "Não consegui processar sua resposta.";
       
       try {
-        const json = JSON.parse(responseData);
-        aiText = json.text || json.message || json.output || json.response || (typeof json === 'string' ? json : JSON.stringify(json));
+        const json: WebhookResponse = JSON.parse(responseData);
+        // Processar as respostas do bot (suporta array ou mensagem única)
+        await processarRespostasBot(json);
       } catch (e) {
-        if (responseData.trim()) aiText = responseData;
+        // Se não for JSON válido, tratar como texto simples
+        if (responseData.trim()) {
+          await processarRespostasBot({ text: responseData });
+        } else {
+          await processarRespostasBot({ text: "Não consegui processar sua resposta." });
+        }
       }
-
-      const aiMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        content: aiText,
-        sender: 'ai',
-        timestamp: Date.now()
-      };
-
-      setMessages(prev => [...prev, aiMsg]);
 
     } catch (error) {
       console.error("Erro:", error);
+      setIsTyping(false); // Garantir que o indicador seja escondido em caso de erro
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
         content: "Estou com dificuldades de conexão. Tente novamente em instantes.",
@@ -284,10 +338,11 @@ export const AIChatButton = () => {
                     </motion.div>
                   ))}
                   
-                  {isLoading && (
+                  {(isLoading || isTyping) && (
                     <motion.div 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                       className="flex items-start"
                     >
                       <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm">
@@ -326,12 +381,12 @@ export const AIChatButton = () => {
                   onKeyDown={handleKeyDown}
                   placeholder="Digite sua mensagem..."
                   className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm text-[#1A365D] placeholder:text-gray-400 px-2"
-                  disabled={isLoading}
+                  disabled={isLoading || isTyping}
                 />
                 
                 <button
                   onClick={() => handleSendMessage()}
-                  disabled={!inputText.trim() || isLoading}
+                  disabled={!inputText.trim() || isLoading || isTyping}
                   className={cn(
                     "p-2 rounded-full transition-all duration-300 flex items-center justify-center",
                     inputText.trim() 
