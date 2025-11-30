@@ -9,7 +9,7 @@ import { StickyBar } from "@/components/StickyBar";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col overflow-x-hidden w-full">
       <StickyBar />
       <Hero />
       <Problem />
