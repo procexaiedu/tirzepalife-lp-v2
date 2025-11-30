@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { Button } from "./ui/Button";
@@ -9,15 +9,26 @@ import { useChat } from "@/context/ChatContext";
 export const StickyBar = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { openChat } = useChat();
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
       // Show bar after scrolling past 600px
-      if (window.scrollY > 600) {
-        setIsVisible(true);
+      if (currentScrollY > 600) {
+        if (currentScrollY > lastScrollY.current) {
+          // Scrolling down -> Show
+          setIsVisible(true);
+        } else if (currentScrollY < lastScrollY.current) {
+          // Scrolling up -> Hide
+          setIsVisible(false);
+        }
       } else {
         setIsVisible(false);
       }
+      
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
