@@ -1,10 +1,102 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Brain, AlertCircle, Ban, XCircle } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { Brain, Ban } from "lucide-react";
+import { useRef } from "react";
 import { Container } from "@/components/ui/Container";
 
+const CycleStep = ({ step, index, scrollYProgress, totalSteps }: { step: { title: string; desc: string }, index: number, scrollYProgress: any, totalSteps: number }) => {
+  // Calculate the range for this step to activate
+  // We want the step to start fading in slightly before the line reaches it
+  const stepStart = index / (totalSteps - 0.5); // Adjusted for visual timing
+  const stepEnd = (index + 0.5) / totalSteps;
+  
+  const opacity = useTransform(
+    scrollYProgress,
+    [Math.max(0, stepStart - 0.1), stepStart],
+    [0.2, 1]
+  );
+  
+  const scale = useTransform(
+    scrollYProgress,
+    [Math.max(0, stepStart - 0.1), stepStart],
+    [0.8, 1]
+  );
+
+  const isCompleted = useTransform(
+    scrollYProgress,
+    [stepStart, stepStart + 0.01],
+    [0, 1]
+  );
+
+  return (
+    <motion.div 
+      style={{ opacity, scale }}
+      className="flex items-center gap-6 relative z-10"
+    >
+      <div className="relative">
+        <motion.div 
+          className="w-12 h-12 rounded-full bg-medical-navy border border-medical-sand flex items-center justify-center shrink-0 relative z-10 shadow-[0_0_15px_rgba(232,224,213,0.3)]"
+          style={{
+            backgroundColor: useTransform(isCompleted, [0, 1], ["#1A365D", "#E8E0D5"]),
+          }}
+        >
+          <motion.span 
+            className="font-serif text-xl"
+            style={{
+                color: useTransform(isCompleted, [0, 1], ["#E8E0D5", "#1A365D"]),
+            }}
+          >
+            {index + 1}
+          </motion.span>
+        </motion.div>
+        
+        {/* Glow effect when active */}
+        <motion.div 
+            style={{ opacity: isCompleted }}
+            className="absolute inset-0 rounded-full bg-medical-sand blur-md -z-10"
+        />
+      </div>
+      
+      <div>
+        <motion.h4 
+            className="font-semibold text-lg text-white"
+            style={{
+                color: useTransform(isCompleted, [0, 1], ["rgba(255,255,255,0.7)", "#ffffff"]),
+                textShadow: useTransform(isCompleted, [0, 1], ["none", "0 0 20px rgba(255,255,255,0.5)"]),
+            }}
+        >
+            {step.title}
+        </motion.h4>
+        <p className="text-sm text-gray-400">{step.desc}</p>
+      </div>
+    </motion.div>
+  );
+};
+
 export const Problem = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 80%", "end 60%"] // Adjust these values to control when animation starts/ends relative to viewport
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  // Map progress to height percentage (0% to 100%)
+  const height = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+
+  const steps = [
+    { title: "Dieta Restritiva", desc: "Você corta calorias drasticamente." },
+    { title: "Aumento da Fome", desc: "Hormônios da fome (Grelina) disparam." },
+    { title: "Metabolismo Lento", desc: "O corpo entra em modo de economia." },
+    { title: "Recuperação de Peso", desc: "O peso volta, muitas vezes maior." }
+  ];
+
   return (
     <section className="py-32 bg-medical-navy text-white relative overflow-hidden">
       {/* Background Noise/Texture */}
@@ -58,26 +150,25 @@ export const Problem = () => {
             <div className="glass-panel-dark rounded-3xl p-10 md:p-12 relative border-white/10">
               <h3 className="font-serif text-2xl mb-8 text-center">O Ciclo da Frustração</h3>
               
-              <div className="relative">
-                {/* Vertical line connecting items */}
-                <div className="absolute left-6 top-4 bottom-4 w-0.5 bg-gradient-to-b from-medical-sand/0 via-medical-sand/50 to-medical-sand/0"></div>
+              <div className="relative" ref={containerRef}>
+                {/* Background Guide Line */}
+                <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-white/10"></div>
+                
+                {/* Animated Progress Line */}
+                <motion.div 
+                    style={{ height }}
+                    className="absolute left-6 top-6 w-0.5 bg-gradient-to-b from-medical-sand via-white to-medical-sand shadow-[0_0_10px_rgba(232,224,213,0.8)]"
+                />
 
                 <div className="space-y-10 relative">
-                   {[
-                     { title: "Dieta Restritiva", desc: "Você corta calorias drasticamente." },
-                     { title: "Aumento da Fome", desc: "Hormônios da fome (Grelina) disparam." },
-                     { title: "Metabolismo Lento", desc: "O corpo entra em modo de economia." },
-                     { title: "Recuperação de Peso", desc: "O peso volta, muitas vezes maior." }
-                   ].map((step, i) => (
-                     <div key={i} className="flex items-center gap-6">
-                       <div className="w-12 h-12 rounded-full bg-medical-navy border border-medical-sand flex items-center justify-center shrink-0 z-10 shadow-[0_0_15px_rgba(232,224,213,0.3)]">
-                         <span className="font-serif text-xl text-medical-sand">{i + 1}</span>
-                       </div>
-                       <div>
-                         <h4 className="font-semibold text-lg text-white">{step.title}</h4>
-                         <p className="text-sm text-gray-400">{step.desc}</p>
-                       </div>
-                     </div>
+                   {steps.map((step, i) => (
+                     <CycleStep 
+                        key={i} 
+                        step={step} 
+                        index={i} 
+                        scrollYProgress={smoothProgress} 
+                        totalSteps={steps.length} 
+                     />
                    ))}
                 </div>
               </div>
