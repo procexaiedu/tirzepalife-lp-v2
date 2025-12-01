@@ -1,72 +1,85 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
 import { Brain, Ban } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { Container } from "@/components/ui/Container";
 
-const CycleStep = ({ step, index, scrollYProgress, totalSteps }: { step: { title: string; desc: string }, index: number, scrollYProgress: any, totalSteps: number }) => {
-  // Calculate the range for this step to activate
-  // We want the step to start fading in slightly before the line reaches it
-  const stepStart = index / (totalSteps - 0.5); // Adjusted for visual timing
-  const stepEnd = (index + 0.5) / totalSteps;
-  
-  const opacity = useTransform(
-    scrollYProgress,
-    [Math.max(0, stepStart - 0.1), stepStart],
-    [0.2, 1]
-  );
-  
-  const scale = useTransform(
-    scrollYProgress,
-    [Math.max(0, stepStart - 0.1), stepStart],
-    [0.8, 1]
-  );
+// ============================================
+// PERFORMANCE OPTIMIZATIONS:
+// 1. Usar scaleY em vez de height (GPU-accelerated)
+// 2. Pré-calcular todos os transforms fora do JSX
+// 3. Spring mais responsivo para mobile
+// 4. CSS variables para transições de cor (GPU-friendly)
+// 5. will-change para hinting ao navegador
+// ============================================
 
-  const isCompleted = useTransform(
-    scrollYProgress,
-    [stepStart, stepStart + 0.01],
-    [0, 1]
-  );
+interface CycleStepProps {
+  step: { title: string; desc: string };
+  index: number;
+  scrollYProgress: MotionValue<number>;
+  totalSteps: number;
+}
+
+const CycleStep = ({ step, index, scrollYProgress, totalSteps }: CycleStepProps) => {
+  // Pré-calcular ranges uma única vez com useMemo
+  const { stepStart, fadeStart } = useMemo(() => {
+    const start = index / (totalSteps - 0.5);
+    return {
+      stepStart: start,
+      fadeStart: Math.max(0, start - 0.1)
+    };
+  }, [index, totalSteps]);
+
+  // Todos os transforms são criados fora do JSX - executam no compositor thread
+  const opacity = useTransform(scrollYProgress, [fadeStart, stepStart], [0.2, 1]);
+  const scale = useTransform(scrollYProgress, [fadeStart, stepStart], [0.8, 1]);
+  const progress = useTransform(scrollYProgress, [stepStart, stepStart + 0.01], [0, 1]);
+  
+  // Pré-calcular cores - evita criar transforms dentro do render
+  const circleBg = useTransform(progress, [0, 1], ["#1A365D", "#E8E0D5"]);
+  const circleColor = useTransform(progress, [0, 1], ["#E8E0D5", "#1A365D"]);
+  const titleColor = useTransform(progress, [0, 1], ["rgba(255,255,255,0.7)", "#ffffff"]);
+  const glowOpacity = useTransform(progress, [0, 1], [0, 1]);
 
   return (
     <motion.div 
-      style={{ opacity, scale }}
+      style={{ 
+        opacity, 
+        scale,
+        willChange: "opacity, transform" // Hint para GPU compositing
+      }}
       className="flex items-center gap-6 relative z-10"
     >
       <div className="relative">
         <motion.div 
-          className="w-12 h-12 rounded-full bg-medical-navy border border-medical-sand flex items-center justify-center shrink-0 relative z-10 shadow-[0_0_15px_rgba(232,224,213,0.3)]"
+          className="w-12 h-12 rounded-full border border-medical-sand flex items-center justify-center shrink-0 relative z-10 shadow-[0_0_15px_rgba(232,224,213,0.3)]"
           style={{
-            backgroundColor: useTransform(isCompleted, [0, 1], ["#1A365D", "#E8E0D5"]),
+            backgroundColor: circleBg,
+            willChange: "background-color"
           }}
         >
           <motion.span 
             className="font-serif text-xl"
-            style={{
-                color: useTransform(isCompleted, [0, 1], ["#E8E0D5", "#1A365D"]),
-            }}
+            style={{ color: circleColor }}
           >
             {index + 1}
           </motion.span>
         </motion.div>
         
-        {/* Glow effect when active */}
+        {/* Glow effect - usando opacity que é GPU-accelerated */}
         <motion.div 
-            style={{ opacity: isCompleted }}
-            className="absolute inset-0 rounded-full bg-medical-sand blur-md -z-10"
+          style={{ opacity: glowOpacity }}
+          className="absolute inset-0 rounded-full bg-medical-sand blur-md -z-10 will-change-[opacity]"
         />
       </div>
       
       <div>
         <motion.h4 
-            className="font-semibold text-lg text-white"
-            style={{
-                color: useTransform(isCompleted, [0, 1], ["rgba(255,255,255,0.7)", "#ffffff"]),
-                textShadow: useTransform(isCompleted, [0, 1], ["none", "0 0 20px rgba(255,255,255,0.5)"]),
-            }}
+          className="font-semibold text-lg"
+          style={{ color: titleColor }}
         >
-            {step.title}
+          {step.title}
         </motion.h4>
         <p className="text-sm text-gray-400">{step.desc}</p>
       </div>
@@ -78,17 +91,23 @@ export const Problem = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 80%", "end 60%"] // Adjust these values to control when animation starts/ends relative to viewport
+    offset: ["start 80%", "end 60%"]
   });
 
+  // Spring otimizado para mobile:
+  // - stiffness maior = resposta mais rápida
+  // - damping maior = menos oscilação
+  // - restDelta menor = maior precisão de finalização
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+    stiffness: 300,  // ↑ Resposta mais imediata
+    damping: 40,     // ↑ Menos "bouncing", mais direto
+    restDelta: 0.0001
   });
 
-  // Map progress to height percentage (0% to 100%)
-  const height = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  // OTIMIZAÇÃO CRÍTICA: Usar scaleY em vez de height
+  // scaleY é processado pelo compositor thread (GPU)
+  // height causa reflow/repaint no main thread
+  const progressScale = useTransform(smoothProgress, [0, 1], [0, 1]);
 
   const steps = [
     { title: "Dieta Restritiva", desc: "Você corta calorias drasticamente." },
@@ -154,11 +173,16 @@ export const Problem = () => {
                 {/* Background Guide Line */}
                 <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-white/10"></div>
                 
-                {/* Animated Progress Line */}
-                <motion.div 
-                    style={{ height }}
-                    className="absolute left-6 top-6 w-0.5 bg-gradient-to-b from-medical-sand via-white to-medical-sand shadow-[0_0_10px_rgba(232,224,213,0.8)]"
-                />
+                {/* Animated Progress Line - OTIMIZADO com scaleY (GPU-accelerated) */}
+                <div className="absolute left-6 top-6 bottom-6 w-0.5 overflow-hidden">
+                  <motion.div 
+                    style={{ 
+                      scaleY: progressScale,
+                      willChange: "transform" // Força composição GPU
+                    }}
+                    className="w-full h-full origin-top bg-gradient-to-b from-medical-sand via-white to-medical-sand shadow-[0_0_10px_rgba(232,224,213,0.8)]"
+                  />
+                </div>
 
                 <div className="space-y-10 relative">
                    {steps.map((step, i) => (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import { AIChatButton } from "@/components/AIChatButton";
 import { ChatProvider } from "@/context/ChatContext";
+import { CookieBanner } from "@/components/CookieBanner";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -34,6 +35,7 @@ export default function RootLayout({
         <ChatProvider>
           {children}
           <AIChatButton />
+          <CookieBanner />
         </ChatProvider>
       </body>
     </html>

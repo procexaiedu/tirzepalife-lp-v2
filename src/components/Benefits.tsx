@@ -127,8 +127,7 @@ export const Benefits = () => {
                       <Star className="w-3 h-3 md:w-4 md:h-4 fill-current" />
                       <Star className="w-3 h-3 md:w-4 md:h-4 fill-current" />
                     </div>
-                    <p className="font-serif text-base md:text-xl italic mb-1 md:mb-2">&quot;O processo foi muito mais simples do que imaginei. Me senti acolhida.&quot;</p>
-                    <p className="text-xs md:text-sm opacity-80 font-medium">- Paciente Verificada</p>
+                    <p className="font-serif text-base md:text-xl italic">&quot;O processo foi muito mais simples do que imaginei. Me senti acolhida.&quot;</p>
                   </div>
                </div>
             </div>

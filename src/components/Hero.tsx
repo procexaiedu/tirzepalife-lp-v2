@@ -88,9 +88,9 @@ export const Hero = () => {
             <div className="flex items-center gap-4 text-sm font-medium text-gray-500">
               <div className="flex -space-x-3">
                 {[
-                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&q=80&fit=crop",
-                  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=64&h=64&q=80&fit=crop",
-                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&q=80&fit=crop"
+                  "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=64&h=64&q=80&fit=crop",
+                  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&q=80&fit=crop",
+                  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=64&h=64&q=80&fit=crop"
                 ].map((src, i) => (
                   <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center overflow-hidden relative">
                     <img 

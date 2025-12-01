@@ -1,0 +1,180 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "content": "## Configuração",
+          "height": 220,
+          "width": 170
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -96,
+          0
+        ],
+        "id": "8db761a5-5f2e-4a8f-b34f-a09fdfba32f7",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "TizerpaLife",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -48,
+          80
+        ],
+        "id": "678a0803-0c25-49e4-b01d-615ae84b91d5",
+        "name": "Webhook",
+        "webhookId": "491975ba-0c77-445e-b54c-cf6c648e7b29"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "91ee1ece-f423-45ee-b628-906df8a36da4",
+                "name": "remoteJid",
+                "value": "={{ $json.body.data.key.remoteJid }}",
+                "type": "string"
+              },
+              {
+                "id": "c9ed0236-5ff7-4663-8d4e-596ff3738a75",
+                "name": "id",
+                "value": "={{ $json.body.data.key.id }}",
+                "type": "string"
+              },
+              {
+                "id": "e132ceaf-3444-4552-b3e8-ba0b0471d34f",
+                "name": "mensagem",
+                "value": "={{ $json.body.data.message.conversation }}",
+                "type": "string"
+              },
+              {
+                "id": "dec05903-a892-41ee-a327-8e47b381b2ab",
+                "name": "messageType",
+                "value": "={{ $json.body.data.messageType }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          208,
+          80
+        ],
+        "id": "c747b06f-d4f4-4e5d-9fad-802600508954",
+        "name": "config"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "INSERT INTO public.clientes (\n    nome,\n    telefone_whatsapp,\n    condicao_medica,\n    gestante_lactante,\n    historico_tireoide,\n    uso_anterior_glp1,\n    status_qualificacao,\n    dosagem_interesse,\n    origem,\n    atendido,\n    created_at,\n    updated_at\n) VALUES (\n    $1, -- nome\n    $2, -- telefone (chave única)\n    $3, -- condicao_medica\n    $4, -- gestante_lactante (bool)\n    $5, -- historico_tireoide (bool)\n    $6, -- uso_anterior_glp1 (bool)\n    'aguardando_ia', -- status_qualificacao (definimos um padrão inicial)\n    $7, -- dosagem_interesse\n    'formulario_site', -- origem fixa\n    false, -- atendido (ainda não)\n    NOW(),\n    NOW()\n)\nON CONFLICT (telefone_whatsapp) DO UPDATE SET\n    updated_at = NOW(),\n    status_qualificacao = 'aguardando_ia', -- Reativa o lead para a IA chamar\n    atendido = false;",
+          "options": {
+            "queryReplacement": "={{ $json.body.nome }}, {{ $json.body.telefone }}, {{ $json.body.condicao || null }}, {{ $json.body.gestante === 'sim' ? true : false }}, {{ $json.body.tireoide === 'sim' ? true : false }}, {{ $json.body.uso_anterior === 'sim' ? true : false }}, {{ $json.body.dosagem || null }}"
+          }
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          416,
+          80
+        ],
+        "id": "8f5262f1-add1-41bf-912f-1d9b3cc2dc04",
+        "name": "Execute a SQL query",
+        "credentials": {
+          "postgres": {
+            "id": "cdb7mHNUiWEkaZJ7",
+            "name": "LF@GMAIL - Testes"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "config",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "config": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {
+      "Webhook": [
+        {
+          "headers": {
+            "host": "webh.procexai.tech",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+            "content-length": "309",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,pt;q=0.8",
+            "content-type": "application/json",
+            "origin": "https://tirzepalife-lp-v2.vercel.app",
+            "priority": "u=1, i",
+            "referer": "https://tirzepalife-lp-v2.vercel.app/",
+            "sec-ch-ua": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "10.0.0.2",
+            "x-forwarded-host": "webh.procexai.tech",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "665db1a63cc6",
+            "x-real-ip": "10.0.0.2"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "key": {
+                "remoteJid": "web_465020925@s.whatsapp.net",
+                "fromMe": false,
+                "id": "1764609912387"
+              },
+              "pushName": "Visitante Web",
+              "message": {
+                "conversation": "ola"
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1764609912,
+              "instanceId": "web-client-integration",
+              "source": "web"
+            },
+            "sender": "web_465020925@s.whatsapp.net"
+          },
+          "webhookUrl": "https://webh.procexai.tech/webhook/TizerpaLife",
+          "executionMode": "production"
+        }
+      ]
+    },
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
+    }
+  }

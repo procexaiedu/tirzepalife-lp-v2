@@ -54,28 +54,23 @@ export const ContactSection = () => {
 
     try {
       const payload = {
-        name: formData.name,
-        phone: formData.phone,
-        weight: formData.weight,
-        height: formData.height,
-        goal: formData.goal,
-        qualified: true,
-        source: "landing_page_form",
-        timestamp: new Date().toISOString()
+        nome: formData.name,
+        telefone_whatsapp: formData.phone,
+        condicao_medica: "Avaliação Peso/Altura",
+        gestante_lactante: exclusions.pregnant,
+        historico_tireoide: exclusions.cancerHistory,
+        uso_anterior_glp1: false,
+        dosagem_interesse: null,
+        origem: "site_formulario",
+        observacoes: `Peso: ${formData.weight}kg, Altura: ${formData.height}cm, Histórico Pancreatite: ${exclusions.pancreatitis ? 'Sim' : 'Não'}`
       };
 
-      const response = await fetch("https://webh.procexai.tech/webhook/c457fa49-542f-49e3-85e8-96faca1f43f6", {
+      const response = await fetch("https://webh.procexai.tech/webhook/TizerpaLife-Formulário", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-           data: {
-               ...payload,
-               message: `Nova solicitação de avaliação:\nNome: ${payload.name}\nTel: ${payload.phone}\nPeso: ${payload.weight}\nAltura: ${payload.height}`
-           },
-           sender: "form_submission"
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -104,7 +99,7 @@ export const ContactSection = () => {
               Como podemos <span className="text-medical-navy italic">ajudá-lo?</span>
             </h2>
             <p className="mt-4 text-gray-600">
-              Escolha a forma de atendimento que preferir. Recomendamos o chat para respostas instantâneas.
+              Fale com nossos especialistas no WhatsApp para comprar com segurança e entrega rápida.
             </p>
           </motion.div>
         </div>

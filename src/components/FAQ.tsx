@@ -13,8 +13,8 @@ const faqs = [
     answer: "A Tirzepatida é o primeiro medicamento de uma nova classe chamada 'twincretins'. Ela imita dois hormônios naturais do corpo (GIP e GLP-1) que regulam o apetite e o açúcar no sangue, resultando em uma perda de peso significativamente maior do que os medicamentos anteriores."
   },
   {
-    question: "Preciso de receita médica?",
-    answer: "Sim. A Tirzepatida é um medicamento controlado e exige prescrição médica. Nossa equipe realiza uma avaliação completa do seu histórico de saúde antes de prescrever o tratamento."
+    question: "Como é feito o acompanhamento?",
+    answer: "Você terá suporte contínuo via WhatsApp com nossa equipe de especialistas para monitorar sua evolução, ajustar doses se necessário e garantir que você alcance seus objetivos com segurança e conforto."
   },
   {
     question: "Quais são os efeitos colaterais?",
