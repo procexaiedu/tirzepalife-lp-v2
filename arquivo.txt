@@ -1,0 +1,79 @@
+**CONTEXTO:**
+Você atuará como um **Senior Frontend Developer & UI Designer** especializado em mercados de luxo ("Quiet Luxury") e saúde (MedTech). Sua tarefa é codificar uma Landing Page para um medicamento de perda de peso de alto padrão.
+
+**INSTRUÇÃO PRINCIPAL:**
+O texto (copywriting) específico será fornecido em um arquivo separado/mensagem subsequente. Utilize este arquivo **exclusivamente** para definir a Estética, a UX e a Estrutura do código.
+
+---
+
+### 1. DIRETRIZES VISUAIS (THEME CONFIG)
+
+**A. Tipografia (A Voz da Marca)**
+*Proibido usar Arial, Roboto ou fontes padrão do sistema.*
+*   **Headlines (Display):** `Playfair Display` ou `Cormorant Garamond`.
+    *   *Peso:* Light (300) ou Regular (400).
+    *   *Estilo:* Elegante, editorial, nunca "gritando" em negrito pesado.
+*   **Body (Texto):** `Plus Jakarta Sans` ou `Manrope`.
+    *   *Cor:* Cinza Carvão (#333333). Nunca preto absoluto (#000000).
+    *   *Vibe:* Geométrica, científica, alta legibilidade.
+
+**B. Paleta de Cores (Atmosfera Wellness)**
+*   **Background Principal:** Off-White Quente (`#F9F7F2`) ou Areia Suave (`#F5F1EA`). Evite branco puro (#FFFFFF) no fundo geral.
+*   **Cor de Ação (CTA):** Deep Navy Blue (`#1A365D`) OU Verde Floresta Profundo (`#183829`).
+*   **Cor de Acento (Secundária):** Azul Sereno (`#4A90E2`) para detalhes menores.
+*   **Bordas/Linhas:** Cinza muito claro (`#E2E8F0`).
+
+**C. Textura & Acabamento (O "Toque" de Luxo)**
+*   **Noise Texture:** Aplique um efeito de granulação (noise) de 2% a 4% sobre os fundos coloridos para simular papel de alta gramatura (evitar o look "digital artificial").
+*   **Sombras:** Suaves e difusas. Nada de sombras duras.
+
+---
+
+### 2. BIBLIOTECA DE COMPONENTES (UI KIT)
+
+**A. Botões (CTAs)**
+*   **Formato:** Pill Shape (Totalmente arredondados). Nada de cantos quadrados.
+*   **Estado:** Sombra suave (`shadow-lg` no Tailwind) para profundidade.
+*   **Cores:** Fundo escuro (Navy/Verde) com texto branco. Sem cores de "varejo" (vermelho/laranja).
+
+**B. Formulários (Convites)**
+*   **Estilo:** Minimalista. Fundo branco, borda cinza clara (#E2E8F0), cantos arredondados (Rounded-xl).
+*   **Foco:** Ao clicar, borda muda para a cor do CTA (Navy ou Verde).
+*   **Labels:** Use placeholders inteligentes para limpar o visual.
+
+**C. Imagens & Gráficos**
+*   **Border Radius:** 12px ou 24px (suave).
+*   **Hero Image Treatment:** Use um *Gradient Overlay* (máscara) partindo da cor sólida do fundo (#F9F7F2) para transparente, garantindo leitura perfeita do texto sobre a imagem.
+*   **Gráficos:** Linhas finas (1px), cores sóbrias. Estilo editorial, não corporativo.
+
+**D. Espaçamento (Whitespace)**
+*   **Regra de Ouro:** Dobre o espaçamento padrão. Se o normal é `py-12`, use `py-24` ou `py-32`. O luxo respira.
+
+---
+
+### 3. ESTRUTURA DA PÁGINA (WIREFRAME)
+
+Desenvolva a página seguindo esta ordem lógica de seções:
+
+1.  **Sticky Bar (Topo):** Logo minimalista + Ícone de Check "Tratamento Aprovado pela ANVISA".
+2.  **Hero Section:**
+    *   Layout Split: Imagem da modelo (com overlay) + Headline + Formulário Flutuante ("Verifique Elegibilidade") na lateral.
+3.  **Trust Bar (Prova Social):** Logos de parceiros/mídia ou ícones monocromáticos (FDA/Anvisa/Médicos).
+4.  **Problem Section (A Luta Biológica):** Foco em texto e empatia sobre "Food Noise". Fundo limpo.
+5.  **Solution Section (Mecanismo):** Gráfico minimalista explicando a ação dual (GIP + GLP-1).
+6.  **Results (Dados Clínicos):** Gráficos de barras elegantes (Estudo SURMOUNT-1). Visualização de dados premium.
+7.  **Eligibility (Checklist):** Lista limpa de "Quem pode usar" vs "Contraindicações".
+8.  **FAQ Accordion:** Perguntas frequentes com animação suave de abrir/fechar.
+9.  **Footer:** Disclaimer legal obrigatório (texto pequeno), CRM, Links de Política.
+
+---
+
+### 4. STACK TECNOLÓGICA SUGERIDA
+*   **Framework:** React (Next.js ou Vite).
+*   **Estilização:** Tailwind CSS.
+*   **Ícones:** Lucide React (estilo fino/stroke).
+*   **Fontes:** Google Fonts (importar Playfair Display e Plus Jakarta Sans).
+
+**AGUARDE O PRÓXIMO INPUT COM O CONTEÚDO DE TEXTO PARA PREENCHER ESTA ESTRUTURA.**
+
+## --- END OF FILE ---

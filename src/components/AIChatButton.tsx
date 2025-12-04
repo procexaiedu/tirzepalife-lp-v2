@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Sparkles, Mic, Zap } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles, Mic, Zap, Phone } from 'lucide-react';
 import { useChat } from "@/context/ChatContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { ContactOptions } from './chat/ContactOptions';
 
 // --- Types ---
 declare global {
@@ -41,10 +42,15 @@ export const AIChatButton = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isTyping, setIsTyping] = useState(false); // Novo estado para indicador de digitação
+  const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  
+  // Lead Gen States
+  const [interactionCount, setInteractionCount] = useState(0);
+  const [showContactOptions, setShowContactOptions] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   
@@ -66,7 +72,7 @@ export const AIChatButton = () => {
 
   useEffect(() => {
     if (isOpen) scrollToBottom();
-  }, [messages, isOpen]);
+  }, [messages, isOpen, showContactOptions]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -95,20 +101,24 @@ export const AIChatButton = () => {
     }
   }, []);
 
-  // Tooltip de chamada de atenção após 8 segundos
   useEffect(() => {
     if (hasInteracted || isOpen) return;
     
     const timer = setTimeout(() => {
       setShowTooltip(true);
-      // Esconde o tooltip após 6 segundos
       setTimeout(() => setShowTooltip(false), 6000);
     }, 8000);
 
     return () => clearTimeout(timer);
   }, [hasInteracted, isOpen]);
 
-  // Marca que o usuário já interagiu
+  // Auto-trigger contact options after 3 interactions
+  useEffect(() => {
+    if (interactionCount >= 3 && !showContactOptions) {
+      setShowContactOptions(true);
+    }
+  }, [interactionCount, showContactOptions]);
+
   const handleOpenChat = () => {
     setHasInteracted(true);
     setShowTooltip(false);
@@ -129,33 +139,22 @@ export const AIChatButton = () => {
     }
   };
 
-  // Função para processar múltiplas respostas do bot com delays
   const processarRespostasBot = async (response: WebhookResponse) => {
-    // Normaliza a resposta para um array de mensagens
     let webhookMessages: WebhookMessage[] = [];
     
     if (response.messages && Array.isArray(response.messages)) {
-      // Nova estrutura com array de mensagens
       webhookMessages = response.messages;
     } else {
-      // Fallback para resposta única (compatibilidade retroativa)
       const text = response.text || response.message || response.output || response.response || 
                    (typeof response === 'string' ? response : JSON.stringify(response));
       webhookMessages = [{ text, delay: 1000 }];
     }
 
-    // Processa cada mensagem sequencialmente
     for (const msg of webhookMessages) {
-      // Mostrar indicador "digitando..."
       setIsTyping(true);
-      
-      // Aguardar o delay especificado (default 1000ms)
       await new Promise(resolve => setTimeout(resolve, msg.delay || 1000));
-      
-      // Esconder indicador "digitando..."
       setIsTyping(false);
       
-      // Adicionar mensagem ao chat
       const aiMsg: Message = {
         id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
         content: msg.text,
@@ -164,8 +163,6 @@ export const AIChatButton = () => {
       };
       
       setMessages(prev => [...prev, aiMsg]);
-      
-      // Pequeno delay entre mensagens para evitar atualizações muito rápidas
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
@@ -183,6 +180,7 @@ export const AIChatButton = () => {
     setMessages(prev => [...prev, userMsg]);
     setInputText("");
     setIsLoading(true);
+    setInteractionCount(prev => prev + 1);
 
     try {
       const payload = {
@@ -204,11 +202,18 @@ export const AIChatButton = () => {
         sender: `${sessionId}@s.whatsapp.net`
       };
 
+      // Timeout de 2 minutos (120000ms)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
+
       const response = await fetch("https://webh.procexai.tech/webhook/TizerpaLife", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) throw new Error('Falha na comunicação');
 
@@ -216,10 +221,8 @@ export const AIChatButton = () => {
       
       try {
         const json: WebhookResponse = JSON.parse(responseData);
-        // Processar as respostas do bot (suporta array ou mensagem única)
         await processarRespostasBot(json);
       } catch (e) {
-        // Se não for JSON válido, tratar como texto simples
         if (responseData.trim()) {
           await processarRespostasBot({ text: responseData });
         } else {
@@ -229,7 +232,7 @@ export const AIChatButton = () => {
 
     } catch (error) {
       console.error("Erro:", error);
-      setIsTyping(false); // Garantir que o indicador seja escondido em caso de erro
+      setIsTyping(false);
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
         content: "Estou com dificuldades de conexão. Tente novamente em instantes.",
@@ -263,7 +266,7 @@ export const AIChatButton = () => {
             rel="noopener noreferrer"
             className={cn(
               "underline underline-offset-2 transition-opacity hover:opacity-80",
-              sender === 'user' ? "text-white decoration-white/30" : "text-[#1A365D] decoration-[#1A365D]/30"
+              sender === 'user' ? "text-white decoration-white/30" : "text-[var(--color-medical-navy)] decoration-[var(--color-medical-navy)]/30"
             )}
           >
             {part}
@@ -272,6 +275,15 @@ export const AIChatButton = () => {
       }
       return part;
     });
+  };
+
+  const handleWhatsAppClick = () => {
+    window.open(`https://wa.me/5511999999999?text=Olá, gostaria de saber mais sobre o tratamento.`, '_blank');
+  };
+
+  const handlePhoneSubmit = (phone: string) => {
+    console.log("Phone submitted:", phone);
+    // Here you would typically send this to your API
   };
 
   return (
@@ -283,30 +295,44 @@ export const AIChatButton = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="relative w-[85vw] sm:w-[360px] md:w-[400px] h-[500px] max-h-[70vh] flex flex-col bg-[#F9F7F2] shadow-2xl overflow-hidden mb-4 sm:mb-6 rounded-[2rem] border border-white/50 ring-1 ring-black/5"
+            className="relative w-[85vw] sm:w-[360px] md:w-[400px] h-[500px] max-h-[70vh] flex flex-col bg-[var(--color-medical-white)] shadow-2xl overflow-hidden mb-4 sm:mb-6 rounded-[2rem] border border-white/50 ring-1 ring-black/5"
           >
             {/* --- Header --- */}
-            <div className="relative z-10 shrink-0 px-6 py-5 flex items-center justify-between bg-[#F9F7F2]/80 backdrop-blur-md border-b border-[#1A365D]/5">
-              <div>
-                <h2 className="font-serif text-[#1A365D] text-lg font-medium tracking-wide">Concierge</h2>
-                <p className="text-xs text-[#1A365D]/60 uppercase tracking-widest font-medium mt-0.5">TirzepaLife</p>
+            <div className="relative z-10 shrink-0 px-6 py-4 flex items-center justify-between bg-[var(--color-medical-white)]/80 backdrop-blur-md border-b border-[var(--color-medical-navy)]/5">
+              <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 bg-[var(--color-medical-navy)] rounded-full flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+                 </div>
+                 <div>
+                   <h2 className="font-serif text-[var(--color-medical-navy)] text-base font-medium tracking-wide">Concierge</h2>
+                   <p className="text-[10px] text-[var(--color-medical-navy)]/60 uppercase tracking-widest font-medium">TirzepaLife</p>
+                 </div>
               </div>
-              <button 
-                onClick={closeChat}
-                className="group p-2 rounded-full hover:bg-[#1A365D]/5 transition-colors duration-300"
-              >
-                <X className="w-5 h-5 text-[#1A365D]/60 group-hover:text-[#1A365D] transition-colors" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                   onClick={() => setShowContactOptions(!showContactOptions)}
+                   className="p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300 text-[var(--color-medical-navy)]/60 hover:text-[var(--color-medical-navy)]"
+                   title="Falar com especialista"
+                >
+                   <Phone className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={closeChat}
+                  className="group p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300"
+                >
+                  <X className="w-5 h-5 text-[var(--color-medical-navy)]/60 group-hover:text-[var(--color-medical-navy)] transition-colors" />
+                </button>
+              </div>
             </div>
 
             {/* --- Chat Area --- */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#F9F7F2] to-white scroll-smooth custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[var(--color-medical-white)] to-white scroll-smooth custom-scrollbar">
                {messages.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center px-4 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]">
-                    <div className="w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-[#1A365D] to-[#2A4A7F] flex items-center justify-center shadow-lg shadow-[#1A365D]/20">
-                      <Sparkles className="w-6 h-6 text-[#F9F7F2]" />
+                    <div className="w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-[var(--color-medical-navy)] to-[#2A4A7F] flex items-center justify-center shadow-lg shadow-[var(--color-medical-navy)]/20">
+                      <Sparkles className="w-6 h-6 text-[var(--color-medical-white)]" />
                     </div>
-                    <h3 className="font-serif text-2xl text-[#1A365D] mb-2">Bem-vindo</h3>
+                    <h3 className="font-serif text-2xl text-[var(--color-medical-navy)] mb-2">Bem-vindo</h3>
                     <p className="text-sm text-gray-500 leading-relaxed max-w-[240px]">
                       Estou à disposição para auxiliar com informações sobre o tratamento e acompanhamento.
                     </p>
@@ -327,8 +353,8 @@ export const AIChatButton = () => {
                       <div className={cn(
                         "px-5 py-3.5 text-[15px] leading-relaxed shadow-sm",
                         msg.sender === 'user'
-                          ? "bg-[#1A365D] text-[#F9F7F2] rounded-2xl rounded-tr-sm"
-                          : "bg-white text-[#333] border border-gray-100 rounded-2xl rounded-tl-sm"
+                          ? "bg-[var(--color-medical-navy)] text-[var(--color-medical-white)] rounded-2xl rounded-tr-sm"
+                          : "bg-white text-[var(--color-medical-text)] border border-gray-100 rounded-2xl rounded-tl-sm"
                       )}>
                         {renderMessageContent(msg.content, msg.sender)}
                       </div>
@@ -347,13 +373,21 @@ export const AIChatButton = () => {
                     >
                       <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm">
                         <div className="flex space-x-1.5">
-                          <span className="w-1.5 h-1.5 bg-[#1A365D]/40 rounded-full animate-[bounce_1.4s_infinite_both_-0.32s]"></span>
-                          <span className="w-1.5 h-1.5 bg-[#1A365D]/40 rounded-full animate-[bounce_1.4s_infinite_both_-0.16s]"></span>
-                          <span className="w-1.5 h-1.5 bg-[#1A365D]/40 rounded-full animate-[bounce_1.4s_infinite_both]"></span>
+                          <span className="w-1.5 h-1.5 bg-[var(--color-medical-navy)]/40 rounded-full animate-[bounce_1.4s_infinite_both_-0.32s]"></span>
+                          <span className="w-1.5 h-1.5 bg-[var(--color-medical-navy)]/40 rounded-full animate-[bounce_1.4s_infinite_both_-0.16s]"></span>
+                          <span className="w-1.5 h-1.5 bg-[var(--color-medical-navy)]/40 rounded-full animate-[bounce_1.4s_infinite_both]"></span>
                         </div>
                       </div>
                     </motion.div>
                   )}
+                  
+                  {showContactOptions && (
+                    <ContactOptions 
+                      onWhatsAppClick={handleWhatsAppClick}
+                      onPhoneSubmit={handlePhoneSubmit}
+                    />
+                  )}
+
                   <div ref={messagesEndRef} />
                  </>
                )}
@@ -361,14 +395,14 @@ export const AIChatButton = () => {
 
             {/* --- Input Area --- */}
             <div className="p-5 bg-white border-t border-gray-100">
-              <div className="relative flex items-center bg-[#F5F5F5] rounded-full px-2 py-1.5 transition-all duration-300 focus-within:bg-white focus-within:shadow-md focus-within:ring-1 focus-within:ring-[#1A365D]/10">
+              <div className="relative flex items-center bg-[#F5F5F5] rounded-full px-2 py-1.5 transition-all duration-300 focus-within:bg-white focus-within:shadow-md focus-within:ring-1 focus-within:ring-[var(--color-medical-navy)]/10">
                 <button 
                   onClick={toggleListening}
                   className={cn(
                     "p-2 rounded-full transition-colors duration-300",
                     isListening 
                       ? "text-red-500 bg-red-50 animate-pulse" 
-                      : "text-gray-400 hover:text-[#1A365D] hover:bg-gray-100"
+                      : "text-gray-400 hover:text-[var(--color-medical-navy)] hover:bg-gray-100"
                   )}
                   title="Digitar por voz"
                 >
@@ -380,7 +414,7 @@ export const AIChatButton = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Digite sua mensagem..."
-                  className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm text-[#1A365D] placeholder:text-gray-400 px-2"
+                  className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm text-[var(--color-medical-text)] placeholder:text-gray-400 px-2"
                   disabled={isLoading || isTyping}
                 />
                 
@@ -390,7 +424,7 @@ export const AIChatButton = () => {
                   className={cn(
                     "p-2 rounded-full transition-all duration-300 flex items-center justify-center",
                     inputText.trim() 
-                      ? "bg-[#1A365D] text-white shadow-lg shadow-[#1A365D]/20 hover:scale-105 active:scale-95" 
+                      ? "bg-[var(--color-medical-navy)] text-white shadow-lg shadow-[var(--color-medical-navy)]/20 hover:scale-105 active:scale-95" 
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   )}
                 >
@@ -423,11 +457,11 @@ export const AIChatButton = () => {
                     ✕
                   </button>
                   <div className="flex items-start gap-3">
-                    <div className="shrink-0 w-10 h-10 bg-gradient-to-br from-[#1A365D] to-[#2A4A7F] rounded-full flex items-center justify-center">
+                    <div className="shrink-0 w-10 h-10 bg-gradient-to-br from-[var(--color-medical-navy)] to-[#2A4A7F] rounded-full flex items-center justify-center">
                       <Zap className="w-5 h-5 text-[#D4AF37]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-[#1A365D] text-sm mb-1">Resposta em segundos!</p>
+                      <p className="font-semibold text-[var(--color-medical-navy)] text-sm mb-1">Resposta em segundos!</p>
                       <p className="text-xs text-gray-500 leading-relaxed">
                         Tire suas dúvidas agora com nosso especialista.
                       </p>
@@ -447,7 +481,7 @@ export const AIChatButton = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleOpenChat}
-              className="relative group flex items-center justify-center w-16 h-16 rounded-full bg-[#1A365D] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10"
+              className="relative group flex items-center justify-center w-16 h-16 rounded-full bg-[var(--color-medical-navy)] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10"
             >
               {/* Container para efeitos de brilho (sheen) */}
               <div className="absolute inset-0 rounded-full overflow-hidden">
@@ -455,9 +489,9 @@ export const AIChatButton = () => {
               </div>
 
               {/* Pulse ring animation */}
-              <span className="absolute inset-0 rounded-full bg-[#1A365D] animate-ping opacity-20"></span>
+              <span className="absolute inset-0 rounded-full bg-[var(--color-medical-navy)] animate-ping opacity-20"></span>
               
-              <MessageCircle className="w-7 h-7 text-[#F9F7F2] relative z-10" />
+              <MessageCircle className="w-7 h-7 text-[var(--color-medical-white)] relative z-10" />
               
               {/* Badge "Online" */}
               <span className="absolute -top-2 -right-1 flex items-center gap-1 bg-white text-[10px] font-bold text-green-600 px-2 py-0.5 rounded-full shadow-lg border border-green-100 z-20">
