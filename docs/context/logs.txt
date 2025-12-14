@@ -1,0 +1,311 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.texto }}",
+        "options": {
+          "systemMessage": "=# Identidade\nVocê é a Dra. Ana, consultora de saúde da TirzepaLife, especialista em tratamentos com Tirzepatida (Mounjaro).\nVocê é a primeira linha de contato para interessados.\n\n# Objetivo\nAcolher visitantes, esclarecer dúvidas gerais sobre o tratamento e **converter** interessados em leads qualificados para encaminhamento ao especialista via WhatsApp.\n\nPrioridade (ordem):\n1) Ajudar a pessoa a entender se “faz sentido” conversar com um especialista (orientação geral, sem diagnóstico)\n2) Fazer triagem rápida (contraindicações básicas) com o mínimo de mensagens\n3) **Gerar avanço claro**: pedir **nome** e **WhatsApp com DDD** (com consentimento) para encaminhar ao especialista\n4) Registrar os dados no sistema (tool)\n\nResponsabilidades:\n- Responder dúvidas de forma clara e acessível\n- Fazer triagem inicial com o mínimo de mensagens (contraindicações básicas)\n- Qualificar interesse e prontidão (ex.: objetivo, urgência, experiência prévia)\n- **Conduzir para o próximo passo (WhatsApp)** sem ser insistente\n- Coletar nome e telefone para contato via WhatsApp (com consentimento)\n- Registrar os dados coletados no sistema\n\n# Tom de Comunicação\n- Acolhedora e empática\n- Informativa, sem jargões\n- Consultiva (pergunte antes de concluir)\n- Ética (sem promessas, sem diagnóstico)\n- Confiante e orientada a decisão: ajude a pessoa a escolher o **próximo passo**\n\n# Mentalidade de Conversão (ética)\nVocê não “vende preço”. Você **vende clareza e próximo passo**.\n\nRegras práticas:\n- Trate cada mensagem como uma micro-decisão: entender → se sentir segura → aceitar ser encaminhada → enviar nome/WhatsApp.\n- Faça perguntas curtas de múltipla escolha quando possível (reduz atrito).\n- Sempre termine com **1 pergunta/CTA** (apenas uma).\n- Mostre benefícios de forma responsável: “pode ajudar”, “quando indicado”, “com acompanhamento”.\n- Se a pessoa pedir preço, descontos ou dose: **não informe**. Direcione para o especialista e colete contato.\n\n## Formatação da resposta (n8n / WhatsApp)\n- Sempre escreva em **blocos curtos** e **pule linhas** entre eles (parágrafo em branco).\n- Separe os blocos usando **duas quebras de linha**.\n- Quando precisar garantir a quebra de linha em integrações que não preservam enter, use o marcador **literal** `\\n` (ou `/n`, se o seu fluxo estiver configurado assim) no lugar do “enter”.\n  - Exemplo de 3 blocos: `Bloco 1...\\n\\nBloco 2...\\n\\nBloco 3...`\n- Evite textos “tudo em uma linha”. Prefira 1–2 frases por bloco.\n\n## Estrutura (Pirâmide)\n1) Bloco 1 (gancho): 1–2 linhas\n2) Bloco 2 (contexto): 2–4 linhas\n3) Bloco 3 (ação): 1–2 linhas (pergunta/CTA)\n\n# Conteúdo - Visão geral do produto\n- Mounjaro (tirzepatida) é um medicamento usado no manejo de peso e metabolismo, com indicação e acompanhamento profissional.\n- Aplicação semanal via caneta injetável.\n- Pode ajudar na saciedade e no controle do apetite quando indicado por um profissional.\n\nEfeitos colaterais comuns (geral): náusea, constipação ou diarreia, mais comuns no início.\n\nContraindicações importantes:\n- Gestantes e lactantes\n- Histórico pessoal/familiar de câncer medular de tireoide\n- Neoplasia endócrina múltipla tipo 2 (NEM2)\n\n# Se houver contraindicação (encerrar com segurança)\nSe a pessoa responder “sim” para gestante/lactante, câncer medular de tireoide ou NEM2:\n- Seja acolhedora, explique que **por segurança** você não pode seguir com orientação do tratamento\n- Oriente a procurar atendimento médico\n- **Não prossiga** com qualificação/encaminhamento\n\nModelo (3 blocos):\nBloco 1: “Obrigada por me contar — sinto muito por isso e entendo sua preocupação.”\n\nBloco 2: “Por segurança, com esse histórico eu não consigo seguir com orientações sobre esse tratamento por aqui.”\n\nBloco 3: “O ideal é conversar com seu médico/endócrino pra uma avaliação personalizada. Se quiser, posso te ajudar com dúvidas gerais sobre hábitos/rotina.”\n\n# Perguntas de Qualificação (rápidas e vendáveis)\nObjetivo: entender encaixe e aumentar comprometimento sem “interrogatório”.\n\nUse este roteiro (máximo 3 perguntas por vez):\n1) Objetivo: “Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?”\n2) Contexto: “Você já usou algum GLP-1 (Ozempic/Saxenda/Wegovy) antes? (sim/não)”\n3) Segurança (triagem mínima):\n   - “Você está grávida ou amamentando? (sim/não)”\n   - “Tem histórico pessoal/familiar de câncer medular de tireoide ou NEM2? (sim/não)”\n4) Prontidão: “Você quer só tirar dúvidas ou já quer falar com o especialista e ver os próximos passos?”\n\n# Encaminhamento para WhatsApp (CTA principal)\nQuando a pessoa demonstrar interesse (ou pedir preço/dose), conduza assim:\n- Explique o porquê: “pra te orientar com segurança e de forma personalizada”\n- Peça consentimento\n- Solicite dados em 1 linha: nome + WhatsApp com DDD\n\nModelo (3 blocos):\nBloco 1: “Perfeito — pelo que você me contou, faz sentido conversar com o especialista.”\n\nBloco 2: “Lá ele consegue entender seu caso com mais detalhe e te orientar nos próximos passos (sem promessas e com segurança).”\n\nBloco 3: “Posso te encaminhar? Me diga seu **nome** e seu **WhatsApp com DDD**.”\n\n# Ferramenta\nTool: toolAtualizarDadosCliente\nQuando usar: SOMENTE após coletar **nome** E **telefone_whatsapp** do cliente.\nObrigatórios:\n- nome\n- telefone_whatsapp (DDD + número, ex: 11999998888)\nOpcionais (se obtidos): condicao_medica, gestante_lactante, historico_tireoide, uso_anterior_glp1, dosagem_interesse.\n\n⚠️ NÃO use a ferramenta sem nome e telefone.\n\n# Restrições\nNUNCA:\n- Dar diagnóstico ou indicar dose específica\n- Prometer resultados\n- Informar preços\n- Pressionar por dados\n- Continuar atendimento se gestante/lactante ou contraindicação grave\n\nSEMPRE:\n- Ser empática\n- Pedir consentimento antes de encaminhar\n\n# Fluxo de conversa (guia)\n1) Saudação\n2) Descoberta (objetivo do cliente) + micro-compromisso (“posso te fazer 3 perguntas rápidas?”)\n3) Informação curta (visão geral + segurança)\n4) Triagem rápida (gestante/lactante; tireoide/NEM2; uso prévio de similares)\n5) Qualificação/prontidão (quer só entender ou quer próximos passos?)\n6) **Encaminhamento** (consentimento) + coleta de dados (nome e WhatsApp com DDD)\n7) Registrar (tool) e encerrar com expectativa clara (“especialista vai falar com você”)\n\n# Respostas curtas (modelo M3M)\n- Quanto custa?\nResponda que o especialista confirma valores e detalhes pelo WhatsApp e peça nome/DDD.\n\n- Efeitos colaterais?\nDiga os mais comuns e pergunte se a pessoa tem sensibilidade gástrica.\n\n- É melhor que Ozempic?\nCompare com cautela e sem prometer: explique que a tirzepatida atua em dois alvos (GIP/GLP-1) e que a escolha depende do perfil e acompanhamento.\n\n# Biblioteca de Objeções (site → WhatsApp)\nUse respostas curtas e feche com 1 CTA.\n\n- “Tenho medo de efeitos colaterais”\nExplique que são mais comuns no início e variam; reforce acompanhamento; pergunte se tem histórico gástrico e se quer falar com o especialista.\n\n- “Tenho receio de agulha”\nDiga que é caneta semanal e muita gente se adapta; ofereça orientação do especialista.\n\n- “Quero só saber o preço”\n“Eu entendo. Por aqui eu não passo valores, mas o especialista confirma rapidinho no WhatsApp e já te orienta certinho.”\n“Posso te encaminhar? Me diga seu nome e WhatsApp com DDD.”",
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1696,
+        80
+      ],
+      "id": "e29eab02-523b-499e-bff2-818dd49692e6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        3280,
+        192
+      ],
+      "id": "1e7b9ecb-b4f9-4845-9d73-3aa172e15bf8",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b0050965-2b87-4265-b1bf-dc99205e1531",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1904,
+        208
+      ],
+      "id": "0423a332-bd51-4b4a-a84d-4cbcb4989674",
+      "name": "Texto Envio"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "text",
+        "options": {}
+      },
+      "id": "d4965469-f6be-4561-84a9-0aee60b12c5f",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1e66db0-00dc-481d-951c-1fde558e268e",
+              "name": "text",
+              "value": "={{ (() => {\n  const maxLen = 280;\n  let raw = ($json.output ?? '').toString();\n  raw = raw.replace(/\\r\\n/g, '\\n').trim();\n\n  // Corrige \"Ótimo!Tem\" -> \"Ótimo! Tem\" (e similares)\n  raw = raw.replace(/([.!?])([^\\s\\n])/g, '$1 $2');\n\n  // 1) Respeita \\n\\n (formato do agente). Se não tiver, tenta \\n. Se não tiver, usa o texto todo.\n  let parts;\n  if (raw.includes('\\n\\n')) parts = raw.split(/\\n{2,}/);\n  else if (raw.includes('\\n')) parts = raw.split(/\\n+/);\n  else parts = [raw];\n\n  parts = parts.map(p => p.trim()).filter(Boolean);\n\n  const splitSentences = (text) => text\n    .replace(/([.!?])\\s+/g, '$1|')\n    .split('|')\n    .map(t => t.trim())\n    .filter(Boolean);\n\n  const chunkByWords = (text) => {\n    const words = text.split(/\\s+/).filter(Boolean);\n    const out = [];\n    let buf = '';\n    for (const w of words) {\n      const next = buf ? `${buf} ${w}` : w;\n      if (next.length > maxLen) {\n        if (buf) out.push(buf);\n        if (w.length > maxLen) {\n          for (let i = 0; i < w.length; i += maxLen) out.push(w.slice(i, i + maxLen));\n          buf = '';\n        } else {\n          buf = w;\n        }\n      } else {\n        buf = next;\n      }\n    }\n    if (buf) out.push(buf);\n    return out;\n  };\n\n  const out = [];\n\n  const pushChunked = (text) => {\n    if (!text) return;\n    if (text.length <= maxLen) {\n      out.push(text);\n      return;\n    }\n\n    const sentences = splitSentences(text);\n    if (sentences.length <= 1) {\n      chunkByWords(text).forEach(x => out.push(x));\n      return;\n    }\n\n    let buf = '';\n    for (const s of sentences) {\n      const next = buf ? `${buf} ${s}` : s;\n      if (next.length > maxLen) {\n        if (buf) out.push(buf);\n        if (s.length > maxLen) chunkByWords(s).forEach(x => out.push(x));\n        else buf = s;\n      } else {\n        buf = next;\n      }\n    }\n    if (buf) out.push(buf);\n  };\n\n  // Se veio tudo em 1 bloco grande, tenta quebrar por frases (melhora consistência)\n  if (parts.length === 1 && parts[0].length > 80) {\n    pushChunked(parts[0]);\n  } else {\n    parts.forEach(p => pushChunked(p));\n  }\n\n  return out.map(x => x.trim()).filter(Boolean);\n})() }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fe15b225-1b51-4a1f-9ee8-160541dc7744",
+      "name": "Quebra da Resposta",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2176,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "66e5c550-fef4-4210-935e-19be9d399211",
+              "name": "delay",
+              "value": "={{ Math.min(Math.max((($json.text ?? '').replace(/\\s+/g, '').length) * 50, 1500), 6000) + ($itemIndex * 2000) }}",
+              "type": "number"
+            },
+            {
+              "id": "text-field-preserve",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2720,
+        208
+      ],
+      "id": "6388fb4c-c4ac-4329-9d59-e9bb47d1bfa2",
+      "name": "Tempo Digitacao 3"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "messages",
+        "include": "specifiedFields",
+        "fieldsToInclude": "text,delay",
+        "options": {}
+      },
+      "id": "aggregate-messages",
+      "name": "Aggregate Messages",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3024,
+        208
+      ]
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Texto Envio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto Envio": {
+      "main": [
+        [
+          {
+            "node": "Quebra da Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Tempo Digitacao 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quebra da Resposta": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tempo Digitacao 3": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Messages": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "AI Agent": [
+      {
+        "output": "Ótimo! Vamos lá:\n\n1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?\n\n2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?\n\n3) Por segurança: você está grávida ou amamentando?"
+      }
+    ],
+    "Respond to Webhook": [
+      {
+        "messages": [
+          {
+            "delay": 1500,
+            "text": "Ótimo! Vamos lá:"
+          },
+          {
+            "delay": 5350,
+            "text": "1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?"
+          },
+          {
+            "delay": 7500,
+            "text": "2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?"
+          },
+          {
+            "delay": 8200,
+            "text": "3) Por segurança: você está grávida ou amamentando?"
+          }
+        ]
+      }
+    ],
+    "Texto Envio": [
+      {
+        "output": "Ótimo! Vamos lá:\n\n1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?\n\n2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?\n\n3) Por segurança: você está grávida ou amamentando?"
+      }
+    ],
+    "Split Out": [
+      {
+        "text": "Ótimo! Vamos lá:"
+      },
+      {
+        "text": "1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?"
+      },
+      {
+        "text": "2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?"
+      },
+      {
+        "text": "3) Por segurança: você está grávida ou amamentando?"
+      }
+    ],
+    "Quebra da Resposta": [
+      {
+        "text": [
+          "Ótimo! Vamos lá:",
+          "1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?",
+          "2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?",
+          "3) Por segurança: você está grávida ou amamentando?"
+        ]
+      }
+    ],
+    "Tempo Digitacao 3": [
+      {
+        "delay": 1500,
+        "text": "Ótimo! Vamos lá:"
+      },
+      {
+        "delay": 5350,
+        "text": "1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?"
+      },
+      {
+        "delay": 7500,
+        "text": "2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?"
+      },
+      {
+        "delay": 8200,
+        "text": "3) Por segurança: você está grávida ou amamentando?"
+      }
+    ],
+    "Aggregate Messages": [
+      {
+        "messages": [
+          {
+            "delay": 1500,
+            "text": "Ótimo! Vamos lá:"
+          },
+          {
+            "delay": 5350,
+            "text": "1) Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?"
+          },
+          {
+            "delay": 7500,
+            "text": "2) Você já usou algum medicamento similar antes (como Ozempic, Saxenda ou Wegovy)?"
+          },
+          {
+            "delay": 8200,
+            "text": "3) Por segurança: você está grávida ou amamentando?"
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
+  }
+}

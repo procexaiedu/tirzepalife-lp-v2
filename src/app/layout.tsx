@@ -19,7 +19,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Tirzepatida - Controle de Peso com Ciência",
-  description: "Recupere o controle do peso com a primeira terapia twincretin (GIP + GLP-1).",
+  description: "Controle o apetite e o peso com Tirzepatida, com acompanhamento médico e foco em segurança.",
 };
 
 export default function RootLayout({

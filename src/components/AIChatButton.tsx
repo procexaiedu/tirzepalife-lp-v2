@@ -1,19 +1,58 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Sparkles, Mic, Zap, Phone } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { MessageCircle, X, Send, Sparkles, Mic, Zap } from 'lucide-react';
 import { useChat } from "@/context/ChatContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ContactOptions } from './chat/ContactOptions';
+import { TriageFormCard } from "@/components/chat/TriageFormCard";
+import type { ChatUi, ChatUiFormCard, TriageFormValues, WebhookResponse, WebhookMessage } from "@/types/chatUi";
 
 // --- Types ---
 declare global {
   interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
   }
 }
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence?: number;
+}
+
+interface SpeechRecognitionResult {
+  0: SpeechRecognitionAlternative;
+  length: number;
+  isFinal?: boolean;
+}
+
+interface SpeechRecognitionResultList {
+  0: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognitionEvent {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string;
+  message?: string;
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
 
 interface Message {
   id: string;
@@ -22,20 +61,7 @@ interface Message {
   timestamp: number;
 }
 
-// Interface para mensagem do webhook
-interface WebhookMessage {
-  text: string;
-  delay?: number;
-}
-
-// Interface para resposta do webhook
-interface WebhookResponse {
-  messages?: WebhookMessage[];
-  text?: string;
-  message?: string;
-  output?: string;
-  response?: string;
-}
+const WEBHOOK_URL = "https://webh.procexai.tech/webhook/TizerpaLife";
 
 export const AIChatButton = () => {
   const { isOpen, openChat, closeChat } = useChat();
@@ -46,13 +72,12 @@ export const AIChatButton = () => {
   const [isListening, setIsListening] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  
-  // Lead Gen States
-  const [interactionCount, setInteractionCount] = useState(0);
-  const [showContactOptions, setShowContactOptions] = useState(false);
+  const [activeUi, setActiveUi] = useState<ChatUi | null>(null);
+  const [isSubmittingUi, setIsSubmittingUi] = useState(false);
+  const [hasRequestedStart, setHasRequestedStart] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   
   // Session Management
   const [sessionId] = useState(() => {
@@ -66,13 +91,19 @@ export const AIChatButton = () => {
     return `web_${Math.floor(Math.random() * 1000000000)}`;
   });
 
+  const triageCompletedKey = useMemo(() => `triage_completed_${sessionId}`, [sessionId]);
+  const isTriageCompleted = () => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(triageCompletedKey) === "1";
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     if (isOpen) scrollToBottom();
-  }, [messages, isOpen, showContactOptions]);
+  }, [messages, isOpen]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -83,13 +114,13 @@ export const AIChatButton = () => {
         recognitionRef.current.interimResults = false;
         recognitionRef.current.lang = 'pt-BR';
 
-        recognitionRef.current.onresult = (event: any) => {
+        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = event.results[0][0].transcript;
           setInputText((prev) => prev + (prev ? " " : "") + transcript);
           setIsListening(false);
         };
 
-        recognitionRef.current.onerror = (event: any) => {
+        recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
           console.error("Speech recognition error", event.error);
           setIsListening(false);
         };
@@ -112,17 +143,56 @@ export const AIChatButton = () => {
     return () => clearTimeout(timer);
   }, [hasInteracted, isOpen]);
 
-  // Auto-trigger contact options after 3 interactions
-  useEffect(() => {
-    if (interactionCount >= 3 && !showContactOptions) {
-      setShowContactOptions(true);
-    }
-  }, [interactionCount, showContactOptions]);
-
   const handleOpenChat = () => {
     setHasInteracted(true);
     setShowTooltip(false);
     openChat();
+  };
+
+  const construirPayloadBase = (id: string, conversation: string, extras?: Record<string, unknown>) => {
+    return {
+      data: {
+        key: {
+          remoteJid: `${sessionId}@s.whatsapp.net`,
+          fromMe: false,
+          id
+        },
+        pushName: "Visitante Web",
+        message: {
+          conversation
+        },
+        messageType: "conversation",
+        messageTimestamp: Math.floor(Date.now() / 1000),
+        instanceId: "web-client-integration",
+        source: "web",
+        ...(extras ?? {})
+      },
+      sender: `${sessionId}@s.whatsapp.net`
+    };
+  };
+
+  const chamarWebhook = async (payload: unknown) => {
+    // Timeout de 2 minutos (120000ms)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) throw new Error('Falha na comunicação');
+
+    const responseData = await response.text();
+    try {
+      return JSON.parse(responseData) as WebhookResponse;
+    } catch {
+      return { text: responseData } as WebhookResponse;
+    }
   };
 
   const toggleListening = () => {
@@ -150,6 +220,10 @@ export const AIChatButton = () => {
       webhookMessages = [{ text, delay: 1000 }];
     }
 
+    if (response.ui) {
+      setActiveUi(response.ui);
+    }
+
     for (const msg of webhookMessages) {
       setIsTyping(true);
       await new Promise(resolve => setTimeout(resolve, msg.delay || 1000));
@@ -167,6 +241,41 @@ export const AIChatButton = () => {
     }
   };
 
+  const iniciarFluxoAoAbrir = async () => {
+    if (hasRequestedStart) return;
+    if (isLoading || isTyping) return;
+    if (messages.length > 0) return;
+    if (isTriageCompleted()) return;
+
+    setHasRequestedStart(true);
+    setIsLoading(true);
+
+    try {
+      const startId = `start_${Date.now()}`;
+      const payload = construirPayloadBase(startId, "__start__");
+      const json = await chamarWebhook(payload);
+      await processarRespostasBot(json);
+    } catch (error) {
+      console.error("Erro:", error);
+      setIsTyping(false);
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Estou com dificuldades de conexão. Tente novamente em instantes.",
+        sender: 'ai',
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    void iniciarFluxoAoAbrir();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -180,55 +289,11 @@ export const AIChatButton = () => {
     setMessages(prev => [...prev, userMsg]);
     setInputText("");
     setIsLoading(true);
-    setInteractionCount(prev => prev + 1);
 
     try {
-      const payload = {
-        data: {
-          key: {
-            remoteJid: `${sessionId}@s.whatsapp.net`,
-            fromMe: false,
-            id: userMsg.id
-          },
-          pushName: "Visitante Web",
-          message: {
-            conversation: userMsg.content
-          },
-          messageType: "conversation",
-          messageTimestamp: Math.floor(Date.now() / 1000),
-          instanceId: "web-client-integration",
-          source: "web"
-        },
-        sender: `${sessionId}@s.whatsapp.net`
-      };
-
-      // Timeout de 2 minutos (120000ms)
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 120000);
-
-      const response = await fetch("https://webh.procexai.tech/webhook/TizerpaLife", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) throw new Error('Falha na comunicação');
-
-      const responseData = await response.text();
-      
-      try {
-        const json: WebhookResponse = JSON.parse(responseData);
-        await processarRespostasBot(json);
-      } catch (e) {
-        if (responseData.trim()) {
-          await processarRespostasBot({ text: responseData });
-        } else {
-          await processarRespostasBot({ text: "Não consegui processar sua resposta." });
-        }
-      }
+      const payload = construirPayloadBase(userMsg.id, userMsg.content);
+      const json = await chamarWebhook(payload);
+      await processarRespostasBot(json);
 
     } catch (error) {
       console.error("Erro:", error);
@@ -242,6 +307,47 @@ export const AIChatButton = () => {
       setMessages(prev => [...prev, errorMsg]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSubmitTriage = async (schema: ChatUiFormCard, values: TriageFormValues) => {
+    setIsSubmittingUi(true);
+    try {
+      const optionLabel = (fieldName: string) => {
+        const field = schema.fields.find(f => f.name === fieldName);
+        const opt = field?.options.find(o => o.value === values[fieldName]);
+        return opt?.label ?? values[fieldName] ?? "";
+      };
+
+      const resumo = `Triagem preenchida: Objetivo=${optionLabel("goal")}; Já usou GLP-1=${optionLabel("used_glp1")}; Grávida/amamentando=${optionLabel("pregnant_lactating")}; Histórico câncer medular/NEM2=${optionLabel("thyroid_history")}.`;
+
+      const userMsg: Message = {
+        id: Date.now().toString(),
+        content: "Respondi a triagem ✅",
+        sender: 'user',
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, userMsg]);
+
+      const payload = construirPayloadBase(userMsg.id, resumo, { form: values, form_id: schema.id });
+      const json = await chamarWebhook(payload);
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(triageCompletedKey, "1");
+      }
+      setActiveUi(null);
+      await processarRespostasBot(json);
+    } catch (error) {
+      console.error("Erro:", error);
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Não consegui enviar sua triagem agora. Tente novamente em instantes.",
+        sender: 'ai',
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsSubmittingUi(false);
     }
   };
 
@@ -277,17 +383,8 @@ export const AIChatButton = () => {
     });
   };
 
-  const handleWhatsAppClick = () => {
-    window.open(`https://wa.me/5511999999999?text=Olá, gostaria de saber mais sobre o tratamento.`, '_blank');
-  };
-
-  const handlePhoneSubmit = (phone: string) => {
-    console.log("Phone submitted:", phone);
-    // Here you would typically send this to your API
-  };
-
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] font-sans flex flex-col items-end">
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
@@ -308,21 +405,12 @@ export const AIChatButton = () => {
                    <p className="text-[10px] text-[var(--color-medical-navy)]/60 uppercase tracking-widest font-medium">TirzepaLife</p>
                  </div>
               </div>
-              <div className="flex items-center gap-1">
-                <button
-                   onClick={() => setShowContactOptions(!showContactOptions)}
-                   className="p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300 text-[var(--color-medical-navy)]/60 hover:text-[var(--color-medical-navy)]"
-                   title="Falar com especialista"
-                >
-                   <Phone className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={closeChat}
-                  className="group p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300"
-                >
-                  <X className="w-5 h-5 text-[var(--color-medical-navy)]/60 group-hover:text-[var(--color-medical-navy)] transition-colors" />
-                </button>
-              </div>
+              <button 
+                onClick={closeChat}
+                className="group p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300"
+              >
+                <X className="w-5 h-5 text-[var(--color-medical-navy)]/60 group-hover:text-[var(--color-medical-navy)] transition-colors" />
+              </button>
             </div>
 
             {/* --- Chat Area --- */}
@@ -363,6 +451,21 @@ export const AIChatButton = () => {
                       </span>
                     </motion.div>
                   ))}
+
+                  {activeUi?.type === "form_card" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="flex items-start"
+                    >
+                      <TriageFormCard
+                        schema={activeUi as ChatUiFormCard}
+                        isSubmitting={isSubmittingUi}
+                        onSubmit={(vals) => handleSubmitTriage(activeUi as ChatUiFormCard, vals)}
+                      />
+                    </motion.div>
+                  )}
                   
                   {(isLoading || isTyping) && (
                     <motion.div 
@@ -379,13 +482,6 @@ export const AIChatButton = () => {
                         </div>
                       </div>
                     </motion.div>
-                  )}
-                  
-                  {showContactOptions && (
-                    <ContactOptions 
-                      onWhatsAppClick={handleWhatsAppClick}
-                      onPhoneSubmit={handlePhoneSubmit}
-                    />
                   )}
 
                   <div ref={messagesEndRef} />
@@ -415,12 +511,12 @@ export const AIChatButton = () => {
                   onKeyDown={handleKeyDown}
                   placeholder="Digite sua mensagem..."
                   className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-sm text-[var(--color-medical-text)] placeholder:text-gray-400 px-2"
-                  disabled={isLoading || isTyping}
+                  disabled={isLoading || isTyping || isSubmittingUi || activeUi?.type === "form_card"}
                 />
                 
                 <button
                   onClick={() => handleSendMessage()}
-                  disabled={!inputText.trim() || isLoading || isTyping}
+                  disabled={!inputText.trim() || isLoading || isTyping || isSubmittingUi || activeUi?.type === "form_card"}
                   className={cn(
                     "p-2 rounded-full transition-all duration-300 flex items-center justify-center",
                     inputText.trim() 
@@ -481,7 +577,7 @@ export const AIChatButton = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleOpenChat}
-              className="relative group flex items-center justify-center w-16 h-16 rounded-full bg-[var(--color-medical-navy)] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10"
+              className="relative group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--color-medical-navy)] shadow-[0_8px_30px_rgba(26,54,93,0.25)] border border-[#ffffff]/10"
             >
               {/* Container para efeitos de brilho (sheen) */}
               <div className="absolute inset-0 rounded-full overflow-hidden">
@@ -491,7 +587,7 @@ export const AIChatButton = () => {
               {/* Pulse ring animation */}
               <span className="absolute inset-0 rounded-full bg-[var(--color-medical-navy)] animate-ping opacity-20"></span>
               
-              <MessageCircle className="w-7 h-7 text-[var(--color-medical-white)] relative z-10" />
+              <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 text-[var(--color-medical-white)] relative z-10" />
               
               {/* Badge "Online" */}
               <span className="absolute -top-2 -right-1 flex items-center gap-1 bg-white text-[10px] font-bold text-green-600 px-2 py-0.5 rounded-full shadow-lg border border-green-100 z-20">

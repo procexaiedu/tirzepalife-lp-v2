@@ -36,7 +36,7 @@ export default function TermsPage() {
                 <li>usar os materiais para qualquer finalidade comercial ou para exibição pública (comercial ou não comercial);</li>
                 <li>tentar descompilar ou fazer engenharia reversa de qualquer software contido no site TirzepaLife;</li>
                 <li>remover quaisquer direitos autorais ou outras notações de propriedade dos materiais; ou</li>
-                <li>transferir os materiais para outra pessoa ou 'espelhe' os materiais em qualquer outro servidor.</li>
+                <li>transferir os materiais para outra pessoa ou “espelhe” os materiais em qualquer outro servidor.</li>
               </ul>
 
               <h2 className="text-xl font-bold text-medical-navy mt-8 mb-4">4. Limitações</h2>

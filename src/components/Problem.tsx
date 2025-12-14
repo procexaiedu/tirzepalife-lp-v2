@@ -1,11 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import { Brain, Ban } from "lucide-react";
 import { useRef } from "react";
 import { Container } from "@/components/ui/Container";
 
-const CycleStep = ({ step, index, scrollYProgress, totalSteps }: { step: { title: string; desc: string }, index: number, scrollYProgress: any, totalSteps: number }) => {
+const CycleStep = ({ step, index, scrollYProgress, totalSteps }: { step: { title: string; desc: string }, index: number, scrollYProgress: MotionValue<number>, totalSteps: number }) => {
   // Calculate the range for this step to activate
   // Usando intervalos mais suaves para melhor resposta em ambas as direções
   const stepStart = index / totalSteps;

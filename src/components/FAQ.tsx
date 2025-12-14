@@ -10,7 +10,7 @@ import { useChat } from "@/context/ChatContext";
 const faqs = [
   {
     question: "O que é a Tirzepatida (Mounjaro)?",
-    answer: "A Tirzepatida é o primeiro medicamento de uma nova classe chamada 'twincretins'. Ela imita dois hormônios naturais do corpo (GIP e GLP-1) que regulam o apetite e o açúcar no sangue, resultando em uma perda de peso significativamente maior do que os medicamentos anteriores."
+    answer: "A Tirzepatida é um medicamento de dupla ação que atua em hormônios ligados ao apetite e ao metabolismo (GIP e GLP-1). Na prática, ajuda a reduzir a fome e a melhorar o controle metabólico, potencializando a perda de peso com acompanhamento médico."
   },
   {
     question: "Como é feito o acompanhamento?",

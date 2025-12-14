@@ -1,0 +1,32 @@
+create table public.clientes (
+  id serial not null,
+  nome character varying(100) null,
+  telefone_whatsapp character varying(20) not null,
+  condicao_medica character varying(50) null,
+  gestante_lactante boolean null,
+  historico_tireoide boolean null,
+  uso_anterior_glp1 boolean null,
+  status_qualificacao character varying(20) not null,
+  dosagem_interesse character varying(20) null,
+  origem character varying(50) null default 'ads_site'::character varying,
+  observacoes text null,
+  created_at timestamp without time zone null default now(),
+  updated_at timestamp without time zone null default now(),
+  session_id text null,
+  asaas_payment_id character varying(50) null,
+  asaas_status character varying(20) null,
+  asaas_link_pagamento text null,
+  cpf character varying(14) null,
+  constraint clientes_pkey primary key (id),
+  constraint unique_telefone_whatsapp unique (telefone_whatsapp)
+) TABLESPACE pg_default;
+
+create index IF not exists idx_clientes_status on public.clientes using btree (status_qualificacao) TABLESPACE pg_default;
+
+create index IF not exists idx_clientes_created on public.clientes using btree (created_at) TABLESPACE pg_default;
+
+create index IF not exists idx_clientes_telefone on public.clientes using btree (telefone_whatsapp) TABLESPACE pg_default;
+
+create trigger n8n_trigger_acce909f_fea3_4414_a824_216b92b7909f
+after INSERT on clientes for EACH row
+execute FUNCTION n8n_trigger_function_acce909f_fea3_4414_a824_216b92b7909f ();
