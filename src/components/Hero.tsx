@@ -23,7 +23,7 @@ export const Hero = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section ref={ref} className="relative min-h-screen flex items-center overflow-hidden pt-20 pb-24 sm:pb-0">
+    <section ref={ref} className="relative min-h-screen flex flex-col md:flex-row md:items-center overflow-hidden pt-20 pb-8 md:pb-0">
       {/* Logo */}
       <div className="absolute top-2 left-2 md:top-8 md:left-12 z-20">
         <Image 
@@ -36,25 +36,43 @@ export const Hero = () => {
         />
       </div>
 
-      {/* Dynamic Background */}
-      <div 
-        className="absolute inset-0 z-0"
-      >
-         {/* Foto: manter o foco na direita no desktop para preservar a modelo, sem “lavar” com o gradiente */}
-         <div className="absolute inset-0 bg-[url('/img.jpg')] bg-no-repeat bg-cover bg-[70%_center] md:bg-[80%_center] lg:bg-right opacity-100" />
-         {/* Gradiente limitado (não cobre a direita) para manter o texto legível */}
-         <div className="pointer-events-none absolute inset-y-0 left-0 w-full md:w-[85%] lg:w-[70%] bg-gradient-to-r from-medical-white via-medical-white/95 to-transparent" />
+      {/* Desktop Background - Hidden on mobile */}
+      <div className="hidden md:block absolute inset-0 z-0">
+         <div className="absolute inset-0 bg-[url('/img.jpg')] bg-no-repeat bg-cover bg-[80%_center] lg:bg-right opacity-100" />
+         <div className="pointer-events-none absolute inset-y-0 left-0 w-[85%] lg:w-[70%] bg-gradient-to-r from-medical-white via-medical-white/95 to-transparent" />
          <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-medical-white via-transparent to-transparent h-64" />
       </div>
 
-      <Container className="relative z-10">
+      {/* Mobile Background - Subtle gradient only */}
+      <div className="md:hidden absolute inset-0 z-0 bg-gradient-to-b from-medical-white via-medical-white to-medical-sand/30" />
+
+      {/* Mobile Hero Image - Visible only on mobile */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="md:hidden relative w-full h-[45vh] min-h-[320px] mt-16 mb-4 overflow-hidden"
+      >
+        <Image
+          src="/img.jpg"
+          alt="Mulher sorrindo segurando produto TirzepaLife"
+          fill
+          className="object-cover object-[65%_20%]"
+          priority
+          sizes="100vw"
+        />
+        {/* Gradiente suave na parte inferior para transição com o conteúdo */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-medical-white to-transparent" />
+      </motion.div>
+
+      <Container className="relative z-10 flex-1 flex items-center">
         <div className="max-w-3xl lg:max-w-xl xl:max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-medical-text leading-[1.1] mb-8 tracking-tight">
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-medical-text leading-[1.1] mb-6 md:mb-8 tracking-tight">
               Mais saciedade, menos fome: <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-medical-navy to-medical-navy-light italic pr-2">
                 Emagreça com comprovação científica
@@ -66,7 +84,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="font-sans text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed max-w-2xl"
+            className="font-sans text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-6 md:mb-8 leading-relaxed max-w-2xl"
           >
             Controle o apetite e retome o comando do seu corpo com <span className="font-semibold text-medical-navy">Tirzepatida</span>. <br className="hidden sm:block" />
             Resultados de até <WeightLossTooltip /> com acompanhamento médico especializado.
@@ -76,7 +94,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6"
           >
             <div className="flex flex-col items-start gap-2">
               <Button 
@@ -122,15 +140,15 @@ export const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
-            className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-6"
+            className="mt-8 md:mt-16 grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
           >
              {[
                 "Menos fome e ansiedade",
                 "Acompanhamento médico",
                 "Entrega rápida"
              ].map((item) => (
-               <div key={item} className="flex items-center gap-2 text-gray-600 font-medium">
-                 <CheckCircle2 className="w-5 h-5 text-medical-navy" />
+               <div key={item} className="flex items-center gap-2 text-gray-600 font-medium text-sm md:text-base">
+                 <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-medical-navy flex-shrink-0" />
                  {item}
                </div>
              ))}
