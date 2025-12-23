@@ -1,0 +1,189 @@
+# TirzepaLife - Cursor AI Rules
+
+## Project Context
+TirzepaLife is a Next.js 16 landing page and lead generation system for Tirzepatida (Mounjaro) weight management treatment. Features AI-powered chat, traditional forms, WhatsApp automation via n8n, and database-backed lead management.
+
+## Tech Stack
+- Next.js 16 (App Router) + React 19
+- TypeScript (strict mode)
+- Tailwind CSS 4 + Custom CSS variables
+- Radix UI primitives + Framer Motion
+- React Hook Form
+- n8n webhooks for backend automation
+
+## Code Style & Conventions
+
+### TypeScript
+- Always use TypeScript with explicit types
+- Use interfaces for object types, type aliases for unions/primitives
+- Path alias: `@/*` maps to `src/*`
+- Strict mode enabled - no implicit any
+
+### React Patterns
+- Use functional components with hooks
+- Prefer composition over prop drilling
+- Use React Server Components by default (Next.js 14+ pattern)
+- Client components must have `"use client"` directive at top
+- Use `cn()` utility from `@/lib/utils` for conditional classes
+
+### Component Structure
+```typescript
+// Standard component template
+"use client"; // Only if client-side features needed
+
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+
+interface Props {
+  // Props definition
+}
+
+export function ComponentName({ prop }: Props) {
+  // Component logic
+  return (
+    <motion.div
+      className={cn("base-classes", conditionalClasses)}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+    >
+      {/* Content */}
+    </motion.div>
+  );
+}
+```
+
+### Styling Rules
+- Use Tailwind CSS utility classes
+- Follow mobile-first responsive design
+- Breakpoints: `sm:`, `md:`, `lg:`
+- Use CSS variables from `globals.css` for brand colors:
+  - `--color-medical-navy: #1A365D`
+  - `--color-medical-white: #FDFAF7`
+  - `--color-medical-sand: #E8DCD2`
+- Radix UI components are unstyled - apply Tailwind directly
+- Use Framer Motion for animations (fade-in, slide-in, scale)
+
+## Critical Domain Rules
+
+### Phone Number Format (CRITICAL)
+**NEVER** change phone format without checking all integration points:
+- **Database format**: DDD + number (10-11 digits) WITHOUT country code
+- Example: `11999998888` (CORRECT) vs `5511999998888` (WRONG)
+- Frontend mask: `(11) 99999-9999`
+- n8n workflows add `55` prefix when sending to Evolution API
+- Use `normalizeWhatsappBr()` from ContactSection.tsx:50-60 for normalization
+
+### Chat Session Management
+- Session format: `web_${random}@s.whatsapp.net`
+- Store session ID in localStorage: `chat_session_id`
+- Track triage completion: `triage_completed_${sessionId}`
+- Send `__start__` message to trigger bot greeting
+
+### Webhook Integration
+- Chat webhook: `https://webh.procexai.tech/webhook/TizerpaLife`
+- Form webhook: `https://webh.procexai.tech/webhook/TizerpaLife-Formulario`
+- Payload structure includes:
+  - `data.key.remoteJid`: Session identifier
+  - `data.message.conversation`: Message content
+  - `data.source`: Always `"web"`
+  - `sender`: Same as remoteJid
+
+### Lead Flow
+- **Chat path**: Triage → Form card → Webhook → Database
+- **Form path**: Form → `/api/leads` → Webhook → Database
+- Both converge to n8n automation for WhatsApp outreach
+
+## File Organization
+
+### Adding Components
+1. Create in `src/components/` or `src/components/ui/`
+2. Use descriptive PascalCase names
+3. Export as named export, not default
+4. Import in page with `@/components/*`
+
+### Adding Pages
+1. Create route folder in `src/app/`
+2. Add `page.tsx` for route component
+3. Add `layout.tsx` if route needs custom layout
+4. Update metadata in parent layout
+
+### API Routes
+- Place in `src/app/api/`
+- Use route handlers with Next.js 14+ conventions
+- Export named functions: `GET`, `POST`, etc.
+- Return `NextResponse` objects
+
+## Database Schema (clientes table)
+Key fields (see `docs/context/tabela.txt`):
+- `nome`: Customer name
+- `telefone_whatsapp`: Phone (10-11 digits, NO `55` prefix)
+- `session_id`: Chat session identifier
+- `status_qualificacao`: Lead status
+- `origem`: Source (`formulario_site`, `chat_site`, `whatsapp`)
+- `gestante_lactante`, `historico_tireoide`: Medical exclusions
+- `cpf`: Tax ID for payment
+- `asaas_payment_id`, `asaas_status`: Payment integration
+
+**UNIQUE constraints**: `telefone_whatsapp`, `session_id`
+
+## AI Agent Context
+- **Dra. Ana** (docs/prompts/agente-sac-site.md): Website chat agent
+  - Qualification, triage, Q&A
+  - Collects name + WhatsApp
+  - M3M formatting (3 blocks with line breaks)
+- **Lúcia** (docs/prompts/agente-vendas-whatsapp.md): WhatsApp sales
+  - CPF collection + payment link generation
+  - Short, direct objection handling
+
+## Common Tasks
+
+### Modifying Chat UI
+1. Edit `src/components/AIChatButton.tsx` for main interface
+2. Edit `src/components/chat/TriageFormCard.tsx` for forms
+3. Update types in `src/types/chatUi.ts`
+4. Test webhook responses in browser Network tab
+
+### Adding Form Fields
+1. Update component state (ContactSection.tsx or TriageFormCard.tsx)
+2. Add validation rules
+3. Update payload structure
+4. Ensure n8n workflow handles new fields
+5. Update database schema if persisting
+
+### Styling Changes
+1. Modify `src/app/globals.css` for global styles
+2. Update CSS variables for brand colors
+3. Apply Tailwind classes directly to components
+4. Use `cn()` for conditional styling
+
+## Development Commands
+```bash
+npm run dev    # Start dev server (port 3000)
+npm run build  # Production build
+npm run lint   # Run ESLint
+```
+
+## Testing Checklist
+- [ ] Phone normalization returns 10-11 digits
+- [ ] Chat sessions persist in localStorage
+- [ ] Webhook payloads match n8n expectations
+- [ ] Forms validate correctly before submission
+- [ ] Responsive design works on mobile/tablet/desktop
+- [ ] Animations don't cause layout shift
+
+## When Writing Code
+1. Check existing patterns in codebase first
+2. Use TypeScript types consistently
+3. Follow mobile-first responsive design
+4. Test phone number handling carefully
+5. Verify webhook integration after changes
+6. Keep components small and focused
+7. Use Framer Motion for animations
+8. Apply accessibility best practices
+
+## References
+- Full docs: `CLAUDE.md`
+- Database schema: `docs/context/tabela.txt`
+- Agent prompts: `docs/prompts/`
+- Workflows: `docs/workflows/`
+- Additional context: `.cursor/` folder

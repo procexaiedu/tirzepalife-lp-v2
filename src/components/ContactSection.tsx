@@ -44,9 +44,19 @@ export const ContactSection = () => {
   };
 
   // Função para extrair apenas os números do telefone e adicionar código do país
-  const formatPhoneForPayload = (phone: string): string => {
-    const numbersOnly = phone.replace(/\D/g, ''); // Remove formatação
-    return `55${numbersOnly}`; // Adiciona código do país Brasil
+  // IMPORTANTE (padronização):
+  // - No banco (`clientes.telefone_whatsapp`) armazene APENAS DDD + número (10 ou 11 dígitos), sem o "55".
+  // - Os fluxos de envio (Evolution / wa.me) devem prefixar "55" na hora de enviar.
+  const normalizeWhatsappBr = (phone: string): string => {
+    const digits = phone.replace(/\D/g, '');
+    if (!digits) return '';
+    // Se vier com 55 (ex.: 5511999998888), remove o código do país
+    if (digits.startsWith('55') && (digits.length === 12 || digits.length === 13)) {
+      return digits.slice(2);
+    }
+    // DDD + número (fixo 10 ou celular 11)
+    if (digits.length === 10 || digits.length === 11) return digits;
+    return '';
   };
 
   const handleExclusionChange = (key: keyof typeof exclusions) => {
@@ -75,15 +85,22 @@ export const ContactSection = () => {
     setStatus('submitting');
 
     try {
+      const telefone = normalizeWhatsappBr(formData.phone);
+      if (!telefone) {
+        setStatus('error');
+        return;
+      }
+
       const payload = {
         nome: formData.name,
-        telefone_whatsapp: formatPhoneForPayload(formData.phone),
+        telefone_whatsapp: telefone,
         condicao_medica: "Avaliação Peso/Altura",
         gestante_lactante: exclusions.pregnant,
         historico_tireoide: exclusions.cancerHistory,
         uso_anterior_glp1: false,
         dosagem_interesse: null,
-        origem: "site_formulario",
+        // Mantém alinhado com os fluxos do n8n/DB
+        origem: "formulario_site",
         observacoes: `Peso: ${formData.weight}kg, Altura: ${formData.height}cm, Histórico Pancreatite: ${exclusions.pancreatitis ? 'Sim' : 'Não'}`
       };
 
@@ -91,13 +108,11 @@ export const ContactSection = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      // Usando mode: 'no-cors' para contornar bloqueio de CORS
-      // Nota: Não é possível ler a resposta, mas os dados são enviados
-      await fetch("https://webh.procexai.tech/webhook/TizerpaLife-Formulario", {
+      // Envia via rota server-side para evitar CORS e permitir validar sucesso/erro
+      const res = await fetch("/api/leads", {
         method: "POST",
-        mode: "no-cors",
         headers: {
-          "Content-Type": "text/plain", // no-cors só aceita alguns content-types
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
         signal: controller.signal,
@@ -105,17 +120,11 @@ export const ContactSection = () => {
 
       clearTimeout(timeoutId);
 
-      // Como não podemos verificar response.ok com no-cors, assumimos sucesso
+      if (!res.ok) throw new Error(`Falha ao enviar lead (${res.status})`);
       setStatus('success');
     } catch (error) {
       console.error(error);
-      // Se for timeout, ainda consideramos sucesso pois com no-cors não podemos verificar
-      if (error instanceof Error && error.name === 'AbortError') {
-        // Timeout - mas com no-cors os dados provavelmente já foram enviados
-        setStatus('success');
-      } else {
-        setStatus('error');
-      }
+      setStatus('error');
     }
   };
 

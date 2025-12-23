@@ -1,153 +1,153 @@
 {
     "nodes": [
-        {
-            "parameters": {
-                "httpMethod": "POST",
-                "path": "asaas-confirmacao",
-                "options": {}
-            },
-            "type": "n8n-nodes-base.webhook",
-            "typeVersion": 1.1,
-            "position": [
-                -448,
-                -32
-            ],
-            "id": "f30ac66a-52c4-459b-9301-ab1c36c26c38",
-            "name": "Webhook Asaas",
-            "webhookId": "466abe8d-1392-4529-a45e-d672e72ab117"
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "asaas-confirmacao",
+          "options": {}
         },
-        {
-            "parameters": {
-                "conditions": {
-                    "string": [
-                        {
-                            "value1": "={{ $json.body.event }}",
-                            "value2": "PAYMENT_RECEIVED"
-                        },
-                        {
-                            "value1": "={{ $json.body.event }}",
-                            "value2": "PAYMENT_CONFIRMED"
-                        }
-                    ]
-                },
-                "combineOperation": "any"
-            },
-            "type": "n8n-nodes-base.if",
-            "typeVersion": 1,
-            "position": [
-                -224,
-                -32
-            ],
-            "id": "e3393cc1-0dd7-486c-9543-719e2f93f347",
-            "name": "É Pagamento Confirmado?"
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1.1,
+        "position": [
+          -448,
+          -32
+        ],
+        "id": "f30ac66a-52c4-459b-9301-ab1c36c26c38",
+        "name": "Webhook Asaas",
+        "webhookId": "466abe8d-1392-4529-a45e-d672e72ab117"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "string": [
+              {
+                "value1": "={{ $json.body.event }}",
+                "value2": "PAYMENT_RECEIVED"
+              },
+              {
+                "value1": "={{ $json.body.event }}",
+                "value2": "PAYMENT_CONFIRMED"
+              }
+            ]
+          },
+          "combineOperation": "any"
         },
-        {
-            "parameters": {
-                "operation": "update",
-                "schema": {
-                    "__rl": true,
-                    "mode": "list",
-                    "value": "public"
-                },
-                "table": {
-                    "__rl": true,
-                    "value": "clientes",
-                    "mode": "list",
-                    "cachedResultName": "clientes"
-                },
-                "columns": {
-                    "mappingMode": "defineBelow",
-                    "value": {
-                        "status_qualificacao": "pago",
-                        "atendido": true,
-                        "asaas_status": "PAGO"
-                    },
-                    "matchingColumns": [
-                        "asaas_payment_id"
-                    ]
-                },
-                "options": {}
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          -224,
+          -32
+        ],
+        "id": "e3393cc1-0dd7-486c-9543-719e2f93f347",
+        "name": "É Pagamento Confirmado?"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "clientes",
+            "mode": "list",
+            "cachedResultName": "clientes"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "status_qualificacao": "pago",
+              "atendido": true,
+              "asaas_status": "PAGO"
             },
-            "type": "n8n-nodes-base.postgres",
-            "typeVersion": 2.6,
-            "position": [
-                32,
-                -48
-            ],
-            "id": "cfd0c87b-3447-4744-9f16-a9278a2e84c4",
-            "name": "Atualizar Status DB",
-            "credentials": {
-                "postgres": {
-                    "id": "cdb7mHNUiWEkaZJ7",
-                    "name": "LF@GMAIL - Testes"
-                }
-            }
+            "matchingColumns": [
+              "asaas_payment_id"
+            ]
+          },
+          "options": {}
         },
-        {
-            "parameters": {
-                "method": "POST",
-                "url": "https://evolution3.procexai.tech/message/sendText/lucia",
-                "sendHeaders": true,
-                "headerParameters": {
-                    "parameters": [
-                        {
-                            "name": "apikey",
-                            "value": "905CB4736A03-4EDF-853E-CD0A0694C13B"
-                        }
-                    ]
-                },
-                "sendBody": true,
-                "specifyBody": "json",
-                "jsonBody": "={\n  \"number\": \"55{{ $json.telefone_whatsapp }}\",\n  \"text\": \"🎉 Pagamento confirmado, {{ $json.nome }}! \\n\\nJá recebemos a notificação do banco aqui. Sua vaga no tratamento TizerpaLife está garantida.\\n\\nEm breve nossa equipe de logística entrará em contato para confirmar o endereço de entrega.\\n\\nQualquer dúvida, estou por aqui!\",\n  \"delay\": 1200,\n  \"linkPreview\": false\n}",
-                "options": {}
-            },
-            "type": "n8n-nodes-base.httpRequest",
-            "typeVersion": 4.1,
-            "position": [
-                320,
-                -48
-            ],
-            "id": "ca17f6a9-fbb5-4f0a-b1ca-0f7f9f147c6c",
-            "name": "Enviar Confirmação Zap"
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          32,
+          -48
+        ],
+        "id": "cfd0c87b-3447-4744-9f16-a9278a2e84c4",
+        "name": "Atualizar Status DB",
+        "credentials": {
+          "postgres": {
+            "id": "cdb7mHNUiWEkaZJ7",
+            "name": "LF@GMAIL - Testes"
+          }
         }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://evolution3.procexai.tech/message/sendText/lucia",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "apikey",
+                "value": "905CB4736A03-4EDF-853E-CD0A0694C13B"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"number\": \"55{{ $json.telefone_whatsapp }}\",\n  \"text\": \"🎉 Pagamento confirmado, {{ $json.nome }}! \\n\\nJá recebemos a notificação do banco aqui. Sua vaga no tratamento TizerpaLife está garantida.\\n\\nEm breve nossa equipe de logística entrará em contato para confirmar o endereço de entrega.\\n\\nQualquer dúvida, estou por aqui!\",\n  \"delay\": 1200,\n  \"linkPreview\": false\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          320,
+          -48
+        ],
+        "id": "ca17f6a9-fbb5-4f0a-b1ca-0f7f9f147c6c",
+        "name": "Enviar Confirmação Zap"
+      }
     ],
     "connections": {
-        "Webhook Asaas": {
-            "main": [
-                [
-                    {
-                        "node": "É Pagamento Confirmado?",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "É Pagamento Confirmado?": {
-            "main": [
-                [
-                    {
-                        "node": "Atualizar Status DB",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Atualizar Status DB": {
-            "main": [
-                [
-                    {
-                        "node": "Enviar Confirmação Zap",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        }
+      "Webhook Asaas": {
+        "main": [
+          [
+            {
+              "node": "É Pagamento Confirmado?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "É Pagamento Confirmado?": {
+        "main": [
+          [
+            {
+              "node": "Atualizar Status DB",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Atualizar Status DB": {
+        "main": [
+          [
+            {
+              "node": "Enviar Confirmação Zap",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
     },
     "pinData": {},
     "meta": {
-        "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
+      "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
     }
-}
+  }

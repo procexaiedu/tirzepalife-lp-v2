@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const WhatsAppButton = () => {
-  // Substitua pelo seu número de telefone (com código do país)
-  const phoneNumber = "5511999999999"; 
+  // Substitua via env (recomendado): NEXT_PUBLIC_WHATSAPP_NUMBER="55119..."
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5511999999999";
   // Mensagem focada em conversão/venda
   const message = encodeURIComponent("Olá! Gostaria de comprar Mounjaro / Tirzepatida.");
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

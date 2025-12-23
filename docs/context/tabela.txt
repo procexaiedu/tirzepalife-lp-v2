@@ -1,7 +1,11 @@
+-- OBS: este arquivo é um snapshot/documentação.
+-- Para suportar "pré-lead" do chat web (triagem antes do WhatsApp), veja `docs/db/alter_clientes_for_web_chat.sql`.
+
 create table public.clientes (
   id serial not null,
   nome character varying(100) null,
-  telefone_whatsapp character varying(20) not null,
+  -- Para o chat web, este campo precisa aceitar NULL até o usuário informar o WhatsApp
+  telefone_whatsapp character varying(20) null,
   condicao_medica character varying(50) null,
   gestante_lactante boolean null,
   historico_tireoide boolean null,
@@ -20,6 +24,14 @@ create table public.clientes (
   constraint clientes_pkey primary key (id),
   constraint unique_telefone_whatsapp unique (telefone_whatsapp)
 ) TABLESPACE pg_default;
+
+-- Recomendado para o chat web: 1 registro por sessão (UNIQUE aceita múltiplos NULL)
+-- Preferencial (compatível com `ON CONFLICT (session_id)`):
+--   create unique index IF not exists unique_clientes_session_id on public.clientes (session_id);
+--
+-- Atenção: se você usar índice UNIQUE *parcial* (com WHERE session_id IS NOT NULL),
+-- então o UPSERT precisa repetir o WHERE:
+--   ON CONFLICT (session_id) WHERE (session_id IS NOT NULL) DO UPDATE ...
 
 create index IF not exists idx_clientes_status on public.clientes using btree (status_qualificacao) TABLESPACE pg_default;
 

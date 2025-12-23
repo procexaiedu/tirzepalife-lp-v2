@@ -92,9 +92,26 @@ export const AIChatButton = () => {
   });
 
   const triageCompletedKey = useMemo(() => `triage_completed_${sessionId}`, [sessionId]);
+  const triageValuesKey = useMemo(() => `triage_values_${sessionId}`, [sessionId]);
   const isTriageCompleted = () => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem(triageCompletedKey) === "1";
+  };
+
+  const getStoredTriage = (): TriageFormValues | null => {
+    if (typeof window === 'undefined') return null;
+    const raw = localStorage.getItem(triageValuesKey);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as TriageFormValues;
+    } catch {
+      return null;
+    }
+  };
+
+  const storeTriage = (values: TriageFormValues) => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(triageValuesKey, JSON.stringify(values));
   };
 
   const scrollToBottom = () => {
@@ -149,7 +166,24 @@ export const AIChatButton = () => {
     openChat();
   };
 
-  const construirPayloadBase = (id: string, conversation: string, extras?: Record<string, unknown>) => {
+  const buildClientContext = (history: Message[]) => {
+    const triage = getStoredTriage();
+    return {
+      session_id: sessionId,
+      triage_completed: isTriageCompleted(),
+      triage,
+      last_messages: history.map((m) => ({
+        sender: m.sender,
+        content: m.content,
+        timestamp: m.timestamp,
+      })),
+      page: typeof window !== "undefined" ? { path: window.location.pathname, url: window.location.href } : null,
+      timestamp_ms: Date.now(),
+    };
+  };
+
+  const construirPayloadBase = (id: string, conversation: string, extras?: Record<string, unknown>, history?: Message[]) => {
+    const historyToSend = history ?? messages.slice(-12);
     return {
       data: {
         key: {
@@ -165,6 +199,7 @@ export const AIChatButton = () => {
         messageTimestamp: Math.floor(Date.now() / 1000),
         instanceId: "web-client-integration",
         source: "web",
+        client_context: buildClientContext(historyToSend),
         ...(extras ?? {})
       },
       sender: `${sessionId}@s.whatsapp.net`
@@ -245,14 +280,14 @@ export const AIChatButton = () => {
     if (hasRequestedStart) return;
     if (isLoading || isTyping) return;
     if (messages.length > 0) return;
-    if (isTriageCompleted()) return;
 
     setHasRequestedStart(true);
     setIsLoading(true);
 
     try {
       const startId = `start_${Date.now()}`;
-      const payload = construirPayloadBase(startId, "__start__");
+      const bootstrap = (isTriageCompleted() && getStoredTriage()) ? "__resume__" : "__start__";
+      const payload = construirPayloadBase(startId, bootstrap, undefined, []);
       const json = await chamarWebhook(payload);
       await processarRespostasBot(json);
     } catch (error) {
@@ -291,7 +326,8 @@ export const AIChatButton = () => {
     setIsLoading(true);
 
     try {
-      const payload = construirPayloadBase(userMsg.id, userMsg.content);
+      const history = [...messages, userMsg].slice(-12);
+      const payload = construirPayloadBase(userMsg.id, userMsg.content, undefined, history);
       const json = await chamarWebhook(payload);
       await processarRespostasBot(json);
 
@@ -329,7 +365,11 @@ export const AIChatButton = () => {
       };
       setMessages(prev => [...prev, userMsg]);
 
-      const payload = construirPayloadBase(userMsg.id, resumo, { form: values, form_id: schema.id });
+      // Persistência local para permitir retomada (ex.: usuário fecha/atualiza e reabre o chat)
+      storeTriage(values);
+
+      const history = [...messages, userMsg].slice(-12);
+      const payload = construirPayloadBase(userMsg.id, resumo, { form: values, form_id: schema.id }, history);
       const json = await chamarWebhook(payload);
 
       if (typeof window !== 'undefined') {

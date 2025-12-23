@@ -1,419 +1,512 @@
 {
     "nodes": [
-        {
-            "parameters": {
-                "assignments": {
-                    "assignments": [
-                        {
-                            "id": "91ee1ece-f423-45ee-b628-906df8a36da4",
-                            "name": "telefone_whatsapp",
-                            "value": "={{ $('Postgres Trigger').item.json.payload.telefone_whatsapp }}",
-                            "type": "string"
-                        },
-                        {
-                            "id": "c9ed0236-5ff7-4663-8d4e-596ff3738a75",
-                            "name": "session_id",
-                            "value": "={{ $('Postgres Trigger').item.json.payload.id }}",
-                            "type": "string"
-                        },
-                        {
-                            "id": "b55c1f3c-8765-4552-8b31-77e848e5a476",
-                            "name": "nome",
-                            "value": "={{ $('Postgres Trigger').item.json.payload.nome }}",
-                            "type": "string"
-                        },
-                        {
-                            "id": "eca4d2d4-df22-4420-afe9-ebb45bb34c68",
-                            "name": "observacoes",
-                            "value": "={{ $('Postgres Trigger').item.json.payload.observacoes }}",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "options": {}
-            },
-            "type": "n8n-nodes-base.set",
-            "typeVersion": 3.4,
-            "position": [
-                -464,
-                480
-            ],
-            "id": "a88acf63-7f08-4614-b7d9-37989b1cfe91",
-            "name": "config"
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "6neA1FnNpZzYe7Ja",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/6neA1FnNpZzYe7Ja",
+            "cachedResultName": "TizerpaLife - Webhook Asaas (Pós-Venda)"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
         },
-        {
-            "parameters": {
-                "promptType": "define",
-                "text": "=observações do cliente:\n{{ $('Postgres Trigger').item.json.payload.observacoes }}",
-                "options": {
-                    "systemMessage": "=",
-                    "returnIntermediateSteps": true
-                }
-            },
-            "type": "@n8n/n8n-nodes-langchain.agent",
-            "typeVersion": 2.2,
-            "position": [
-                -192,
-                480
-            ],
-            "id": "f336d48b-1cb9-487a-8fbb-49b88348242b",
-            "name": "AI Agent"
-        },
-        {
-            "parameters": {
-                "model": "deepseek/deepseek-v3.2",
-                "options": {
-                    "temperature": 0.3
-                }
-            },
-            "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
-            "typeVersion": 1,
-            "position": [
-                -304,
-                656
-            ],
-            "id": "c358b89c-faa2-4a43-9879-2968624bf29a",
-            "name": "OpenRouter Chat Model",
-            "credentials": {
-                "openRouterApi": {
-                    "id": "ssrtde89Aai4EcNA",
-                    "name": "Ticket Imediato"
-                }
-            }
-        },
-        {
-            "parameters": {
-                "sessionIdType": "customKey",
-                "sessionKey": "={{ $json.telefone_whatsapp }}",
-                "tableName": "="
-            },
-            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-            "typeVersion": 1.3,
-            "position": [
-                -160,
-                656
-            ],
-            "id": "534ed77b-7fa4-40c7-9b47-b4ed369f3a1c",
-            "name": "Postgres Chat Memory",
-            "credentials": {
-                "postgres": {
-                    "id": "cdb7mHNUiWEkaZJ7",
-                    "name": "LF@GMAIL - Testes"
-                }
-            }
-        },
-        {
-            "parameters": {
-                "schema": {
-                    "__rl": true,
-                    "mode": "list",
-                    "value": "public"
-                },
-                "tableName": {
-                    "__rl": true,
-                    "value": "clientes",
-                    "mode": "list",
-                    "cachedResultName": "clientes"
-                },
-                "additionalFields": {},
-                "options": {}
-            },
-            "type": "n8n-nodes-base.postgresTrigger",
-            "typeVersion": 1,
-            "position": [
-                -752,
-                480
-            ],
-            "id": "acce909f-fea3-4414-a824-216b92b7909f",
-            "name": "Postgres Trigger",
-            "credentials": {
-                "postgres": {
-                    "id": "cdb7mHNUiWEkaZJ7",
-                    "name": "LF@GMAIL - Testes"
-                }
-            }
-        },
-        {
-            "parameters": {
-                "fieldToSplitOut": "text",
-                "options": {}
-            },
-            "id": "f603b485-ae44-476c-ab0f-fc27bddb3dcf",
-            "name": "Split Out",
-            "type": "n8n-nodes-base.splitOut",
-            "typeVersion": 1,
-            "position": [
-                416,
-                480
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          -720,
+          544
+        ],
+        "id": "078908a8-0ebb-46fe-a3cc-5ade5ae97fa7",
+        "name": "Call 'TizerpaLife - Webhook Asaas (Pós-Venda)'1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "91ee1ece-f423-45ee-b628-906df8a36da4",
+                "name": "telefone_whatsapp",
+                "value": "={{ $('Postgres Trigger').item.json.payload.telefone_whatsapp }}",
+                "type": "string"
+              },
+              {
+                "id": "c9ed0236-5ff7-4663-8d4e-596ff3738a75",
+                "name": "session_id",
+                "value": "={{ $('Postgres Trigger').item.json.payload.id }}",
+                "type": "string"
+              },
+              {
+                "id": "b55c1f3c-8765-4552-8b31-77e848e5a476",
+                "name": "nome",
+                "value": "={{ $('Postgres Trigger').item.json.payload.nome }}",
+                "type": "string"
+              },
+              {
+                "id": "eca4d2d4-df22-4420-afe9-ebb45bb34c68",
+                "name": "observacoes",
+                "value": "={{ $('Postgres Trigger').item.json.payload.observacoes }}",
+                "type": "string"
+              }
             ]
+          },
+          "options": {}
         },
-        {
-            "parameters": {
-                "assignments": {
-                    "assignments": [
-                        {
-                            "id": "a1e66db0-00dc-481d-951c-1fde558e268e",
-                            "name": "text",
-                            "value": "={{ $json.output.split('\\n').filter(v => v !== '') }}",
-                            "type": "array"
-                        }
-                    ]
-                },
-                "options": {}
-            },
-            "id": "e20e2ede-29b1-4d21-a58c-3510500b9e36",
-            "name": "Quebra da Resposta",
-            "type": "n8n-nodes-base.set",
-            "typeVersion": 3.4,
-            "position": [
-                224,
-                480
-            ]
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1216,
+          256
+        ],
+        "id": "d71ecfad-9384-4574-873d-c6906f53a492",
+        "name": "config"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=observações do cliente:\n{{ $('Postgres Trigger').item.json.payload.observacoes }}",
+          "options": {
+            "systemMessage": "=",
+            "returnIntermediateSteps": true
+          }
         },
-        {
-            "parameters": {
-                "method": "POST",
-                "url": "=https://evolution3.procexai.tech/message/sendText/lucia",
-                "sendHeaders": true,
-                "headerParameters": {
-                    "parameters": [
-                        {
-                            "name": "accept",
-                            "value": "application/json, text/plain, */*"
-                        },
-                        {
-                            "name": "apikey",
-                            "value": "=905CB4736A03-4EDF-853E-CD0A0694C13B"
-                        }
-                    ]
-                },
-                "sendBody": true,
-                "specifyBody": "json",
-                "jsonBody": "={\n  \"number\": \"55{{ $('config').item.json.telefone_whatsapp }}\",\n  \"text\": \"{{ $json.text }}\",\n  \"delay\": 1200,\n  \"linkPreview\": false\n}",
-                "options": {
-                    "redirect": {
-                        "redirect": {}
-                    }
-                }
-            },
-            "id": "270e3096-8488-47cd-84b6-0601d02ca350",
-            "name": "sendText",
-            "type": "n8n-nodes-base.httpRequest",
-            "typeVersion": 4.1,
-            "position": [
-                832,
-                624
-            ],
-            "alwaysOutputData": false,
-            "retryOnFail": true
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          -944,
+          256
+        ],
+        "id": "c4b4fd71-c825-4d92-826e-788e6342c4e1",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": "deepseek/deepseek-v3.2",
+          "options": {
+            "temperature": 0.3
+          }
         },
-        {
-            "parameters": {
-                "options": {}
-            },
-            "type": "n8n-nodes-base.splitInBatches",
-            "typeVersion": 3,
-            "position": [
-                640,
-                480
-            ],
-            "id": "be85c00c-6f79-4523-bd81-79fb645a0c60",
-            "name": "Loop Over Items"
-        },
-        {
-            "parameters": {},
-            "type": "n8n-nodes-base.wait",
-            "typeVersion": 1.1,
-            "position": [
-                992,
-                624
-            ],
-            "id": "17881ec8-53ab-4484-8c24-b92593949bc7",
-            "name": "Wait",
-            "webhookId": "500ae643-7ac1-4e67-83b2-9b3d8eac3f77"
-        },
-        {
-            "parameters": {
-                "workflowId": {
-                    "__rl": true,
-                    "value": "1mz5ykHNG1cjXWjl",
-                    "mode": "list",
-                    "cachedResultUrl": "/workflow/1mz5ykHNG1cjXWjl",
-                    "cachedResultName": "sub-workflow-TirzepaLife"
-                },
-                "workflowInputs": {
-                    "mappingMode": "defineBelow",
-                    "value": {},
-                    "matchingColumns": [],
-                    "schema": [],
-                    "attemptToConvertTypes": false,
-                    "convertFieldsToString": false
-                }
-            },
-            "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-            "typeVersion": 2.2,
-            "position": [
-                256,
-                800
-            ],
-            "id": "a6ca6aca-8751-431c-bcd5-88a88bd99230",
-            "name": "Call 'sub-workflow-TirzepaLife'"
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+        "typeVersion": 1,
+        "position": [
+          -1056,
+          432
+        ],
+        "id": "4e5330d4-1fc7-45be-9ed4-2a33cec751fc",
+        "name": "OpenRouter Chat Model",
+        "credentials": {
+          "openRouterApi": {
+            "id": "ssrtde89Aai4EcNA",
+            "name": "Ticket Imediato"
+          }
         }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $json.telefone_whatsapp }}",
+          "tableName": "="
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          -912,
+          432
+        ],
+        "id": "215ed5f1-201e-4778-9c81-8306471c9efc",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "cdb7mHNUiWEkaZJ7",
+            "name": "LF@GMAIL - Testes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "tableName": {
+            "__rl": true,
+            "value": "clientes",
+            "mode": "list",
+            "cachedResultName": "clientes"
+          },
+          "additionalFields": {},
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgresTrigger",
+        "typeVersion": 1,
+        "position": [
+          -1504,
+          256
+        ],
+        "id": "a49d26c1-bd2c-47fb-a4fd-5c2222be8fc0",
+        "name": "Postgres Trigger",
+        "credentials": {
+          "postgres": {
+            "id": "cdb7mHNUiWEkaZJ7",
+            "name": "LF@GMAIL - Testes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "text",
+          "options": {}
+        },
+        "id": "c964e9f8-df9b-45be-966b-b2cb16e4dcfb",
+        "name": "Split Out",
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1,
+        "position": [
+          -336,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "a1e66db0-00dc-481d-951c-1fde558e268e",
+                "name": "text",
+                "value": "={{ $json.output.split('\\n').filter(v => v !== '') }}",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "e77f770c-8411-4873-8e63-5b46af78cebc",
+        "name": "Quebra da Resposta",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -528,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://evolution3.procexai.tech/message/sendText/lucia",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "accept",
+                "value": "application/json, text/plain, */*"
+              },
+              {
+                "name": "apikey",
+                "value": "=905CB4736A03-4EDF-853E-CD0A0694C13B"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"number\": \"55{{ $('config').item.json.telefone_whatsapp }}\",\n  \"text\": \"{{ $json.text }}\",\n  \"delay\": 1200,\n  \"linkPreview\": false\n}",
+          "options": {
+            "redirect": {
+              "redirect": {}
+            }
+          }
+        },
+        "id": "c23ae985-a435-46cc-a394-964abe43be6c",
+        "name": "sendText",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          80,
+          400
+        ],
+        "alwaysOutputData": false,
+        "retryOnFail": true
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          -112,
+          256
+        ],
+        "id": "4ffd82f0-88a3-4c31-b99c-bbf83b4cde7c",
+        "name": "Loop Over Items"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          240,
+          400
+        ],
+        "id": "a27787d9-777f-445d-a7b9-8e620737f026",
+        "name": "Wait",
+        "webhookId": "500ae643-7ac1-4e67-83b2-9b3d8eac3f77"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "1mz5ykHNG1cjXWjl",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/1mz5ykHNG1cjXWjl",
+            "cachedResultName": "sub-workflow-TirzepaLife"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          -496,
+          576
+        ],
+        "id": "f57bc03d-d476-48fd-a6ef-5311a88011b5",
+        "name": "Call 'sub-workflow-TirzepaLife'"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            },
+            "conditions": [
+              {
+                "id": "b0f1e6af-8b8c-4f01-9cc5-93f70baf7b12",
+                "leftValue": "={{ $('Postgres Trigger').item.json.payload.status_qualificacao }}",
+                "rightValue": "qualificado",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              },
+              {
+                "id": "6f4c7f5a-3b0f-4a77-8f4a-6c61d64a62c3",
+                "leftValue": "={{ $('Postgres Trigger').item.json.payload.telefone_whatsapp ? 'sim' : 'nao' }}",
+                "rightValue": "sim",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          -1360,
+          256
+        ],
+        "id": "18a84e42-fd1d-4f6a-bb7e-cd904a578b72",
+        "name": "If Lead Qualificado"
+      }
     ],
     "connections": {
-        "config": {
-            "main": [
-                [
-                    {
-                        "node": "AI Agent",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "AI Agent": {
-            "main": [
-                [
-                    {
-                        "node": "Quebra da Resposta",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "OpenRouter Chat Model": {
-            "ai_languageModel": [
-                [
-                    {
-                        "node": "AI Agent",
-                        "type": "ai_languageModel",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Postgres Chat Memory": {
-            "ai_memory": [
-                [
-                    {
-                        "node": "AI Agent",
-                        "type": "ai_memory",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Postgres Trigger": {
-            "main": [
-                [
-                    {
-                        "node": "config",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Split Out": {
-            "main": [
-                [
-                    {
-                        "node": "Loop Over Items",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Quebra da Resposta": {
-            "main": [
-                [
-                    {
-                        "node": "Split Out",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "sendText": {
-            "main": [
-                [
-                    {
-                        "node": "Wait",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Loop Over Items": {
-            "main": [
-                [],
-                [
-                    {
-                        "node": "sendText",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Wait": {
-            "main": [
-                [
-                    {
-                        "node": "Loop Over Items",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "Call 'sub-workflow-TirzepaLife'": {
-            "ai_tool": [
-                [
-                    {
-                        "node": "AI Agent",
-                        "type": "ai_tool",
-                        "index": 0
-                    }
-                ]
-            ]
-        }
+      "Call 'TizerpaLife - Webhook Asaas (Pós-Venda)'1": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "config": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Quebra da Resposta",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenRouter Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Trigger": {
+        "main": [
+          [
+            {
+              "node": "If Lead Qualificado",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Out": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Quebra da Resposta": {
+        "main": [
+          [
+            {
+              "node": "Split Out",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "sendText": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "node": "sendText",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Call 'sub-workflow-TirzepaLife'": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If Lead Qualificado": {
+        "main": [
+          [
+            {
+              "node": "config",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
     },
     "pinData": {
-        "Postgres Trigger": [
-            {
-                "length": 449,
-                "processId": 2412885,
-                "channel": "n8n_channel_acce909f_fea3_4414_a824_216b92b7909f",
-                "payload": {
-                    "id": 1,
-                    "nome": null,
-                    "telefone_whatsapp": "19983382045",
-                    "condicao_medica": null,
-                    "gestante_lactante": null,
-                    "historico_tireoide": null,
-                    "uso_anterior_glp1": null,
-                    "status_qualificacao": "qualificado",
-                    "dosagem_interesse": null,
-                    "origem": "ads_site",
-                    "observacoes": null,
-                    "created_at": "2025-12-07T00:54:14.061455",
-                    "updated_at": "2025-12-07T00:54:14.061455",
-                    "atendido": false,
-                    "atendido_em": null,
-                    "session_id": null
-                },
-                "name": "notification"
-            }
-        ]
+      "Postgres Trigger": [
+        {
+          "length": 449,
+          "processId": 2412885,
+          "channel": "n8n_channel_acce909f_fea3_4414_a824_216b92b7909f",
+          "payload": {
+            "id": 1,
+            "nome": null,
+            "telefone_whatsapp": "19983382045",
+            "condicao_medica": null,
+            "gestante_lactante": null,
+            "historico_tireoide": null,
+            "uso_anterior_glp1": null,
+            "status_qualificacao": "qualificado",
+            "dosagem_interesse": null,
+            "origem": "ads_site",
+            "observacoes": null,
+            "created_at": "2025-12-07T00:54:14.061455",
+            "updated_at": "2025-12-07T00:54:14.061455",
+            "atendido": false,
+            "atendido_em": null,
+            "session_id": null
+          },
+          "name": "notification"
+        }
+      ]
     },
     "meta": {
-        "templateCredsSetupCompleted": true,
-        "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
+      "templateCredsSetupCompleted": true,
+      "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
     }
-}
+  }

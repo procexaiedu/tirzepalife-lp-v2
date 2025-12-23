@@ -1,190 +1,190 @@
 {
     "nodes": [
-        {
-            "parameters": {
-                "method": "POST",
-                "url": "https://sandbox.asaas.com/api/v3/customers",
-                "sendHeaders": true,
-                "headerParameters": {
-                    "parameters": [
-                        {
-                            "name": "access_token",
-                            "value": "SUA_API_KEY_AQUI"
-                        }
-                    ]
-                },
-                "sendBody": true,
-                "bodyParameters": {
-                    "parameters": [
-                        {
-                            "name": "name",
-                            "value": "={{ $json.nome }}"
-                        },
-                        {
-                            "name": "cpfCnpj",
-                            "value": "={{ $json.cpf.toString().replace(/\\D/g, '') }}"
-                        },
-                        {
-                            "name": "mobilePhone",
-                            "value": "={{ $json.telefone }}"
-                        }
-                    ]
-                },
-                "options": {}
-            },
-            "type": "n8n-nodes-base.httpRequest",
-            "typeVersion": 4.1,
-            "position": [
-                -112,
-                -32
-            ],
-            "id": "10b051a5-354d-4fa7-906c-5130fda21ec0",
-            "name": "1. Criar Cliente Asaas"
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://sandbox.asaas.com/api/v3/customers",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "access_token",
+                "value": "SUA_API_KEY_AQUI"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "name",
+                "value": "={{ $json.nome }}"
+              },
+              {
+                "name": "cpfCnpj",
+                "value": "={{ $json.cpf.toString().replace(/\\D/g, '') }}"
+              },
+              {
+                "name": "mobilePhone",
+                "value": "={{ $json.telefone }}"
+              }
+            ]
+          },
+          "options": {}
         },
-        {
-            "parameters": {
-                "method": "POST",
-                "url": "https://sandbox.asaas.com/api/v3/payments",
-                "sendHeaders": true,
-                "headerParameters": {
-                    "parameters": [
-                        {
-                            "name": "access_token",
-                            "value": "SUA_API_KEY_AQUI"
-                        }
-                    ]
-                },
-                "sendBody": true,
-                "bodyParameters": {
-                    "parameters": [
-                        {
-                            "name": "customer",
-                            "value": "={{ $json.id }}"
-                        },
-                        {
-                            "name": "billingType",
-                            "value": "PIX"
-                        },
-                        {
-                            "name": "value",
-                            "value": 297
-                        },
-                        {
-                            "name": "dueDate",
-                            "value": "={{ $today.plus(1, 'days').format('yyyy-MM-dd') }}"
-                        },
-                        {
-                            "name": "description",
-                            "value": "TizerpaLife - Tratamento Completo"
-                        }
-                    ]
-                },
-                "options": {}
-            },
-            "type": "n8n-nodes-base.httpRequest",
-            "typeVersion": 4.1,
-            "position": [
-                112,
-                -32
-            ],
-            "id": "0a7d66ed-9e08-4a98-9be7-fb5adf4e1638",
-            "name": "2. Criar Cobrança"
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          -112,
+          -32
+        ],
+        "id": "10b051a5-354d-4fa7-906c-5130fda21ec0",
+        "name": "1. Criar Cliente Asaas"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://sandbox.asaas.com/api/v3/payments",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "access_token",
+                "value": "SUA_API_KEY_AQUI"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "customer",
+                "value": "={{ $json.id }}"
+              },
+              {
+                "name": "billingType",
+                "value": "PIX"
+              },
+              {
+                "name": "value",
+                "value": 297
+              },
+              {
+                "name": "dueDate",
+                "value": "={{ $today.plus(1, 'days').format('yyyy-MM-dd') }}"
+              },
+              {
+                "name": "description",
+                "value": "TizerpaLife - Tratamento Completo"
+              }
+            ]
+          },
+          "options": {}
         },
-        {
-            "parameters": {
-                "operation": "update",
-                "schema": {
-                    "__rl": true,
-                    "mode": "list",
-                    "value": "public"
-                },
-                "table": {
-                    "__rl": true,
-                    "value": "clientes",
-                    "mode": "list",
-                    "cachedResultName": "clientes"
-                },
-                "columns": {
-                    "mappingMode": "defineBelow",
-                    "value": {
-                        "asaas_payment_id": "={{ $json.id }}",
-                        "asaas_link_pagamento": "={{ $json.invoiceUrl }}",
-                        "cpf": "={{ $('Ferramenta Venda Completa').item.json.cpf }}",
-                        "nome": "={{ $('Ferramenta Venda Completa').item.json.nome }}",
-                        "status_qualificacao": "aguardando_pagamento"
-                    },
-                    "matchingColumns": [
-                        "telefone_whatsapp"
-                    ]
-                },
-                "options": {}
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          112,
+          -32
+        ],
+        "id": "0a7d66ed-9e08-4a98-9be7-fb5adf4e1638",
+        "name": "2. Criar Cobrança"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "clientes",
+            "mode": "list",
+            "cachedResultName": "clientes"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "asaas_payment_id": "={{ $json.id }}",
+              "asaas_link_pagamento": "={{ $json.invoiceUrl }}",
+              "cpf": "={{ $('Ferramenta Venda Completa').item.json.cpf }}",
+              "nome": "={{ $('Ferramenta Venda Completa').item.json.nome }}",
+              "status_qualificacao": "aguardando_pagamento"
             },
-            "type": "n8n-nodes-base.postgres",
-            "typeVersion": 2.6,
-            "position": [
-                336,
-                -32
-            ],
-            "id": "5bdf0e53-d6d3-4015-8aa5-e4845bb9644c",
-            "name": "3. Salvar no DB",
-            "credentials": {
-                "postgres": {
-                    "id": "cdb7mHNUiWEkaZJ7",
-                    "name": "LF@GMAIL - Testes"
-                }
-            }
+            "matchingColumns": [
+              "telefone_whatsapp"
+            ]
+          },
+          "options": {}
         },
-        {
-            "parameters": {
-                "inputSource": "passthrough"
-            },
-            "type": "n8n-nodes-base.executeWorkflowTrigger",
-            "typeVersion": 1.1,
-            "position": [
-                -400,
-                -32
-            ],
-            "id": "d8f494f9-eb95-4deb-8733-c908eb69bc8e",
-            "name": "When Executed by Another Workflow"
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          336,
+          -32
+        ],
+        "id": "5bdf0e53-d6d3-4015-8aa5-e4845bb9644c",
+        "name": "3. Salvar no DB",
+        "credentials": {
+          "postgres": {
+            "id": "cdb7mHNUiWEkaZJ7",
+            "name": "LF@GMAIL - Testes"
+          }
         }
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -400,
+          -32
+        ],
+        "id": "d8f494f9-eb95-4deb-8733-c908eb69bc8e",
+        "name": "When Executed by Another Workflow"
+      }
     ],
     "connections": {
-        "1. Criar Cliente Asaas": {
-            "main": [
-                [
-                    {
-                        "node": "2. Criar Cobrança",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "2. Criar Cobrança": {
-            "main": [
-                [
-                    {
-                        "node": "3. Salvar no DB",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "When Executed by Another Workflow": {
-            "main": [
-                [
-                    {
-                        "node": "1. Criar Cliente Asaas",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        }
+      "1. Criar Cliente Asaas": {
+        "main": [
+          [
+            {
+              "node": "2. Criar Cobrança",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "2. Criar Cobrança": {
+        "main": [
+          [
+            {
+              "node": "3. Salvar no DB",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "1. Criar Cliente Asaas",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
     },
     "pinData": {},
     "meta": {
-        "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
+      "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
     }
-}
+  }
