@@ -1,0 +1,573 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "91ee1ece-f423-45ee-b628-906df8a36da4",
+                "name": "remoteJid",
+                "value": "={{ $json.body.data.key.remoteJid }}",
+                "type": "string"
+              },
+              {
+                "id": "c9ed0236-5ff7-4663-8d4e-596ff3738a75",
+                "name": "id",
+                "value": "={{ $json.body.data.key.id }}",
+                "type": "string"
+              },
+              {
+                "id": "e132ceaf-3444-4552-b3e8-ba0b0471d34f",
+                "name": "mensagem",
+                "value": "={{ $json.body.data.message.conversation }}",
+                "type": "string"
+              },
+              {
+                "id": "dec05903-a892-41ee-a327-8e47b381b2ab",
+                "name": "messageType",
+                "value": "={{ $json.body.data.messageType }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -4128,
+          192
+        ],
+        "id": "9ebf56a7-a3f5-44c3-a926-898928065d6a",
+        "name": "config"
+      },
+      {
+        "parameters": {
+          "content": "## Configuração",
+          "height": 220,
+          "width": 170
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -4560,
+          112
+        ],
+        "id": "4ddee8ea-3ff6-47ad-87ab-79fd5f374e53",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                      "rightValue": "audioMessage",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "2b6e2d76-c1e8-4639-b910-adb228cd6289"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "audio"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "4a719a6f-b912-48ec-81a5-920afde042b6",
+                      "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                      "rightValue": "imageMessage",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "imagem"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "50c6e2b0-2494-4780-abd8-84a0e4213091",
+                      "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                      "rightValue": "conversation",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "texto"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "321a77de-69a3-4242-9172-c384f5bb931e",
+                      "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                      "rightValue": "extendedTextMessage",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "texto2"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "aa7bc82e-26e9-431d-a754-a01c13ab60d0",
+        "name": "mensagem_tipo",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -3552,
+          448
+        ],
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "TizerpaLife",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -4512,
+          192
+        ],
+        "id": "1cf85772-bb2e-4b51-9f60-9710cf13ca72",
+        "name": "Webhook",
+        "webhookId": "491975ba-0c77-445e-b54c-cf6c648e7b29"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.mensagem }}",
+                      "rightValue": "__start__",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "start"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Webhook').item.json.body.data.form_id }}",
+                      "rightValue": "qualificacao_inicial",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "qualificacao_form"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "true",
+                      "rightValue": "true",
+                      "operator": {
+                        "type": "boolean",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "outros"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "05eec75f-7b7e-4b62-8510-ad6c8c61b612",
+        "name": "detectar_start",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -3904,
+          176
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "name": "messages",
+                "value": [
+                  {
+                    "text": "Olá! Sou a Dra. Ana, consultora da TirzepaLife 😊",
+                    "delay": 1000
+                  },
+                  {
+                    "text": "Para te orientar com segurança, preciso fazer algumas perguntas rápidas sobre sua saúde.",
+                    "delay": 1800
+                  },
+                  {
+                    "text": "São apenas 4 perguntas e leva menos de 1 minuto!",
+                    "delay": 1500
+                  }
+                ],
+                "type": "object"
+              },
+              {
+                "name": "ui",
+                "value": {
+                  "type": "form_card",
+                  "id": "qualificacao_inicial",
+                  "title": "Questionário de Elegibilidade",
+                  "description": "Para sua segurança, preciso fazer algumas perguntas rápidas antes de prosseguir.",
+                  "submitLabel": "Enviar Respostas",
+                  "fields": [
+                    {
+                      "name": "gestante_lactante",
+                      "label": "Você está grávida ou amamentando?",
+                      "type": "single_select",
+                      "required": true,
+                      "options": [
+                        {
+                          "value": "sim",
+                          "label": "Sim"
+                        },
+                        {
+                          "value": "nao",
+                          "label": "Não"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "historico_tireoide",
+                      "label": "Você ou alguém da sua família teve câncer medular de tireoide ou NEM2?",
+                      "type": "single_select",
+                      "required": true,
+                      "helperText": "NEM2 = Neoplasia Endócrina Múltipla tipo 2",
+                      "options": [
+                        {
+                          "value": "sim",
+                          "label": "Sim"
+                        },
+                        {
+                          "value": "nao",
+                          "label": "Não"
+                        },
+                        {
+                          "value": "nao_sei",
+                          "label": "Não sei"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "uso_anterior_glp1",
+                      "label": "Você já usou algum medicamento similar antes?",
+                      "type": "single_select",
+                      "required": true,
+                      "helperText": "Ex.: Ozempic, Saxenda, Wegovy, Victoza",
+                      "options": [
+                        {
+                          "value": "ozempic",
+                          "label": "Sim, Ozempic"
+                        },
+                        {
+                          "value": "saxenda",
+                          "label": "Sim, Saxenda"
+                        },
+                        {
+                          "value": "wegovy",
+                          "label": "Sim, Wegovy"
+                        },
+                        {
+                          "value": "outro",
+                          "label": "Sim, outro"
+                        },
+                        {
+                          "value": "nao",
+                          "label": "Não"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "objetivo",
+                      "label": "Qual é o seu objetivo principal?",
+                      "type": "single_select",
+                      "required": true,
+                      "options": [
+                        {
+                          "value": "emagrecimento",
+                          "label": "Emagrecimento"
+                        },
+                        {
+                          "value": "apetite",
+                          "label": "Controle de apetite"
+                        },
+                        {
+                          "value": "metabolico",
+                          "label": "Controle metabólico"
+                        },
+                        {
+                          "value": "saude",
+                          "label": "Melhorar saúde geral"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "993fcd67-6374-4483-9e8c-7a13128ea344",
+        "name": "resposta_start_com_form",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -3568,
+          -176
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "// Extrai respostas do formulário\nconst form = $input.first().json.body.data.form;\nconst gestante = form.gestante_lactante === \"sim\";\nconst tireoide = form.historico_tireoide === \"sim\";\nconst tireoideDuvida = form.historico_tireoide === \"nao_sei\";\n\nlet status = \"qualificado\";\nlet tipo_bloqueio = null;\n\nif (gestante) {\n  status = \"desqualificado_gestante\";\n  tipo_bloqueio = \"gestante\";\n} else if (tireoide) {\n  status = \"desqualificado_tireoide\";\n  tipo_bloqueio = \"tireoide\";\n} else if (tireoideDuvida) {\n  status = \"alerta_tireoide_incerto\";\n  tipo_bloqueio = null;\n}\n\nreturn [{\n  json: {\n    gestante_lactante: gestante,\n    historico_tireoide: tireoide,\n    historico_tireoide_incerto: tireoideDuvida,\n    uso_anterior_glp1: form.uso_anterior_glp1 !== \"nao\",\n    objetivo: form.objetivo,\n    status_validacao: status,\n    tipo_bloqueio: tipo_bloqueio,\n    desqualificado: status.startsWith(\"desqualificado\"),\n    form_original: form,\n    remoteJid: $input.first().json.body.data.key.remoteJid\n  }\n}];"
+        },
+        "id": "c446e4a2-bdab-4f03-86e3-615bbc9f7e27",
+        "name": "validar_bloqueadores",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -3552,
+          288
+        ]
+      }
+    ],
+    "connections": {
+      "config": {
+        "main": [
+          [
+            {
+              "node": "detectar_start",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "mensagem_tipo": {
+        "main": [
+          [],
+          [],
+          [],
+          []
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "config",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "detectar_start": {
+        "main": [
+          [
+            {
+              "node": "resposta_start_com_form",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "validar_bloqueadores",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "mensagem_tipo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "resposta_start_com_form": {
+        "main": [
+          []
+        ]
+      },
+      "validar_bloqueadores": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "pinData": {
+      "config": [
+        {
+          "remoteJid": "web_465020925@s.whatsapp.net",
+          "id": "start_1766515193651",
+          "mensagem": "__start__",
+          "messageType": "conversation"
+        }
+      ],
+      "Webhook": [
+        {
+          "headers": {
+            "host": "webh.procexai.tech",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+            "content-length": "521",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,pt;q=0.8",
+            "content-type": "application/json",
+            "origin": "https://tirzepalife-lp-v2.vercel.app",
+            "priority": "u=1, i",
+            "referer": "https://tirzepalife-lp-v2.vercel.app/",
+            "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "10.0.0.2",
+            "x-forwarded-host": "webh.procexai.tech",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "d8cb359c9c09",
+            "x-real-ip": "10.0.0.2"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "key": {
+                "remoteJid": "web_465020925@s.whatsapp.net",
+                "fromMe": false,
+                "id": "start_1766515193651"
+              },
+              "pushName": "Visitante Web",
+              "message": {
+                "conversation": "__start__"
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1766515193,
+              "instanceId": "web-client-integration",
+              "source": "web",
+              "client_context": {
+                "session_id": "web_465020925",
+                "triage_completed": true,
+                "triage": null,
+                "last_messages": [],
+                "page": {
+                  "path": "/",
+                  "url": "https://tirzepalife-lp-v2.vercel.app/"
+                },
+                "timestamp_ms": 1766515193651
+              }
+            },
+            "sender": "web_465020925@s.whatsapp.net"
+          },
+          "webhookUrl": "https://webh.procexai.tech/webhook/TizerpaLife",
+          "executionMode": "production"
+        }
+      ]
+    },
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"
+    }
+  }

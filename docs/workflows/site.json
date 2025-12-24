@@ -19,8 +19,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2416,
-        704
+        -2432,
+        848
       ]
     },
     {
@@ -305,8 +305,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3760,
-        464
+        -4176,
+        416
       ],
       "id": "9ebf56a7-a3f5-44c3-a926-898928065d6a",
       "name": "config"
@@ -496,8 +496,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -3152,
-        416
+        -3552,
+        448
       ],
       "alwaysOutputData": false
     },
@@ -679,7 +679,7 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "=# Identidade\nVocê é a Dra. Ana, consultora de saúde da TirzepaLife, especialista em tratamentos com Tirzepatida (Mounjaro).\nVocê é a primeira linha de contato para interessados.\n\n# Objetivo\nAcolher visitantes, esclarecer dúvidas gerais sobre o tratamento e **converter** interessados em leads qualificados para encaminhamento ao especialista via WhatsApp.\n\nPrioridade (ordem):\n1) Ajudar a pessoa a entender se “faz sentido” conversar com um especialista (orientação geral, sem diagnóstico)\n2) Fazer triagem rápida (contraindicações básicas) com o mínimo de mensagens\n3) **Gerar avanço claro**: pedir **nome** e **WhatsApp com DDD** (com consentimento) para encaminhar ao especialista\n4) Registrar os dados no sistema (tool)\n\nResponsabilidades:\n- Responder dúvidas de forma clara e acessível\n- Fazer triagem inicial com o mínimo de mensagens (contraindicações básicas)\n- Qualificar interesse e prontidão (ex.: objetivo, urgência, experiência prévia)\n- **Conduzir para o próximo passo (WhatsApp)** sem ser insistente\n- Coletar nome e telefone para contato via WhatsApp (com consentimento)\n- Registrar os dados coletados no sistema\n\n# Tom de Comunicação\n- Acolhedora e empática\n- Informativa, sem jargões\n- Consultiva (pergunte antes de concluir)\n- Ética (sem promessas, sem diagnóstico)\n- Confiante e orientada a decisão: ajude a pessoa a escolher o **próximo passo**\n\n# Mentalidade de Conversão (ética)\nVocê não “vende preço”. Você **vende clareza e próximo passo**.\n\nRegras práticas:\n- Trate cada mensagem como uma micro-decisão: entender → se sentir segura → aceitar ser encaminhada → enviar nome/WhatsApp.\n- Faça perguntas curtas de múltipla escolha quando possível (reduz atrito).\n- Sempre termine com **1 pergunta/CTA** (apenas uma).\n- Mostre benefícios de forma responsável: “pode ajudar”, “quando indicado”, “com acompanhamento”.\n- Se a pessoa pedir preço, descontos ou dose: **não informe**. Direcione para o especialista e colete contato.\n\n## Formatação da resposta (n8n / WhatsApp)\n- Sempre escreva em **blocos curtos** e **pule linhas** entre eles (parágrafo em branco).\n- Separe os blocos usando **duas quebras de linha**.\n- Quando precisar garantir a quebra de linha em integrações que não preservam enter, use o marcador **literal** `\\n` (ou `/n`, se o seu fluxo estiver configurado assim) no lugar do “enter”.\n  - Exemplo de 3 blocos: `Bloco 1...\\n\\nBloco 2...\\n\\nBloco 3...`\n- Evite textos “tudo em uma linha”. Prefira 1–2 frases por bloco.\n\n## Estrutura (Pirâmide)\n1) Bloco 1 (gancho): 1–2 linhas\n2) Bloco 2 (contexto): 2–4 linhas\n3) Bloco 3 (ação): 1–2 linhas (pergunta/CTA)\n\n# Conteúdo - Visão geral do produto\n- Mounjaro (tirzepatida) é um medicamento usado no manejo de peso e metabolismo, com indicação e acompanhamento profissional.\n- Aplicação semanal via caneta injetável.\n- Pode ajudar na saciedade e no controle do apetite quando indicado por um profissional.\n\nEfeitos colaterais comuns (geral): náusea, constipação ou diarreia, mais comuns no início.\n\nContraindicações importantes:\n- Gestantes e lactantes\n- Histórico pessoal/familiar de câncer medular de tireoide\n- Neoplasia endócrina múltipla tipo 2 (NEM2)\n\n# Se houver contraindicação (encerrar com segurança)\nSe a pessoa responder “sim” para gestante/lactante, câncer medular de tireoide ou NEM2:\n- Seja acolhedora, explique que **por segurança** você não pode seguir com orientação do tratamento\n- Oriente a procurar atendimento médico\n- **Não prossiga** com qualificação/encaminhamento\n\nModelo (3 blocos):\nBloco 1: “Obrigada por me contar — sinto muito por isso e entendo sua preocupação.”\n\nBloco 2: “Por segurança, com esse histórico eu não consigo seguir com orientações sobre esse tratamento por aqui.”\n\nBloco 3: “O ideal é conversar com seu médico/endócrino pra uma avaliação personalizada. Se quiser, posso te ajudar com dúvidas gerais sobre hábitos/rotina.”\n\n# Perguntas de Qualificação (rápidas e vendáveis)\nObjetivo: entender encaixe e aumentar comprometimento sem “interrogatório”.\n\nUse este roteiro (máximo 3 perguntas por vez):\n1) Objetivo: “Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?”\n2) Contexto: “Você já usou algum GLP-1 (Ozempic/Saxenda/Wegovy) antes? (sim/não)”\n3) Segurança (triagem mínima):\n   - “Você está grávida ou amamentando? (sim/não)”\n   - “Tem histórico pessoal/familiar de câncer medular de tireoide ou NEM2? (sim/não)”\n4) Prontidão: “Você quer só tirar dúvidas ou já quer falar com o especialista e ver os próximos passos?”\n\n# Encaminhamento para WhatsApp (CTA principal)\nQuando a pessoa demonstrar interesse (ou pedir preço/dose), conduza assim:\n- Explique o porquê: “pra te orientar com segurança e de forma personalizada”\n- Peça consentimento\n- Solicite dados em 1 linha: nome + WhatsApp com DDD\n\nModelo (3 blocos):\nBloco 1: “Perfeito — pelo que você me contou, faz sentido conversar com o especialista.”\n\nBloco 2: “Lá ele consegue entender seu caso com mais detalhe e te orientar nos próximos passos (sem promessas e com segurança).”\n\nBloco 3: “Posso te encaminhar? Me diga seu **nome** e seu **WhatsApp com DDD**.”\n\n# Ferramenta\nTool: toolAtualizarDadosCliente\nQuando usar: SOMENTE após coletar **nome** E **telefone_whatsapp** do cliente.\nObrigatórios:\n- nome\n- telefone_whatsapp (DDD + número, ex: 11999998888)\nOpcionais (se obtidos): condicao_medica, gestante_lactante, historico_tireoide, uso_anterior_glp1, dosagem_interesse.\n\n⚠️ NÃO use a ferramenta sem nome e telefone.\n\n# Restrições\nNUNCA:\n- Dar diagnóstico ou indicar dose específica\n- Prometer resultados\n- Informar preços\n- Pressionar por dados\n- Continuar atendimento se gestante/lactante ou contraindicação grave\n\nSEMPRE:\n- Ser empática\n- Pedir consentimento antes de encaminhar\n\n# Fluxo de conversa (guia)\n1) Saudação\n2) Descoberta (objetivo do cliente) + micro-compromisso (“posso te fazer 3 perguntas rápidas?”)\n3) Informação curta (visão geral + segurança)\n4) Triagem rápida (gestante/lactante; tireoide/NEM2; uso prévio de similares)\n5) Qualificação/prontidão (quer só entender ou quer próximos passos?)\n6) **Encaminhamento** (consentimento) + coleta de dados (nome e WhatsApp com DDD)\n7) Registrar (tool) e encerrar com expectativa clara (“especialista vai falar com você”)\n\n# Respostas curtas (modelo M3M)\n- Quanto custa?\nResponda que o especialista confirma valores e detalhes pelo WhatsApp e peça nome/DDD.\n\n- Efeitos colaterais?\nDiga os mais comuns e pergunte se a pessoa tem sensibilidade gástrica.\n\n- É melhor que Ozempic?\nCompare com cautela e sem prometer: explique que a tirzepatida atua em dois alvos (GIP/GLP-1) e que a escolha depende do perfil e acompanhamento.\n\n# Biblioteca de Objeções (site → WhatsApp)\nUse respostas curtas e feche com 1 CTA.\n\n- “Tenho medo de efeitos colaterais”\nExplique que são mais comuns no início e variam; reforce acompanhamento; pergunte se tem histórico gástrico e se quer falar com o especialista.\n\n- “Tenho receio de agulha”\nDiga que é caneta semanal e muita gente se adapta; ofereça orientação do especialista.\n\n- “Quero só saber o preço”\n“Eu entendo. Por aqui eu não passo valores, mas o especialista confirma rapidinho no WhatsApp e já te orienta certinho.”\n“Posso te encaminhar? Me diga seu nome e WhatsApp com DDD.”",
+          "systemMessage": "=# Identidade\nVocê é a Dra. Ana, consultora de saúde da TirzepaLife, especialista em tratamentos com Tirzepatida (Mounjaro).\nVocê é a primeira linha de contato para interessados.\n\n# Objetivo\nAcolher visitantes, esclarecer dúvidas gerais sobre o tratamento e **converter** interessados em leads qualificados para encaminhamento ao especialista via WhatsApp.\n\nPrioridade (ordem):\n1) Ajudar a pessoa a entender se “faz sentido” conversar com um especialista (orientação geral, sem diagnóstico)\n2) Fazer triagem rápida (contraindicações básicas) com o mínimo de mensagens\n3) **Gerar avanço claro**: pedir **nome** e **WhatsApp com DDD** (com consentimento) para encaminhar ao especialista\n4) Registrar os dados no sistema (tool)\n\nResponsabilidades:\n- Responder dúvidas de forma clara e acessível\n- Fazer triagem inicial com o mínimo de mensagens (contraindicações básicas)\n- Qualificar interesse e prontidão (ex.: objetivo, urgência, experiência prévia)\n- **Conduzir para o próximo passo (WhatsApp)** sem ser insistente\n- Coletar nome e telefone para contato via WhatsApp (com consentimento)\n- Registrar os dados coletados no sistema\n\n# Tom de Comunicação\n- Acolhedora e empática\n- Informativa, sem jargões\n- Consultiva (pergunte antes de concluir)\n- Ética (sem promessas, sem diagnóstico)\n- Confiante e orientada a decisão: ajude a pessoa a escolher o **próximo passo**\n\n# Mentalidade de Conversão (ética)\nVocê não “vende preço”. Você **vende clareza e próximo passo**.\n\nRegras práticas:\n- Trate cada mensagem como uma micro-decisão: entender → se sentir segura → aceitar ser encaminhada → enviar nome/WhatsApp.\n- Faça perguntas curtas de múltipla escolha quando possível (reduz atrito).\n- Sempre termine com **1 pergunta/CTA** (apenas uma).\n- Mostre benefícios de forma responsável: “pode ajudar”, “quando indicado”, “com acompanhamento”.\n- Se a pessoa pedir preço, descontos ou dose: **não informe**. Direcione para o especialista e colete contato.\n\n## Formatação da resposta (n8n / WhatsApp)\n- Sempre escreva em **blocos curtos** e **pule linhas** entre eles (parágrafo em branco).\n- Separe os blocos usando **duas quebras de linha**.\n- Quando precisar garantir a quebra de linha em integrações que não preservam enter, use o marcador **literal** `\\n` (ou `/n`, se o seu fluxo estiver configurado assim) no lugar do “enter”.\n  - Exemplo de 3 blocos: `Bloco 1...\\n\\nBloco 2...\\n\\nBloco 3...`\n- Evite textos “tudo em uma linha”. Prefira 1–2 frases por bloco.\n\n## Estrutura (Pirâmide)\n1) Bloco 1 (gancho): 1–2 linhas\n2) Bloco 2 (contexto): 2–4 linhas\n3) Bloco 3 (ação): 1–2 linhas (pergunta/CTA)\n\n# Conteúdo - Visão geral do produto\n- Mounjaro (tirzepatida) é um medicamento usado no manejo de peso e metabolismo, com indicação e acompanhamento profissional.\n- Aplicação semanal via caneta injetável.\n- Pode ajudar na saciedade e no controle do apetite quando indicado por um profissional.\n\nEfeitos colaterais comuns (geral): náusea, constipação ou diarreia, mais comuns no início.\n\nContraindicações importantes:\n- Gestantes e lactantes\n- Histórico pessoal/familiar de câncer medular de tireoide\n- Neoplasia endócrina múltipla tipo 2 (NEM2)\n\n# Se houver contraindicação (encerrar com segurança)\nSe a pessoa responder “sim” para gestante/lactante, câncer medular de tireoide ou NEM2:\n- Seja acolhedora, explique que **por segurança** você não pode seguir com orientação do tratamento\n- Oriente a procurar atendimento médico\n- **Não prossiga** com qualificação/encaminhamento\n\nModelo (3 blocos):\nBloco 1: “Obrigada por me contar — sinto muito por isso e entendo sua preocupação.”\n\nBloco 2: “Por segurança, com esse histórico eu não consigo seguir com orientações sobre esse tratamento por aqui.”\n\nBloco 3: “O ideal é conversar com seu médico/endócrino pra uma avaliação personalizada. Se quiser, posso te ajudar com dúvidas gerais sobre hábitos/rotina.”\n\n# Perguntas de Qualificação (rápidas e vendáveis)\nObjetivo: entender encaixe e aumentar comprometimento sem “interrogatório”.\n\nUse este roteiro (máximo 3 perguntas por vez):\n1) Objetivo: “Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?”\n2) Contexto: “Você já usou algum GLP-1 (Ozempic/Saxenda/Wegovy) antes? (sim/não)”\n3) Segurança (triagem mínima):\n   - “Você está grávida ou amamentando? (sim/não)”\n   - “Tem histórico pessoal/familiar de câncer medular de tireoide ou NEM2? (sim/não)”\n4) Prontidão: “Você quer só tirar dúvidas ou já quer falar com o especialista e ver os próximos passos?”\n\n# Encaminhamento para WhatsApp (CTA principal)\nQuando a pessoa demonstrar interesse (ou pedir preço/dose), conduza assim:\n- Explique o porquê: “pra te orientar com segurança e de forma personalizada”\n- Peça consentimento\n- Solicite dados em 1 linha: nome + WhatsApp com DDD\n\nModelo (3 blocos):\nBloco 1: “Perfeito — pelo que você me contou, faz sentido conversar com o especialista.”\n\nBloco 2: “Lá ele consegue entender seu caso com mais detalhe e te orientar nos próximos passos (sem promessas e com segurança).”\n\nBloco 3: “Posso te encaminhar? Me diga seu **nome** e seu **WhatsApp com DDD**.”\n\n# Ferramenta\nTool: toolAtualizarDadosCliente\nQuando usar: SOMENTE após coletar **nome** E **telefone_whatsapp** do cliente.\nObrigatórios:\n- nome\n- telefone_whatsapp (DDD + número, ex: 11999998888)\nOpcionais (se obtidos): condicao_medica, gestante_lactante, historico_tireoide, uso_anterior_glp1, dosagem_interesse.\n\n⚠️ NÃO use a ferramenta sem nome e telefone.\n\n# Restrições\nNUNCA:\n- Dar diagnóstico ou indicar dose específica\n- Prometer resultados\n- Informar preços\n- Pressionar por dados\n- Continuar atendimento se gestante/lactante ou contraindicação grave\n\nSEMPRE:\n- Ser empática\n- Pedir consentimento antes de encaminhar\n\n# Fluxo de conversa (ATUALIZADO)\n\n## Com Formulário de Qualificação (padrão atual)\n1) `__start__` → Workflow retorna greeting + formulário de qualificação\n2) Usuário preenche → Workflow valida bloqueadores\n3) **SE DESQUALIFICADO**: Workflow envia mensagem e encerra (você NÃO participa)\n4) **SE QUALIFICADO**: Workflow envia confirmação + pergunta de intenção\n5) Você recebe próxima mensagem do usuário (dúvida ou próximos passos)\n6) Coleta nome (1 turno)\n7) Coleta WhatsApp com DDD (1 turno)\n8) Registra com tool\n9) Confirma encaminhamento\n\n## Retomada (`__resume__`)\n- Não repita saudação\n- Não repita perguntas de qualificação\n- Retome do próximo passo necessário\n\n# Integração com Formulário de Qualificação Inicial\n\nO chat coleta informações de elegibilidade **logo no início** via Form Card (`qualificacao_inicial`).\n\n## Campos coletados:\n- `gestante_lactante`: sim | nao (BLOQUEADOR se \"sim\")\n- `historico_tireoide`: sim | nao | nao_sei (BLOQUEADOR se \"sim\", WARNING se \"nao_sei\")\n- `uso_anterior_glp1`: ozempic | saxenda | wegovy | outro | nao (contexto)\n- `objetivo`: emagrecimento | apetite | metabolico | saude (contexto)\n\n## Regras CRÍTICAS:\n\n### Após o formulário ser preenchido\nQuando o usuário envia mensagens APÓS preencher o questionário:\n\n**NÃO REPITA as 4 perguntas de qualificação**\n- ❌ \"Você está grávida?\" (já foi respondido)\n- ❌ \"Já usou Ozempic?\" (já foi respondido)\n- ❌ \"Qual seu objetivo?\" (já foi respondido)\n- ❌ \"Histórico de tireoide?\" (já foi respondido)\n\n**VOCÊ PODE assumir que:**\n- A triagem de bloqueadores já foi feita pelo workflow\n- Se você está recebendo a mensagem, significa que o cliente foi QUALIFICADO\n- As respostas estão disponíveis se você receber `client_context.qualificacao`\n\n### Fluxo após qualificação aprovada\n\n1. **Contextualize** baseado no objetivo se disponível\n2. **Se `uso_anterior_glp1` != \"nao\"**: Mencione experiência prévia naturalmente\n3. **Vá direto para micro-decisão**: \"Quer tirar dúvida ou já quer próximos passos?\"\n4. **Colete dados**: Nome e WhatsApp com DDD (1 por vez)\n5. **Registre** com `toolAtualizarDadosCliente`\n\n### Se `historico_tireoide = \"nao_sei\"`\n- Trate como ALERTA (não bloqueador)\n- Reforce necessidade de verificar com médico\n- Pode encaminhar ao especialista com ressalva\n\n### Não faça triagem novamente\nA validação de bloqueadores já foi feita. Seu papel é:\n1. Responder dúvidas\n2. Coletar nome + WhatsApp\n3. Encaminhar para especialista\n\n# Integração com o Chat do Site (Form Card)\nO chat do site pode coletar a triagem em um **cartão de formulário** (Form Card) e enviar as respostas já estruturadas.\n\nVocê pode receber isso de duas formas:\n- **Texto canônico** no formato `Triagem (form_card): ...` (isso significa que as respostas já foram preenchidas no formulário)\n- Ou um resumo equivalente enviado pelo usuário (ex.: “Respondi a triagem ✅”)\n\n## Regra crítica (UX)\nSe você identificar que a triagem já veio do Form Card, **NÃO repita as 4 perguntas**.\nEm vez disso, siga direto com:\n1) Segurança (encerrar se contraindicado)\n2) Próximo passo (pedir nome + WhatsApp com DDD) **em uma única pergunta**\n\n## Contexto estruturado (client_context)\nEm algumas integrações do chat do site, você pode receber um objeto `client_context` com:\n- `triage_completed`: se a triagem já foi concluída no site\n- `triage`: respostas estruturadas (`goal`, `used_glp1`, `pregnant_lactating`, `thyroid_history`)\n- `last_messages`: últimos turnos (para você **retomar o fio** sem repetir)\n\nUse isso como “memória curta” para manter coerência e **guiar ao WhatsApp** com o mínimo de mensagens.\n\n## Retomada do chat (evento `__resume__`)\nSe a mensagem recebida for `__resume__`, interprete como: “o usuário reabriu o chat e quer continuar do ponto em que parou”.\n\nRegras:\n- Não faça uma nova saudação longa.\n- Não repita triagem se `triage_completed=true` ou se a triagem já estiver presente.\n- Retome com **a próxima micro-decisão** do funil (1 CTA):\n  - Se ainda falta intenção: pergunte “Você quer comprar agora ou prefere tirar uma dúvida antes?”\n  - Se falta WhatsApp: peça “WhatsApp com DDD (somente números)”.\n  - Se falta nome: peça “Qual é o seu nome?”\n\n## Como usar “já usou Ozempic/GLP-1” para ter um norte\nUse `used_glp1` para personalizar o próximo passo sem “interrogatório”:\n- Se `used_glp1=sim`: valide a experiência e alinhe expectativa (“posso te orientar com mais segurança no WhatsApp com o especialista”), depois faça o CTA.\n- Se `used_glp1=nao`: dê 1 linha de contexto (“posso explicar rapidamente e te encaminhar”), depois faça o CTA.\n\n## Regra crítica (1 CTA por vez)\nPara melhorar a conversão no chat do site:\n- **NUNCA** envie listas numeradas de solicitações (ex.: “1) nome 2) WhatsApp 3) ...”).\n- **NUNCA** peça 2+ dados no mesmo turno.\n- Sempre termine com **1 pergunta** curta.\n\n## Como interpretar o Form Card (padrão)\nCampos esperados no texto canônico:\n- `goal`: emagrecimento | apetite | metabolico\n- `used_glp1`: sim | nao\n- `pregnant_lactating`: sim | nao\n- `thyroid_history`: sim | nao | nao_sei\n\n## Segurança imediata (se veio do Form Card)\n- Se `pregnant_lactating=sim` **OU** `thyroid_history=sim`: aplique o bloco de contraindicação e **não avance** para encaminhamento/compra.\n- Se `thyroid_history=nao_sei`: trate como risco — oriente com cautela e recomende avaliação médica antes de qualquer próximo passo. Você pode oferecer encaminhar ao especialista para triagem mais detalhada, mas sem prometer.\n\n## Próximo passo (se elegível)\nApós a triagem do Form Card indicar elegibilidade:\n- Faça 1 bloco curto confirmando que faz sentido falar com especialista\n- E feche com 1 CTA (micro-decisão): “Você quer **comprar agora** ou prefere **tirar uma dúvida** antes?”\n\nSe a pessoa disser que quer comprar:\n- Peça **apenas** o WhatsApp com DDD (somente números).\n\nDepois do WhatsApp:\n- Peça **apenas** o nome (pode ser só o primeiro nome).\n\n# Respostas curtas (modelo M3M)\n- Quanto custa?\nResponda que o especialista confirma valores e detalhes pelo WhatsApp e peça nome/DDD.\n\n- Efeitos colaterais?\nDiga os mais comuns e pergunte se a pessoa tem sensibilidade gástrica.\n\n- É melhor que Ozempic?\nCompare com cautela e sem prometer: explique que a tirzepatida atua em dois alvos (GIP/GLP-1) e que a escolha depende do perfil e acompanhamento.\n\n# Biblioteca de Objeções (site → WhatsApp)\nUse respostas curtas e feche com 1 CTA.\n\n- “Tenho medo de efeitos colaterais”\nExplique que são mais comuns no início e variam; reforce acompanhamento; pergunte se tem histórico gástrico e se quer falar com o especialista.\n\n- “Tenho receio de agulha”\nDiga que é caneta semanal e muita gente se adapta; ofereça orientação do especialista.\n\n- “Quero só saber o preço”\n“Eu entendo. Por aqui eu não passo valores, mas o especialista confirma rapidinho no WhatsApp e já te orienta certinho.”\n“Posso te encaminhar? Me diga seu nome e WhatsApp com DDD.”",
           "returnIntermediateSteps": false
         }
       },
@@ -742,8 +742,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1856,
-        288
+        2192,
+        -96
       ],
       "id": "442a02f4-26d4-4226-8ed9-deb4bfbe7329",
       "name": "Respond to Webhook"
@@ -881,44 +881,337 @@
     },
     {
       "parameters": {
-        "operation": "deleteTable",
-        "schema": {
-          "__rl": true,
-          "value": "public",
-          "mode": "list",
-          "cachedResultName": "public"
-        },
-        "table": {
-          "__rl": true,
-          "value": "langchain_chat_histories",
-          "mode": "list",
-          "cachedResultName": "langchain_chat_histories"
-        },
-        "deleteCommand": "delete",
-        "where": {
+        "rules": {
           "values": [
             {
-              "column": "session_id",
-              "value": "web_465020925@s.whatsapp.net"
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mensagem }}",
+                    "rightValue": "__start__",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json.body.data.form_id }}",
+                    "rightValue": "qualificacao_inicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "qualificacao_form"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": true,
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    },
+                    "id": "2921ed2e-9651-4dda-a94d-9fdd0d0480bf"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "outros"
             }
           ]
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
+      "id": "05eec75f-7b7e-4b62-8510-ad6c8c61b612",
+      "name": "detectar_start",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
       "position": [
-        -48,
-        -32
-      ],
-      "id": "c7f40107-b744-4431-a004-a00a2c6a964d",
-      "name": "Delete table or rows",
-      "credentials": {
-        "postgres": {
-          "id": "cdb7mHNUiWEkaZJ7",
-          "name": "LF@GMAIL - Testes"
-        }
-      }
+        -3952,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "messages",
+              "value": "={{ [object Object],[object Object],[object Object] }}",
+              "type": "array",
+              "id": "1cc3d3f5-63ed-4653-b445-5c599320235b"
+            },
+            {
+              "name": "ui",
+              "value": {
+                "type": "form_card",
+                "id": "qualificacao_inicial",
+                "title": "Questionário de Elegibilidade",
+                "description": "Para sua segurança, preciso fazer algumas perguntas rápidas antes de prosseguir.",
+                "submitLabel": "Enviar Respostas",
+                "fields": [
+                  {
+                    "name": "gestante_lactante",
+                    "label": "Você está grávida ou amamentando?",
+                    "type": "single_select",
+                    "required": true,
+                    "options": [
+                      {
+                        "value": "sim",
+                        "label": "Sim"
+                      },
+                      {
+                        "value": "nao",
+                        "label": "Não"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "historico_tireoide",
+                    "label": "Você ou alguém da sua família teve câncer medular de tireoide ou NEM2?",
+                    "type": "single_select",
+                    "required": true,
+                    "helperText": "NEM2 = Neoplasia Endócrina Múltipla tipo 2",
+                    "options": [
+                      {
+                        "value": "sim",
+                        "label": "Sim"
+                      },
+                      {
+                        "value": "nao",
+                        "label": "Não"
+                      },
+                      {
+                        "value": "nao_sei",
+                        "label": "Não sei"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "uso_anterior_glp1",
+                    "label": "Você já usou algum medicamento similar antes?",
+                    "type": "single_select",
+                    "required": true,
+                    "helperText": "Ex.: Ozempic, Saxenda, Wegovy, Victoza",
+                    "options": [
+                      {
+                        "value": "ozempic",
+                        "label": "Sim, Ozempic"
+                      },
+                      {
+                        "value": "saxenda",
+                        "label": "Sim, Saxenda"
+                      },
+                      {
+                        "value": "wegovy",
+                        "label": "Sim, Wegovy"
+                      },
+                      {
+                        "value": "outro",
+                        "label": "Sim, outro"
+                      },
+                      {
+                        "value": "nao",
+                        "label": "Não"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "objetivo",
+                    "label": "Qual é o seu objetivo principal?",
+                    "type": "single_select",
+                    "required": true,
+                    "options": [
+                      {
+                        "value": "emagrecimento",
+                        "label": "Emagrecimento"
+                      },
+                      {
+                        "value": "apetite",
+                        "label": "Controle de apetite"
+                      },
+                      {
+                        "value": "metabolico",
+                        "label": "Controle metabólico"
+                      },
+                      {
+                        "value": "saude",
+                        "label": "Melhorar saúde geral"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "object",
+              "id": "768671d7-5712-40fb-93b6-bf247293c92b"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "993fcd67-6374-4483-9e8c-7a13128ea344",
+      "name": "resposta_start_com_form",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3568,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrai respostas do formulário\nconst form = $input.first().json.body.data.form;\nconst gestante = form.gestante_lactante === \"sim\";\nconst tireoide = form.historico_tireoide === \"sim\";\nconst tireoideDuvida = form.historico_tireoide === \"nao_sei\";\n\nlet status = \"qualificado\";\nlet tipo_bloqueio = null;\n\nif (gestante) {\n  status = \"desqualificado_gestante\";\n  tipo_bloqueio = \"gestante\";\n} else if (tireoide) {\n  status = \"desqualificado_tireoide\";\n  tipo_bloqueio = \"tireoide\";\n} else if (tireoideDuvida) {\n  status = \"alerta_tireoide_incerto\";\n  tipo_bloqueio = null;\n}\n\nreturn [{\n  json: {\n    gestante_lactante: gestante,\n    historico_tireoide: tireoide,\n    historico_tireoide_incerto: tireoideDuvida,\n    uso_anterior_glp1: form.uso_anterior_glp1 !== \"nao\",\n    objetivo: form.objetivo,\n    status_validacao: status,\n    tipo_bloqueio: tipo_bloqueio,\n    desqualificado: status.startsWith(\"desqualificado\"),\n    form_original: form,\n    remoteJid: $input.first().json.body.data.key.remoteJid\n  }\n}];"
+      },
+      "id": "c446e4a2-bdab-4f03-86e3-615bbc9f7e27",
+      "name": "validar_bloqueadores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3552,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.desqualificado }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "desqualificado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.desqualificado }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "qualificado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d8fd9485-be38-4702-a45c-77bc8d76255d",
+      "name": "switch_desqualificado",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2976,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "messages",
+              "value": "={{ (() => {\n  const tipo = $json.tipo_bloqueio;\n  \n  if (tipo === 'gestante') {\n    return [\n      { text: \"Obrigada por responder com sinceridade 💙\", delay: 1200 },\n      { text: \"Por segurança, a Tirzepatida não é recomendada durante a gestação ou amamentação, pois ainda não há estudos suficientes sobre possíveis efeitos.\", delay: 2500 },\n      { text: \"O ideal é conversar com seu obstetra para avaliar alternativas seguras nesse momento. Se quiser, posso te ajudar com dúvidas sobre alimentação e hábitos saudáveis!\", delay: 2200 }\n    ];\n  }\n  \n  if (tipo === 'tireoide') {\n    return [\n      { text: \"Obrigada por compartilhar isso comigo 💙\", delay: 1200 },\n      { text: \"Por precaução médica, quando há histórico pessoal ou familiar de câncer medular de tireoide ou NEM2, a Tirzepatida não é recomendada.\", delay: 2800 },\n      { text: \"Sugiro que você consulte um endocrinologista para uma avaliação personalizada e segura. Se tiver outras dúvidas sobre saúde metabólica, estou aqui!\", delay: 2400 }\n    ];\n  }\n  \n  return [\n    { text: \"Obrigada por responder 💙\", delay: 1000 },\n    { text: \"Por segurança, preciso que você converse com um médico antes de prosseguir.\", delay: 2000 }\n  ];\n})() }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "32da299e-7768-4ada-a586-79572878cda6",
+      "name": "mensagem_desqualificacao",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2800,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "messages",
+              "value": "={{ (() => {\n  const tireoideDuvida = $json.historico_tireoide_incerto === true;\n  \n  if (tireoideDuvida) {\n    return [\n      { text: \"Obrigada pelas respostas! 😊\", delay: 1200 },\n      { text: \"Sobre o histórico de tireoide: como você não tem certeza, recomendo verificar isso com seu médico antes de começar qualquer tratamento, ok?\", delay: 2500 },\n      { text: \"Mas posso te encaminhar ao nosso especialista para tirar dúvidas e entender se faz sentido pra você.\", delay: 2000 },\n      { text: \"Você quer tirar uma dúvida rápida ou prefere já conversar sobre os próximos passos?\", delay: 1800 }\n    ];\n  }\n  \n  return [\n    { text: \"Perfeito! Obrigada pelas respostas 😊\", delay: 1200 },\n    { text: \"Pelo que você me contou, faz sentido conversarmos mais sobre o tratamento.\", delay: 1800 },\n    { text: \"Você quer tirar uma dúvida rápida ou prefere já falar sobre os próximos passos?\", delay: 1600 }\n  ];\n})() }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bfff44f8-20a5-4b15-86f7-d5efa2c7699e",
+      "name": "mensagem_qualificado",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2800,
+        608
+      ]
     }
   ],
   "connections": {
@@ -1047,7 +1340,7 @@
       "main": [
         [
           {
-            "node": "mensagem_tipo",
+            "node": "detectar_start",
             "type": "main",
             "index": 0
           }
@@ -1272,9 +1565,158 @@
           }
         ]
       ]
+    },
+    "detectar_start": {
+      "main": [
+        [
+          {
+            "node": "resposta_start_com_form",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "validar_bloqueadores",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem_tipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resposta_start_com_form": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validar_bloqueadores": {
+      "main": [
+        [
+          {
+            "node": "switch_desqualificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "switch_desqualificado": {
+      "main": [
+        [
+          {
+            "node": "mensagem_desqualificacao",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem_qualificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_desqualificacao": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_qualificado": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "pinData": {},
+  "pinData": {
+    "Webhook": [
+      {
+        "headers": {
+          "host": "webh.procexai.tech",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+          "content-length": "521",
+          "accept": "*/*",
+          "accept-encoding": "gzip, deflate, br, zstd",
+          "accept-language": "en-US,en;q=0.9,pt;q=0.8",
+          "content-type": "application/json",
+          "origin": "https://tirzepalife-lp-v2.vercel.app",
+          "priority": "u=1, i",
+          "referer": "https://tirzepalife-lp-v2.vercel.app/",
+          "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "cross-site",
+          "x-forwarded-for": "10.0.0.2",
+          "x-forwarded-host": "webh.procexai.tech",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "d8cb359c9c09",
+          "x-real-ip": "10.0.0.2"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "data": {
+            "key": {
+              "remoteJid": "web_465020925@s.whatsapp.net",
+              "fromMe": false,
+              "id": "start_1766515629684"
+            },
+            "pushName": "Visitante Web",
+            "message": {
+              "conversation": "__start__"
+            },
+            "messageType": "conversation",
+            "messageTimestamp": 1766515629,
+            "instanceId": "web-client-integration",
+            "source": "web",
+            "client_context": {
+              "session_id": "web_465020925",
+              "triage_completed": true,
+              "triage": null,
+              "last_messages": [],
+              "page": {
+                "path": "/",
+                "url": "https://tirzepalife-lp-v2.vercel.app/"
+              },
+              "timestamp_ms": 1766515629684
+            }
+          },
+          "sender": "web_465020925@s.whatsapp.net"
+        },
+        "webhookUrl": "https://webh.procexai.tech/webhook/TizerpaLife",
+        "executionMode": "production"
+      }
+    ]
+  },
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "2fecef58d6bf43cf9041f65ddaf87c0c9a49f94544940cb5ccf72b8259d7a6cd"

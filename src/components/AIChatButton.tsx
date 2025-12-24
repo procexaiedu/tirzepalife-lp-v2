@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { MessageCircle, X, Send, Sparkles, Mic, Zap } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles, Mic, Zap, RotateCcw } from 'lucide-react';
 import { useChat } from "@/context/ChatContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -80,7 +80,7 @@ export const AIChatButton = () => {
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   
   // Session Management
-  const [sessionId] = useState(() => {
+  const [sessionId, setSessionId] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('chat_session_id');
       if (stored) return stored;
@@ -93,9 +93,32 @@ export const AIChatButton = () => {
 
   const triageCompletedKey = useMemo(() => `triage_completed_${sessionId}`, [sessionId]);
   const triageValuesKey = useMemo(() => `triage_values_${sessionId}`, [sessionId]);
+
   const isTriageCompleted = () => {
     if (typeof window === 'undefined') return false;
-    return localStorage.getItem(triageCompletedKey) === "1";
+    const completed = localStorage.getItem(triageCompletedKey) === "1";
+    const hasData = !!localStorage.getItem(triageValuesKey);
+    return completed && hasData;
+  };
+
+  const handleResetChat = () => {
+    if (typeof window === 'undefined') return;
+    if (!confirm("Deseja realmente reiniciar a conversa e a triagem?")) return;
+
+    localStorage.removeItem('chat_session_id');
+    localStorage.removeItem(triageCompletedKey);
+    localStorage.removeItem(triageValuesKey);
+    
+    // Gerar novo ID de sessão
+    const newId = `web_${Math.floor(Math.random() * 1000000000)}`;
+    localStorage.setItem('chat_session_id', newId);
+    
+    // Limpar estados
+    setSessionId(newId);
+    setMessages([]);
+    setActiveUi(null);
+    setHasRequestedStart(false);
+    setInputText("");
   };
 
   const getStoredTriage = (): TriageFormValues | null => {
@@ -445,12 +468,21 @@ export const AIChatButton = () => {
                    <p className="text-[10px] text-[var(--color-medical-navy)]/60 uppercase tracking-widest font-medium">TirzepaLife</p>
                  </div>
               </div>
-              <button 
-                onClick={closeChat}
-                className="group p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300"
-              >
-                <X className="w-5 h-5 text-[var(--color-medical-navy)]/60 group-hover:text-[var(--color-medical-navy)] transition-colors" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button 
+                  onClick={handleResetChat}
+                  title="Reiniciar chat"
+                  className="group p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300"
+                >
+                  <RotateCcw className="w-4 h-4 text-[var(--color-medical-navy)]/60 group-hover:text-[var(--color-medical-navy)] transition-colors" />
+                </button>
+                <button 
+                  onClick={closeChat}
+                  className="group p-2 rounded-full hover:bg-[var(--color-medical-navy)]/5 transition-colors duration-300"
+                >
+                  <X className="w-5 h-5 text-[var(--color-medical-navy)]/60 group-hover:text-[var(--color-medical-navy)] transition-colors" />
+                </button>
+              </div>
             </div>
 
             {/* --- Chat Area --- */}
