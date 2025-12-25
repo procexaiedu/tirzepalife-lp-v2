@@ -268,21 +268,39 @@ export const AIChatButton = () => {
   };
 
   const processarRespostasBot = async (response: WebhookResponse) => {
+    // Se a resposta for vazia ou nula, não faz nada
+    if (!response || (Object.keys(response).length === 0 && typeof response !== 'string')) {
+      return;
+    }
+
     let webhookMessages: WebhookMessage[] = [];
     
     if (response.messages && Array.isArray(response.messages)) {
       webhookMessages = response.messages;
     } else {
-      const text = response.text || response.message || response.output || response.response || 
-                   (typeof response === 'string' ? response : JSON.stringify(response));
-      webhookMessages = [{ text, delay: 1000 }];
+      // Tenta extrair texto de campos comuns
+      const text = response.text || response.message || response.output || response.response;
+      
+      if (text) {
+        webhookMessages = [{ text, delay: 1000 }];
+      } else if (typeof response === 'string' && response.trim()) {
+        webhookMessages = [{ text: response, delay: 1000 }];
+      }
+      // Se não houver texto válido e não houver mensagens estruturadas, 
+      // verificamos se há UI. Se não houver nada, apenas ignoramos.
     }
 
     if (response.ui) {
       setActiveUi(response.ui);
     }
 
+    // Se não houver mensagens para processar, encerramos aqui
+    if (webhookMessages.length === 0) return;
+
     for (const msg of webhookMessages) {
+      // Ignora mensagens sem texto
+      if (!msg.text || !msg.text.trim()) continue;
+
       setIsTyping(true);
       await new Promise(resolve => setTimeout(resolve, msg.delay || 1000));
       setIsTyping(false);

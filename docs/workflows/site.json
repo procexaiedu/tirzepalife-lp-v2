@@ -14,26 +14,26 @@
         },
         "options": {}
       },
-      "id": "170de9cd-7de4-44bf-9c0d-74d2de80b682",
+      "id": "03cedec5-8b6e-4f27-8cad-8db222892a96",
       "name": "edit2",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2432,
-        848
+        464,
+        1168
       ]
     },
     {
       "parameters": {
         "amount": 1
       },
-      "id": "97b94b48-1fc8-459c-a281-cfdbc209db56",
+      "id": "a4b273ec-aba2-497e-bfb5-af3df4ea1fb4",
       "name": "Wait",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -1408,
-        432
+        1488,
+        752
       ],
       "webhookId": "e41c93ee-a926-43db-a345-700f4c59ee63"
     },
@@ -44,13 +44,13 @@
         "key": "={{ $('config').item.json.remoteJid }}",
         "options": {}
       },
-      "id": "d2923dfa-02e9-4db3-b314-d4c9e108de30",
+      "id": "c1785313-bbac-43dc-be4c-443fa2f560cb",
       "name": "Puxar as Mensagens",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1248,
-        432
+        1648,
+        752
       ],
       "credentials": {
         "redis": {
@@ -84,13 +84,13 @@
         },
         "options": {}
       },
-      "id": "c170af18-e426-4bf6-afaf-5393c8d896c8",
+      "id": "fdd2abdf-161f-43dd-a47e-54b9e88af790",
       "name": "If1",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -1088,
-        432
+        1808,
+        752
       ]
     },
     {
@@ -98,13 +98,13 @@
         "operation": "delete",
         "key": "={{ $('config').item.json.remoteJid }}"
       },
-      "id": "0b6a4382-7d84-4bf0-b30b-24fdc88d38d9",
+      "id": "e8deff34-6afe-4add-a098-97d2a2e001bb",
       "name": "Redis",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -720,
-        416
+        2176,
+        736
       ],
       "credentials": {
         "redis": {
@@ -120,13 +120,13 @@
         "messageData": "={{ $json.texto }}",
         "tail": true
       },
-      "id": "8b649d6f-c2fc-43ea-9a71-ad91366fe59e",
+      "id": "9bf94ca1-e796-45a4-8df6-2f6a4b720f94",
       "name": "Lista Mensagens1",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1568,
-        432
+        1328,
+        752
       ],
       "credentials": {
         "redis": {
@@ -149,13 +149,13 @@
         },
         "options": {}
       },
-      "id": "6d3015b1-ab81-44f1-965d-1b8dfcd06619",
+      "id": "3058c01c-47bc-4352-b841-a600c2bd3274",
       "name": "Edit Fields2",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -912,
-        416
+        1984,
+        736
       ]
     },
     {
@@ -165,13 +165,13 @@
         "width": 875,
         "color": 3
       },
-      "id": "b49ee5a0-876e-4780-a34b-e65a3883ef3c",
+      "id": "6b7bd02b-f729-4927-ad54-e9c2e0c64dc5",
       "name": "Sticky Note3",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1632,
-        256
+        1264,
+        576
       ]
     },
     {
@@ -180,13 +180,13 @@
         "sourceProperty": "base64",
         "options": {}
       },
-      "id": "72f4a014-1495-4813-a225-3461cdfa7087",
+      "id": "51e01e2c-0869-4b3a-99c9-61f5427e33bf",
       "name": "Convert to File1",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -2272,
-        432
+        624,
+        752
       ]
     },
     {
@@ -209,13 +209,13 @@
         },
         "options": {}
       },
-      "id": "89484db6-edd3-46c8-b5b9-6dd1b91b0321",
+      "id": "d4033158-25d1-4771-9aea-1502176c1f2d",
       "name": "base",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2416,
-        432
+        480,
+        752
       ]
     },
     {
@@ -232,13 +232,13 @@
         },
         "options": {}
       },
-      "id": "f7eb928b-972d-4e7f-b679-5e00123b5cca",
+      "id": "d4a7cdaa-9cd8-4dd7-a672-7cf39b7c53ad",
       "name": "Edit Fields",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1984,
-        432
+        912,
+        752
       ]
     },
     {
@@ -255,13 +255,13 @@
         "inputType": "base64",
         "options": {}
       },
-      "id": "7debbcc7-58f0-412c-8a23-168ee51f3f6c",
+      "id": "1008ecbb-b972-4b7c-8d6d-b0989c8683e5",
       "name": "OpenAI1",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
       "position": [
-        -2128,
-        432
+        768,
+        752
       ],
       "credentials": {
         "openAiApi": {
@@ -305,10 +305,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4176,
-        416
+        -1312,
+        640
       ],
-      "id": "9ebf56a7-a3f5-44c3-a926-898928065d6a",
+      "id": "d59e45c6-8cab-4088-aaa0-f7c8b4298d77",
       "name": "config"
     },
     {
@@ -320,10 +320,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -4608,
-        336
+        -1712,
+        656
       ],
-      "id": "4ddee8ea-3ff6-47ad-87ab-79fd5f374e53",
+      "id": "955446cf-238a-4bc6-a917-419ccca64fec",
       "name": "Sticky Note"
     },
     {
@@ -355,10 +355,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -96,
-        288
+        2800,
+        608
       ],
-      "id": "730a652e-f009-48a2-bafe-208799f1722e",
+      "id": "ab60b4d9-0ff9-4c79-ac71-e166f2e0fa37",
       "name": "mensagem_cliente"
     },
     {
@@ -375,13 +375,13 @@
         },
         "options": {}
       },
-      "id": "d1ea1520-9767-4b95-99f9-340e2f92722c",
+      "id": "d1826b3e-12d9-4cc4-a41b-75aaaa20fbb1",
       "name": "mensagem_cliente_inicial",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1760,
-        432
+        1136,
+        752
       ]
     },
     {
@@ -491,13 +491,13 @@
         },
         "options": {}
       },
-      "id": "aa7bc82e-26e9-431d-a754-a01c13ab60d0",
+      "id": "c363b68f-9f6f-4ac1-bda3-5e827cabc4bc",
       "name": "mensagem_tipo",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -3552,
-        448
+        -656,
+        768
       ],
       "alwaysOutputData": false
     },
@@ -522,10 +522,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2800,
-        128
+        96,
+        448
       ],
-      "id": "6122a39b-8a52-4a7b-a384-0b31e1a83d1b",
+      "id": "478ffa03-8a07-4a4a-bd6b-f6ae0acefb4a",
       "name": "Baixar Áudio da URL"
     },
     {
@@ -574,13 +574,13 @@
         },
         "options": {}
       },
-      "id": "17cdab3f-c9a0-4cbb-b754-1d9874e074fd",
+      "id": "c4e1921d-df82-4a69-bc50-1643c8356bce",
       "name": "Whisper2",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2352,
-        128
+        544,
+        448
       ]
     },
     {
@@ -597,13 +597,13 @@
         },
         "options": {}
       },
-      "id": "b81c117c-a413-40a7-aa65-2a6bce2ce731",
+      "id": "6b09ba48-c761-42cd-bbf3-250f1b0b2add",
       "name": "edit",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1904,
-        128
+        992,
+        448
       ],
       "alwaysOutputData": true
     },
@@ -616,10 +616,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -2592,
-        128
+        304,
+        448
       ],
-      "id": "022106a7-eed8-4898-8af1-e2e89b3598d2",
+      "id": "e4ef2ed3-807c-473a-949d-1358d3c2443d",
       "name": "Convert to File2"
     },
     {
@@ -645,10 +645,10 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        -2224,
-        128
+        672,
+        448
       ],
-      "id": "9abd210b-5fd1-4306-b926-819264bae338",
+      "id": "3efcc6ce-a612-4ad1-a1d9-ac454e0afee8",
       "name": "OpenAI",
       "credentials": {
         "openAiApi": {
@@ -667,10 +667,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -4560,
-        416
+        -1664,
+        736
       ],
-      "id": "1cf85772-bb2e-4b51-9f60-9710cf13ca72",
+      "id": "8644c561-df69-45f6-815e-78cb18b172b5",
       "name": "Webhook",
       "webhookId": "491975ba-0c77-445e-b54c-cf6c648e7b29"
     },
@@ -686,10 +686,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        112,
-        288
+        3008,
+        608
       ],
-      "id": "a37e7f72-527e-45dd-9788-d9350020fbd3",
+      "id": "3eb8ad6d-6af4-4284-8574-89450f53abf6",
       "name": "AI Agent"
     },
     {
@@ -702,10 +702,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        -16,
-        496
+        2880,
+        816
       ],
-      "id": "a536fdc6-d5e6-48fb-a6c2-e2a035326b6b",
+      "id": "06a7c565-b987-494e-8bf9-2271d555b2ea",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
@@ -723,10 +723,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        128,
-        496
+        3024,
+        816
       ],
-      "id": "608f8331-605e-4958-9f0e-40c8015d527f",
+      "id": "405a6835-df18-4111-ac73-fc52ac02910e",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -742,10 +742,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        2192,
-        -96
+        5088,
+        224
       ],
-      "id": "442a02f4-26d4-4226-8ed9-deb4bfbe7329",
+      "id": "b9ed1db8-7d39-435a-843b-5fe0b9e171d9",
       "name": "Respond to Webhook"
     },
     {
@@ -761,10 +761,10 @@
       "type": "n8n-nodes-base.postgresTool",
       "typeVersion": 2.6,
       "position": [
-        272,
-        496
+        3168,
+        816
       ],
-      "id": "af3ba577-c8a4-4c6d-a8d8-3a7bbb95a5d0",
+      "id": "42578882-d8a7-421c-a4f3-d486cb0776ad",
       "name": "toolAtualizarDadosCliente",
       "credentials": {
         "postgres": {
@@ -790,10 +790,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        480,
-        304
+        3376,
+        624
       ],
-      "id": "5d987b4e-7147-4508-80f1-352a95a9cc7a",
+      "id": "6867534a-1009-4e17-9484-4ca08f9c44ac",
       "name": "Texto Envio"
     },
     {
@@ -801,13 +801,13 @@
         "fieldToSplitOut": "text",
         "options": {}
       },
-      "id": "21251fe8-e675-4433-93cd-938194d1a2ac",
+      "id": "9af8987e-9f08-4c99-9e7a-e5eaa5ab67c9",
       "name": "Split Out",
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        1040,
-        304
+        3936,
+        624
       ]
     },
     {
@@ -824,13 +824,13 @@
         },
         "options": {}
       },
-      "id": "88ff7dbe-327d-4fa5-bb29-b964d8ad2546",
+      "id": "769a92c7-afad-4710-a24c-fd0edc2668f8",
       "name": "Quebra da Resposta",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        752,
-        304
+        3648,
+        624
       ]
     },
     {
@@ -856,10 +856,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1296,
-        304
+        4192,
+        624
       ],
-      "id": "d8435d84-f406-4118-a408-b8695a08741c",
+      "id": "1de8f884-2208-4b95-ac92-9b1ad73d7529",
       "name": "Tempo Digitacao 3"
     },
     {
@@ -870,13 +870,13 @@
         "fieldsToInclude": "text,delay",
         "options": {}
       },
-      "id": "4309c9fc-005b-463f-a0f0-16786290a781",
+      "id": "98dafd10-7efe-4f1a-b63f-7f2c0dfa3a62",
       "name": "Aggregate Messages",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        1600,
-        304
+        4496,
+        624
       ]
     },
     {
@@ -957,13 +957,13 @@
         },
         "options": {}
       },
-      "id": "05eec75f-7b7e-4b62-8510-ad6c8c61b612",
+      "id": "2b286852-249e-4572-b89a-3becc96b035e",
       "name": "detectar_start",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -3952,
-        400
+        -1072,
+        544
       ]
     },
     {
@@ -971,10 +971,10 @@
         "assignments": {
           "assignments": [
             {
+              "id": "1cc3d3f5-63ed-4653-b445-5c599320235b",
               "name": "messages",
-              "value": "={{ [object Object],[object Object],[object Object] }}",
-              "type": "array",
-              "id": "1cc3d3f5-63ed-4653-b445-5c599320235b"
+              "value": "={{ [\n  { text: \"Olá! Sou a Dra. Ana, consultora da TirzepaLife 😊\", delay: 1000 },\n  { text: \"Para te orientar com segurança, preciso fazer algumas perguntas rápidas sobre sua saúde.\", delay: 1800 },\n  { text: \"São apenas 4 perguntas e leva menos de 1 minuto!\", delay: 1500 }\n] }}",
+              "type": "array"
             },
             {
               "name": "ui",
@@ -1084,26 +1084,26 @@
         },
         "options": {}
       },
-      "id": "993fcd67-6374-4483-9e8c-7a13128ea344",
+      "id": "63b845cb-daef-4944-a80a-fa919ac05c3f",
       "name": "resposta_start_com_form",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3568,
-        -176
+        -160,
+        32
       ]
     },
     {
       "parameters": {
         "jsCode": "// Extrai respostas do formulário\nconst form = $input.first().json.body.data.form;\nconst gestante = form.gestante_lactante === \"sim\";\nconst tireoide = form.historico_tireoide === \"sim\";\nconst tireoideDuvida = form.historico_tireoide === \"nao_sei\";\n\nlet status = \"qualificado\";\nlet tipo_bloqueio = null;\n\nif (gestante) {\n  status = \"desqualificado_gestante\";\n  tipo_bloqueio = \"gestante\";\n} else if (tireoide) {\n  status = \"desqualificado_tireoide\";\n  tipo_bloqueio = \"tireoide\";\n} else if (tireoideDuvida) {\n  status = \"alerta_tireoide_incerto\";\n  tipo_bloqueio = null;\n}\n\nreturn [{\n  json: {\n    gestante_lactante: gestante,\n    historico_tireoide: tireoide,\n    historico_tireoide_incerto: tireoideDuvida,\n    uso_anterior_glp1: form.uso_anterior_glp1 !== \"nao\",\n    objetivo: form.objetivo,\n    status_validacao: status,\n    tipo_bloqueio: tipo_bloqueio,\n    desqualificado: status.startsWith(\"desqualificado\"),\n    form_original: form,\n    remoteJid: $input.first().json.body.data.key.remoteJid\n  }\n}];"
       },
-      "id": "c446e4a2-bdab-4f03-86e3-615bbc9f7e27",
+      "id": "5b2a9915-4693-474e-8ae4-af35706c3945",
       "name": "validar_bloqueadores",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3552,
-        288
+        -656,
+        608
       ]
     },
     {
@@ -1160,13 +1160,13 @@
         },
         "options": {}
       },
-      "id": "d8fd9485-be38-4702-a45c-77bc8d76255d",
+      "id": "971110ae-b22b-4579-8ead-855c95cce1b0",
       "name": "switch_desqualificado",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -2976,
-        464
+        -80,
+        784
       ]
     },
     {
@@ -1182,13 +1182,13 @@
         },
         "options": {}
       },
-      "id": "32da299e-7768-4ada-a586-79572878cda6",
+      "id": "6681307f-7051-45d4-a6da-f3e47c6498f4",
       "name": "mensagem_desqualificacao",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2800,
-        304
+        96,
+        624
       ]
     },
     {
@@ -1204,13 +1204,13 @@
         },
         "options": {}
       },
-      "id": "bfff44f8-20a5-4b15-86f7-d5efa2c7699e",
+      "id": "7d602e20-8ee6-4fee-9c2e-ea657aaa1a1f",
       "name": "mensagem_qualificado",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2800,
-        608
+        96,
+        928
       ]
     }
   ],
@@ -1660,7 +1660,7 @@
         "headers": {
           "host": "webh.procexai.tech",
           "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
-          "content-length": "521",
+          "content-length": "522",
           "accept": "*/*",
           "accept-encoding": "gzip, deflate, br, zstd",
           "accept-language": "en-US,en;q=0.9,pt;q=0.8",
@@ -1686,31 +1686,31 @@
         "body": {
           "data": {
             "key": {
-              "remoteJid": "web_465020925@s.whatsapp.net",
+              "remoteJid": "web_303534850@s.whatsapp.net",
               "fromMe": false,
-              "id": "start_1766515629684"
+              "id": "start_1766536386028"
             },
             "pushName": "Visitante Web",
             "message": {
               "conversation": "__start__"
             },
             "messageType": "conversation",
-            "messageTimestamp": 1766515629,
+            "messageTimestamp": 1766536386,
             "instanceId": "web-client-integration",
             "source": "web",
             "client_context": {
-              "session_id": "web_465020925",
-              "triage_completed": true,
+              "session_id": "web_303534850",
+              "triage_completed": false,
               "triage": null,
               "last_messages": [],
               "page": {
                 "path": "/",
                 "url": "https://tirzepalife-lp-v2.vercel.app/"
               },
-              "timestamp_ms": 1766515629684
+              "timestamp_ms": 1766536386028
             }
           },
-          "sender": "web_465020925@s.whatsapp.net"
+          "sender": "web_303534850@s.whatsapp.net"
         },
         "webhookUrl": "https://webh.procexai.tech/webhook/TizerpaLife",
         "executionMode": "production"
