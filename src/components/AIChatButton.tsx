@@ -269,7 +269,7 @@ export const AIChatButton = () => {
 
   const processarRespostasBot = async (response: WebhookResponse) => {
     // Se a resposta for vazia ou nula, não faz nada
-    if (!response || (Object.keys(response).length === 0 && typeof response !== 'string')) {
+    if (!response || (typeof response === 'object' && Object.keys(response).length === 0)) {
       return;
     }
 
@@ -283,8 +283,6 @@ export const AIChatButton = () => {
       
       if (text) {
         webhookMessages = [{ text, delay: 1000 }];
-      } else if (typeof response === 'string' && response.trim()) {
-        webhookMessages = [{ text: response, delay: 1000 }];
       }
       // Se não houver texto válido e não houver mensagens estruturadas, 
       // verificamos se há UI. Se não houver nada, apenas ignoramos.
