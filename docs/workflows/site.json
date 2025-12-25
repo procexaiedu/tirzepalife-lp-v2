@@ -19,7 +19,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
+        1296,
         1168
       ]
     },
@@ -32,7 +32,7 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1488,
+        2320,
         752
       ],
       "webhookId": "e41c93ee-a926-43db-a345-700f4c59ee63"
@@ -49,7 +49,7 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1648,
+        2480,
         752
       ],
       "credentials": {
@@ -89,7 +89,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1808,
+        2640,
         752
       ]
     },
@@ -103,7 +103,7 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        2176,
+        3008,
         736
       ],
       "credentials": {
@@ -125,7 +125,7 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1328,
+        2160,
         752
       ],
       "credentials": {
@@ -154,7 +154,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1984,
+        2816,
         736
       ]
     },
@@ -185,7 +185,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        624,
+        1456,
         752
       ]
     },
@@ -214,7 +214,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        480,
+        1312,
         752
       ]
     },
@@ -237,7 +237,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        912,
+        1744,
         752
       ]
     },
@@ -260,7 +260,7 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
       "position": [
-        768,
+        1600,
         752
       ],
       "credentials": {
@@ -277,25 +277,31 @@
             {
               "id": "91ee1ece-f423-45ee-b628-906df8a36da4",
               "name": "remoteJid",
-              "value": "={{ $json.body.data.key.remoteJid }}",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
               "type": "string"
             },
             {
               "id": "c9ed0236-5ff7-4663-8d4e-596ff3738a75",
               "name": "id",
-              "value": "={{ $json.body.data.key.id }}",
+              "value": "={{ $('Webhook').item.json.body.data.key.id }}",
               "type": "string"
             },
             {
               "id": "e132ceaf-3444-4552-b3e8-ba0b0471d34f",
               "name": "mensagem",
-              "value": "={{ $json.body.data.message.conversation }}",
+              "value": "={{ $('Webhook').item.json.body.data.message.conversation }}",
               "type": "string"
             },
             {
               "id": "dec05903-a892-41ee-a327-8e47b381b2ab",
               "name": "messageType",
-              "value": "={{ $json.body.data.messageType }}",
+              "value": "={{ $('Webhook').item.json.body.data.messageType }}",
+              "type": "string"
+            },
+            {
+              "id": "9e1bf796-b4f6-43b7-bd91-92fbc254e16b",
+              "name": "objetivo",
+              "value": "={{ $('Webhook').item.json.body.data.client_context.triage.objetivo }}",
               "type": "string"
             }
           ]
@@ -305,8 +311,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1312,
-        640
+        -1056,
+        688
       ],
       "id": "d59e45c6-8cab-4088-aaa0-f7c8b4298d77",
       "name": "config"
@@ -320,8 +326,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1712,
-        656
+        -2032,
+        496
       ],
       "id": "955446cf-238a-4bc6-a917-419ccca64fec",
       "name": "Sticky Note"
@@ -355,7 +361,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2800,
+        3632,
         608
       ],
       "id": "ab60b4d9-0ff9-4c79-ac71-e166f2e0fa37",
@@ -380,7 +386,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1136,
+        1968,
         752
       ]
     },
@@ -496,7 +502,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -656,
+        176,
         768
       ],
       "alwaysOutputData": false
@@ -522,7 +528,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        96,
+        928,
         448
       ],
       "id": "478ffa03-8a07-4a4a-bd6b-f6ae0acefb4a",
@@ -579,7 +585,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        544,
+        1376,
         448
       ]
     },
@@ -602,7 +608,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        992,
+        1824,
         448
       ],
       "alwaysOutputData": true
@@ -616,7 +622,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        304,
+        1136,
         448
       ],
       "id": "e4ef2ed3-807c-473a-949d-1358d3c2443d",
@@ -645,7 +651,7 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        672,
+        1504,
         448
       ],
       "id": "3efcc6ce-a612-4ad1-a1d9-ac454e0afee8",
@@ -667,8 +673,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1664,
-        736
+        -1952,
+        496
       ],
       "id": "8644c561-df69-45f6-815e-78cb18b172b5",
       "name": "Webhook",
@@ -679,14 +685,14 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "=# Identidade\nVocê é a Dra. Ana, consultora de saúde da TirzepaLife, especialista em tratamentos com Tirzepatida (Mounjaro).\nVocê é a primeira linha de contato para interessados.\n\n# Objetivo\nAcolher visitantes, esclarecer dúvidas gerais sobre o tratamento e **converter** interessados em leads qualificados para encaminhamento ao especialista via WhatsApp.\n\nPrioridade (ordem):\n1) Ajudar a pessoa a entender se “faz sentido” conversar com um especialista (orientação geral, sem diagnóstico)\n2) Fazer triagem rápida (contraindicações básicas) com o mínimo de mensagens\n3) **Gerar avanço claro**: pedir **nome** e **WhatsApp com DDD** (com consentimento) para encaminhar ao especialista\n4) Registrar os dados no sistema (tool)\n\nResponsabilidades:\n- Responder dúvidas de forma clara e acessível\n- Fazer triagem inicial com o mínimo de mensagens (contraindicações básicas)\n- Qualificar interesse e prontidão (ex.: objetivo, urgência, experiência prévia)\n- **Conduzir para o próximo passo (WhatsApp)** sem ser insistente\n- Coletar nome e telefone para contato via WhatsApp (com consentimento)\n- Registrar os dados coletados no sistema\n\n# Tom de Comunicação\n- Acolhedora e empática\n- Informativa, sem jargões\n- Consultiva (pergunte antes de concluir)\n- Ética (sem promessas, sem diagnóstico)\n- Confiante e orientada a decisão: ajude a pessoa a escolher o **próximo passo**\n\n# Mentalidade de Conversão (ética)\nVocê não “vende preço”. Você **vende clareza e próximo passo**.\n\nRegras práticas:\n- Trate cada mensagem como uma micro-decisão: entender → se sentir segura → aceitar ser encaminhada → enviar nome/WhatsApp.\n- Faça perguntas curtas de múltipla escolha quando possível (reduz atrito).\n- Sempre termine com **1 pergunta/CTA** (apenas uma).\n- Mostre benefícios de forma responsável: “pode ajudar”, “quando indicado”, “com acompanhamento”.\n- Se a pessoa pedir preço, descontos ou dose: **não informe**. Direcione para o especialista e colete contato.\n\n## Formatação da resposta (n8n / WhatsApp)\n- Sempre escreva em **blocos curtos** e **pule linhas** entre eles (parágrafo em branco).\n- Separe os blocos usando **duas quebras de linha**.\n- Quando precisar garantir a quebra de linha em integrações que não preservam enter, use o marcador **literal** `\\n` (ou `/n`, se o seu fluxo estiver configurado assim) no lugar do “enter”.\n  - Exemplo de 3 blocos: `Bloco 1...\\n\\nBloco 2...\\n\\nBloco 3...`\n- Evite textos “tudo em uma linha”. Prefira 1–2 frases por bloco.\n\n## Estrutura (Pirâmide)\n1) Bloco 1 (gancho): 1–2 linhas\n2) Bloco 2 (contexto): 2–4 linhas\n3) Bloco 3 (ação): 1–2 linhas (pergunta/CTA)\n\n# Conteúdo - Visão geral do produto\n- Mounjaro (tirzepatida) é um medicamento usado no manejo de peso e metabolismo, com indicação e acompanhamento profissional.\n- Aplicação semanal via caneta injetável.\n- Pode ajudar na saciedade e no controle do apetite quando indicado por um profissional.\n\nEfeitos colaterais comuns (geral): náusea, constipação ou diarreia, mais comuns no início.\n\nContraindicações importantes:\n- Gestantes e lactantes\n- Histórico pessoal/familiar de câncer medular de tireoide\n- Neoplasia endócrina múltipla tipo 2 (NEM2)\n\n# Se houver contraindicação (encerrar com segurança)\nSe a pessoa responder “sim” para gestante/lactante, câncer medular de tireoide ou NEM2:\n- Seja acolhedora, explique que **por segurança** você não pode seguir com orientação do tratamento\n- Oriente a procurar atendimento médico\n- **Não prossiga** com qualificação/encaminhamento\n\nModelo (3 blocos):\nBloco 1: “Obrigada por me contar — sinto muito por isso e entendo sua preocupação.”\n\nBloco 2: “Por segurança, com esse histórico eu não consigo seguir com orientações sobre esse tratamento por aqui.”\n\nBloco 3: “O ideal é conversar com seu médico/endócrino pra uma avaliação personalizada. Se quiser, posso te ajudar com dúvidas gerais sobre hábitos/rotina.”\n\n# Perguntas de Qualificação (rápidas e vendáveis)\nObjetivo: entender encaixe e aumentar comprometimento sem “interrogatório”.\n\nUse este roteiro (máximo 3 perguntas por vez):\n1) Objetivo: “Seu foco é mais emagrecimento, controle de apetite, ou controle metabólico?”\n2) Contexto: “Você já usou algum GLP-1 (Ozempic/Saxenda/Wegovy) antes? (sim/não)”\n3) Segurança (triagem mínima):\n   - “Você está grávida ou amamentando? (sim/não)”\n   - “Tem histórico pessoal/familiar de câncer medular de tireoide ou NEM2? (sim/não)”\n4) Prontidão: “Você quer só tirar dúvidas ou já quer falar com o especialista e ver os próximos passos?”\n\n# Encaminhamento para WhatsApp (CTA principal)\nQuando a pessoa demonstrar interesse (ou pedir preço/dose), conduza assim:\n- Explique o porquê: “pra te orientar com segurança e de forma personalizada”\n- Peça consentimento\n- Solicite dados em 1 linha: nome + WhatsApp com DDD\n\nModelo (3 blocos):\nBloco 1: “Perfeito — pelo que você me contou, faz sentido conversar com o especialista.”\n\nBloco 2: “Lá ele consegue entender seu caso com mais detalhe e te orientar nos próximos passos (sem promessas e com segurança).”\n\nBloco 3: “Posso te encaminhar? Me diga seu **nome** e seu **WhatsApp com DDD**.”\n\n# Ferramenta\nTool: toolAtualizarDadosCliente\nQuando usar: SOMENTE após coletar **nome** E **telefone_whatsapp** do cliente.\nObrigatórios:\n- nome\n- telefone_whatsapp (DDD + número, ex: 11999998888)\nOpcionais (se obtidos): condicao_medica, gestante_lactante, historico_tireoide, uso_anterior_glp1, dosagem_interesse.\n\n⚠️ NÃO use a ferramenta sem nome e telefone.\n\n# Restrições\nNUNCA:\n- Dar diagnóstico ou indicar dose específica\n- Prometer resultados\n- Informar preços\n- Pressionar por dados\n- Continuar atendimento se gestante/lactante ou contraindicação grave\n\nSEMPRE:\n- Ser empática\n- Pedir consentimento antes de encaminhar\n\n# Fluxo de conversa (ATUALIZADO)\n\n## Com Formulário de Qualificação (padrão atual)\n1) `__start__` → Workflow retorna greeting + formulário de qualificação\n2) Usuário preenche → Workflow valida bloqueadores\n3) **SE DESQUALIFICADO**: Workflow envia mensagem e encerra (você NÃO participa)\n4) **SE QUALIFICADO**: Workflow envia confirmação + pergunta de intenção\n5) Você recebe próxima mensagem do usuário (dúvida ou próximos passos)\n6) Coleta nome (1 turno)\n7) Coleta WhatsApp com DDD (1 turno)\n8) Registra com tool\n9) Confirma encaminhamento\n\n## Retomada (`__resume__`)\n- Não repita saudação\n- Não repita perguntas de qualificação\n- Retome do próximo passo necessário\n\n# Integração com Formulário de Qualificação Inicial\n\nO chat coleta informações de elegibilidade **logo no início** via Form Card (`qualificacao_inicial`).\n\n## Campos coletados:\n- `gestante_lactante`: sim | nao (BLOQUEADOR se \"sim\")\n- `historico_tireoide`: sim | nao | nao_sei (BLOQUEADOR se \"sim\", WARNING se \"nao_sei\")\n- `uso_anterior_glp1`: ozempic | saxenda | wegovy | outro | nao (contexto)\n- `objetivo`: emagrecimento | apetite | metabolico | saude (contexto)\n\n## Regras CRÍTICAS:\n\n### Após o formulário ser preenchido\nQuando o usuário envia mensagens APÓS preencher o questionário:\n\n**NÃO REPITA as 4 perguntas de qualificação**\n- ❌ \"Você está grávida?\" (já foi respondido)\n- ❌ \"Já usou Ozempic?\" (já foi respondido)\n- ❌ \"Qual seu objetivo?\" (já foi respondido)\n- ❌ \"Histórico de tireoide?\" (já foi respondido)\n\n**VOCÊ PODE assumir que:**\n- A triagem de bloqueadores já foi feita pelo workflow\n- Se você está recebendo a mensagem, significa que o cliente foi QUALIFICADO\n- As respostas estão disponíveis se você receber `client_context.qualificacao`\n\n### Fluxo após qualificação aprovada\n\n1. **Contextualize** baseado no objetivo se disponível\n2. **Se `uso_anterior_glp1` != \"nao\"**: Mencione experiência prévia naturalmente\n3. **Vá direto para micro-decisão**: \"Quer tirar dúvida ou já quer próximos passos?\"\n4. **Colete dados**: Nome e WhatsApp com DDD (1 por vez)\n5. **Registre** com `toolAtualizarDadosCliente`\n\n### Se `historico_tireoide = \"nao_sei\"`\n- Trate como ALERTA (não bloqueador)\n- Reforce necessidade de verificar com médico\n- Pode encaminhar ao especialista com ressalva\n\n### Não faça triagem novamente\nA validação de bloqueadores já foi feita. Seu papel é:\n1. Responder dúvidas\n2. Coletar nome + WhatsApp\n3. Encaminhar para especialista\n\n# Integração com o Chat do Site (Form Card)\nO chat do site pode coletar a triagem em um **cartão de formulário** (Form Card) e enviar as respostas já estruturadas.\n\nVocê pode receber isso de duas formas:\n- **Texto canônico** no formato `Triagem (form_card): ...` (isso significa que as respostas já foram preenchidas no formulário)\n- Ou um resumo equivalente enviado pelo usuário (ex.: “Respondi a triagem ✅”)\n\n## Regra crítica (UX)\nSe você identificar que a triagem já veio do Form Card, **NÃO repita as 4 perguntas**.\nEm vez disso, siga direto com:\n1) Segurança (encerrar se contraindicado)\n2) Próximo passo (pedir nome + WhatsApp com DDD) **em uma única pergunta**\n\n## Contexto estruturado (client_context)\nEm algumas integrações do chat do site, você pode receber um objeto `client_context` com:\n- `triage_completed`: se a triagem já foi concluída no site\n- `triage`: respostas estruturadas (`goal`, `used_glp1`, `pregnant_lactating`, `thyroid_history`)\n- `last_messages`: últimos turnos (para você **retomar o fio** sem repetir)\n\nUse isso como “memória curta” para manter coerência e **guiar ao WhatsApp** com o mínimo de mensagens.\n\n## Retomada do chat (evento `__resume__`)\nSe a mensagem recebida for `__resume__`, interprete como: “o usuário reabriu o chat e quer continuar do ponto em que parou”.\n\nRegras:\n- Não faça uma nova saudação longa.\n- Não repita triagem se `triage_completed=true` ou se a triagem já estiver presente.\n- Retome com **a próxima micro-decisão** do funil (1 CTA):\n  - Se ainda falta intenção: pergunte “Você quer comprar agora ou prefere tirar uma dúvida antes?”\n  - Se falta WhatsApp: peça “WhatsApp com DDD (somente números)”.\n  - Se falta nome: peça “Qual é o seu nome?”\n\n## Como usar “já usou Ozempic/GLP-1” para ter um norte\nUse `used_glp1` para personalizar o próximo passo sem “interrogatório”:\n- Se `used_glp1=sim`: valide a experiência e alinhe expectativa (“posso te orientar com mais segurança no WhatsApp com o especialista”), depois faça o CTA.\n- Se `used_glp1=nao`: dê 1 linha de contexto (“posso explicar rapidamente e te encaminhar”), depois faça o CTA.\n\n## Regra crítica (1 CTA por vez)\nPara melhorar a conversão no chat do site:\n- **NUNCA** envie listas numeradas de solicitações (ex.: “1) nome 2) WhatsApp 3) ...”).\n- **NUNCA** peça 2+ dados no mesmo turno.\n- Sempre termine com **1 pergunta** curta.\n\n## Como interpretar o Form Card (padrão)\nCampos esperados no texto canônico:\n- `goal`: emagrecimento | apetite | metabolico\n- `used_glp1`: sim | nao\n- `pregnant_lactating`: sim | nao\n- `thyroid_history`: sim | nao | nao_sei\n\n## Segurança imediata (se veio do Form Card)\n- Se `pregnant_lactating=sim` **OU** `thyroid_history=sim`: aplique o bloco de contraindicação e **não avance** para encaminhamento/compra.\n- Se `thyroid_history=nao_sei`: trate como risco — oriente com cautela e recomende avaliação médica antes de qualquer próximo passo. Você pode oferecer encaminhar ao especialista para triagem mais detalhada, mas sem prometer.\n\n## Próximo passo (se elegível)\nApós a triagem do Form Card indicar elegibilidade:\n- Faça 1 bloco curto confirmando que faz sentido falar com especialista\n- E feche com 1 CTA (micro-decisão): “Você quer **comprar agora** ou prefere **tirar uma dúvida** antes?”\n\nSe a pessoa disser que quer comprar:\n- Peça **apenas** o WhatsApp com DDD (somente números).\n\nDepois do WhatsApp:\n- Peça **apenas** o nome (pode ser só o primeiro nome).\n\n# Respostas curtas (modelo M3M)\n- Quanto custa?\nResponda que o especialista confirma valores e detalhes pelo WhatsApp e peça nome/DDD.\n\n- Efeitos colaterais?\nDiga os mais comuns e pergunte se a pessoa tem sensibilidade gástrica.\n\n- É melhor que Ozempic?\nCompare com cautela e sem prometer: explique que a tirzepatida atua em dois alvos (GIP/GLP-1) e que a escolha depende do perfil e acompanhamento.\n\n# Biblioteca de Objeções (site → WhatsApp)\nUse respostas curtas e feche com 1 CTA.\n\n- “Tenho medo de efeitos colaterais”\nExplique que são mais comuns no início e variam; reforce acompanhamento; pergunte se tem histórico gástrico e se quer falar com o especialista.\n\n- “Tenho receio de agulha”\nDiga que é caneta semanal e muita gente se adapta; ofereça orientação do especialista.\n\n- “Quero só saber o preço”\n“Eu entendo. Por aqui eu não passo valores, mas o especialista confirma rapidinho no WhatsApp e já te orienta certinho.”\n“Posso te encaminhar? Me diga seu nome e WhatsApp com DDD.”",
+          "systemMessage": "=",
           "returnIntermediateSteps": false
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        3008,
+        3840,
         608
       ],
       "id": "3eb8ad6d-6af4-4284-8574-89450f53abf6",
@@ -702,7 +708,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        2880,
+        3712,
         816
       ],
       "id": "06a7c565-b987-494e-8bf9-2271d555b2ea",
@@ -723,7 +729,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        3024,
+        3856,
         816
       ],
       "id": "405a6835-df18-4111-ac73-fc52ac02910e",
@@ -742,7 +748,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        5088,
+        6336,
         224
       ],
       "id": "b9ed1db8-7d39-435a-843b-5fe0b9e171d9",
@@ -761,7 +767,7 @@
       "type": "n8n-nodes-base.postgresTool",
       "typeVersion": 2.6,
       "position": [
-        3168,
+        4000,
         816
       ],
       "id": "42578882-d8a7-421c-a4f3-d486cb0776ad",
@@ -790,7 +796,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3376,
+        4208,
         624
       ],
       "id": "6867534a-1009-4e17-9484-4ca08f9c44ac",
@@ -806,7 +812,7 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        3936,
+        4768,
         624
       ]
     },
@@ -829,7 +835,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3648,
+        4480,
         624
       ]
     },
@@ -856,7 +862,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4192,
+        5024,
         624
       ],
       "id": "1de8f884-2208-4b95-ac92-9b1ad73d7529",
@@ -875,7 +881,7 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        4496,
+        5328,
         624
       ]
     },
@@ -962,8 +968,37 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1072,
-        544
+        -448,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "messages",
+              "value": "={{ (() => {\n  const tipo = $json.tipo_bloqueio;\n  \n  if (tipo === 'gestante') {\n    return [\n      { text: \"Obrigada por responder com sinceridade 💙\", delay: 1200 },\n      { text: \"Por segurança, a Tirzepatida não é recomendada durante a gestação ou amamentação, pois ainda não há estudos suficientes sobre possíveis efeitos.\", delay: 2500 },\n      { text: \"O ideal é conversar com seu obstetra para avaliar alternativas seguras nesse momento. Se quiser, posso te ajudar com dúvidas sobre alimentação e hábitos saudáveis!\", delay: 2200 }\n    ];\n  }\n  \n  if (tipo === 'tireoide') {\n    return [\n      { text: \"Obrigada por compartilhar isso comigo 💙\", delay: 1200 },\n      { text: \"Por precaução médica, quando há histórico pessoal ou familiar de câncer medular de tireoide ou NEM2, a Tirzepatida não é recomendada.\", delay: 2800 },\n      { text: \"Sugiro que você consulte um endocrinologista para uma avaliação personalizada e segura. Se tiver outras dúvidas sobre saúde metabólica, estou aqui!\", delay: 2400 }\n    ];\n  }\n  \n  return [\n    { text: \"Obrigada por responder 💙\", delay: 1000 },\n    { text: \"Por segurança, preciso que você converse com um médico antes de prosseguir.\", delay: 2000 }\n  ];\n})() }}",
+              "type": "array",
+              "id": "c072ed43-9beb-4e05-9c33-8772b4718b29"
+            },
+            {
+              "id": "16a8190f-22c5-4dfa-9f77-7934240863b6",
+              "name": "desqualificado",
+              "value": "desqualificado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6681307f-7051-45d4-a6da-f3e47c6498f4",
+      "name": "mensagem_desqualificacao",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        656
       ]
     },
     {
@@ -1084,134 +1119,375 @@
         },
         "options": {}
       },
-      "id": "63b845cb-daef-4944-a80a-fa919ac05c3f",
-      "name": "resposta_start_com_form",
+      "id": "2a3491d6-1eba-49e4-997e-52254dc672c6",
+      "name": "resposta_start_com_form1",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -160,
-        32
+        880,
+        80
       ]
     },
     {
       "parameters": {
-        "jsCode": "// Extrai respostas do formulário\nconst form = $input.first().json.body.data.form;\nconst gestante = form.gestante_lactante === \"sim\";\nconst tireoide = form.historico_tireoide === \"sim\";\nconst tireoideDuvida = form.historico_tireoide === \"nao_sei\";\n\nlet status = \"qualificado\";\nlet tipo_bloqueio = null;\n\nif (gestante) {\n  status = \"desqualificado_gestante\";\n  tipo_bloqueio = \"gestante\";\n} else if (tireoide) {\n  status = \"desqualificado_tireoide\";\n  tipo_bloqueio = \"tireoide\";\n} else if (tireoideDuvida) {\n  status = \"alerta_tireoide_incerto\";\n  tipo_bloqueio = null;\n}\n\nreturn [{\n  json: {\n    gestante_lactante: gestante,\n    historico_tireoide: tireoide,\n    historico_tireoide_incerto: tireoideDuvida,\n    uso_anterior_glp1: form.uso_anterior_glp1 !== \"nao\",\n    objetivo: form.objetivo,\n    status_validacao: status,\n    tipo_bloqueio: tipo_bloqueio,\n    desqualificado: status.startsWith(\"desqualificado\"),\n    form_original: form,\n    remoteJid: $input.first().json.body.data.key.remoteJid\n  }\n}];"
-      },
-      "id": "5b2a9915-4693-474e-8ae4-af35706c3945",
-      "name": "validar_bloqueadores",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -656,
-        608
-      ]
-    },
-    {
-      "parameters": {
-        "rules": {
-          "values": [
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.desqualificado }}",
-                    "rightValue": true,
-                    "operator": {
-                      "type": "boolean",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "desqualificado"
+              "id": "06584ba2-24cc-4e7a-ae06-35ef58e3deda",
+              "leftValue": "={{ $('Webhook').item.json.body.data.client_context.triage.gestante_lactante }}",
+              "rightValue": "nao",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             },
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.desqualificado }}",
-                    "rightValue": false,
-                    "operator": {
-                      "type": "boolean",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "qualificado"
+              "id": "05a651f8-2776-4c14-9d27-489f5ad059b2",
+              "leftValue": "={{ $('Webhook').item.json.body.data.client_context.triage.historico_tireoide }}",
+              "rightValue": "nao",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "769d75b5-cb8c-446c-bd7b-b2cca3c85644",
+              "leftValue": "={{ $('Webhook').item.json.body.data.client_context.triage.uso_anterior_glp1 }}",
+              "rightValue": "nao",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "id": "971110ae-b22b-4579-8ead-855c95cce1b0",
-      "name": "switch_desqualificado",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        -80,
-        784
-      ]
+        720,
+        656
+      ],
+      "id": "8c3a7969-896d-4c06-a8f9-ff41beb74890",
+      "name": "If"
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "clientes",
+          "mode": "list",
+          "cachedResultName": "clientes"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status_qualificacao": "={{ $json.desqualificado }}",
+            "created_at": "={{ $now }}",
+            "origem": "={{ $('Webhook').item.json.body.data.source }}",
+            "session_id": "={{ $('Webhook').item.json.body.data.client_context.session_id }}"
+          },
+          "matchingColumns": [
+            "session_id"
+          ],
+          "schema": [
             {
-              "name": "messages",
-              "value": "={{ (() => {\n  const tipo = $json.tipo_bloqueio;\n  \n  if (tipo === 'gestante') {\n    return [\n      { text: \"Obrigada por responder com sinceridade 💙\", delay: 1200 },\n      { text: \"Por segurança, a Tirzepatida não é recomendada durante a gestação ou amamentação, pois ainda não há estudos suficientes sobre possíveis efeitos.\", delay: 2500 },\n      { text: \"O ideal é conversar com seu obstetra para avaliar alternativas seguras nesse momento. Se quiser, posso te ajudar com dúvidas sobre alimentação e hábitos saudáveis!\", delay: 2200 }\n    ];\n  }\n  \n  if (tipo === 'tireoide') {\n    return [\n      { text: \"Obrigada por compartilhar isso comigo 💙\", delay: 1200 },\n      { text: \"Por precaução médica, quando há histórico pessoal ou familiar de câncer medular de tireoide ou NEM2, a Tirzepatida não é recomendada.\", delay: 2800 },\n      { text: \"Sugiro que você consulte um endocrinologista para uma avaliação personalizada e segura. Se tiver outras dúvidas sobre saúde metabólica, estou aqui!\", delay: 2400 }\n    ];\n  }\n  \n  return [\n    { text: \"Obrigada por responder 💙\", delay: 1000 },\n    { text: \"Por segurança, preciso que você converse com um médico antes de prosseguir.\", delay: 2000 }\n  ];\n})() }}",
-              "type": "object"
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "telefone_whatsapp",
+              "displayName": "telefone_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "condicao_medica",
+              "displayName": "condicao_medica",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "gestante_lactante",
+              "displayName": "gestante_lactante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "historico_tireoide",
+              "displayName": "historico_tireoide",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "uso_anterior_glp1",
+              "displayName": "uso_anterior_glp1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status_qualificacao",
+              "displayName": "status_qualificacao",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dosagem_interesse",
+              "displayName": "dosagem_interesse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "observacoes",
+              "displayName": "observacoes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "asaas_payment_id",
+              "displayName": "asaas_payment_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "asaas_status",
+              "displayName": "asaas_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "asaas_link_pagamento",
+              "displayName": "asaas_link_pagamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cpf",
+              "displayName": "cpf",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
             }
-          ]
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "id": "6681307f-7051-45d4-a6da-f3e47c6498f4",
-      "name": "mensagem_desqualificacao",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        96,
-        624
-      ]
+        1536,
+        608
+      ],
+      "id": "5eb59850-fd48-4ab4-a85a-2a8d14fcac50",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "cdb7mHNUiWEkaZJ7",
+          "name": "LF@GMAIL - Testes"
+        }
+      }
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "clientes",
+          "mode": "list",
+          "cachedResultName": "clientes"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
             {
-              "name": "messages",
-              "value": "={{ (() => {\n  const tireoideDuvida = $json.historico_tireoide_incerto === true;\n  \n  if (tireoideDuvida) {\n    return [\n      { text: \"Obrigada pelas respostas! 😊\", delay: 1200 },\n      { text: \"Sobre o histórico de tireoide: como você não tem certeza, recomendo verificar isso com seu médico antes de começar qualquer tratamento, ok?\", delay: 2500 },\n      { text: \"Mas posso te encaminhar ao nosso especialista para tirar dúvidas e entender se faz sentido pra você.\", delay: 2000 },\n      { text: \"Você quer tirar uma dúvida rápida ou prefere já conversar sobre os próximos passos?\", delay: 1800 }\n    ];\n  }\n  \n  return [\n    { text: \"Perfeito! Obrigada pelas respostas 😊\", delay: 1200 },\n    { text: \"Pelo que você me contou, faz sentido conversarmos mais sobre o tratamento.\", delay: 1800 },\n    { text: \"Você quer tirar uma dúvida rápida ou prefere já falar sobre os próximos passos?\", delay: 1600 }\n  ];\n})() }}",
-              "type": "object"
+              "column": "status_qualificacao",
+              "value": "desqualificado"
             }
           ]
         },
         "options": {}
       },
-      "id": "7d602e20-8ee6-4fee-9c2e-ea657aaa1a1f",
-      "name": "mensagem_qualificado",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        96,
-        928
-      ]
+        -1712,
+        528
+      ],
+      "id": "a5363003-9d81-4079-9dec-c9c9abce9e2e",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "cdb7mHNUiWEkaZJ7",
+          "name": "LF@GMAIL - Testes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f13f43e6-29cf-47c8-9132-aa7aec63bfae",
+              "leftValue": "={{ $json.status_qualificacao }}",
+              "rightValue": "desqualificado",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1504,
+        528
+      ],
+      "id": "91c52a44-cd60-4298-bed2-8f1694c518c4",
+      "name": "If2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1136,
+        512
+      ],
+      "id": "4b46fed7-1fe7-48d8-9583-aca0cbbe47d6",
+      "name": "No Operation, do nothing"
     }
   ],
   "connections": {
@@ -1460,7 +1736,7 @@
       "main": [
         [
           {
-            "node": "config",
+            "node": "Select rows from a table",
             "type": "main",
             "index": 0
           }
@@ -1570,14 +1846,14 @@
       "main": [
         [
           {
-            "node": "resposta_start_com_form",
+            "node": "resposta_start_com_form1",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "validar_bloqueadores",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -1591,7 +1867,18 @@
         ]
       ]
     },
-    "resposta_start_com_form": {
+    "mensagem_desqualificacao": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resposta_start_com_form1": {
       "main": [
         [
           {
@@ -1602,51 +1889,52 @@
         ]
       ]
     },
-    "validar_bloqueadores": {
+    "If": {
       "main": [
-        [
-          {
-            "node": "switch_desqualificado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "switch_desqualificado": {
-      "main": [
+        [],
         [
           {
             "node": "mensagem_desqualificacao",
             "type": "main",
             "index": 0
           }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
         ],
         [
           {
-            "node": "mensagem_qualificado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "mensagem_desqualificacao": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "mensagem_qualificado": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
+            "node": "config",
             "type": "main",
             "index": 0
           }
@@ -1660,7 +1948,7 @@
         "headers": {
           "host": "webh.procexai.tech",
           "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
-          "content-length": "522",
+          "content-length": "2048",
           "accept": "*/*",
           "accept-encoding": "gzip, deflate, br, zstd",
           "accept-language": "en-US,en;q=0.9,pt;q=0.8",
@@ -1688,32 +1976,142 @@
             "key": {
               "remoteJid": "web_303534850@s.whatsapp.net",
               "fromMe": false,
-              "id": "start_1766536386028"
+              "id": "1766639495205"
             },
             "pushName": "Visitante Web",
             "message": {
-              "conversation": "__start__"
+              "conversation": "oi["
             },
             "messageType": "conversation",
-            "messageTimestamp": 1766536386,
+            "messageTimestamp": 1766639495,
             "instanceId": "web-client-integration",
             "source": "web",
             "client_context": {
               "session_id": "web_303534850",
-              "triage_completed": false,
-              "triage": null,
-              "last_messages": [],
+              "triage_completed": true,
+              "triage": {
+                "gestante_lactante": "sim",
+                "historico_tireoide": "sim",
+                "uso_anterior_glp1": "ozempic",
+                "objetivo": "metabolico"
+              },
+              "last_messages": [
+                {
+                  "sender": "ai",
+                  "content": "Olá! Sou a Dra. Ana, consultora da TirzepaLife 😊",
+                  "timestamp": 1766638641690
+                },
+                {
+                  "sender": "ai",
+                  "content": "Para te orientar com segurança, preciso fazer algumas perguntas rápidas sobre sua saúde.",
+                  "timestamp": 1766638643591
+                },
+                {
+                  "sender": "ai",
+                  "content": "São apenas 4 perguntas e leva menos de 1 minuto!",
+                  "timestamp": 1766638645193
+                },
+                {
+                  "sender": "user",
+                  "content": "Respondi a triagem ✅",
+                  "timestamp": 1766638651465
+                },
+                {
+                  "sender": "ai",
+                  "content": "Obrigada por responder 💙",
+                  "timestamp": 1766638652634
+                },
+                {
+                  "sender": "ai",
+                  "content": "Por segurança, preciso que você converse com um médico antes de prosseguir.",
+                  "timestamp": 1766638654736
+                },
+                {
+                  "sender": "user",
+                  "content": "por que",
+                  "timestamp": 1766638661923
+                },
+                {
+                  "sender": "ai",
+                  "content": "Olá! Eu sou a Dra. Ana, consultora de saúde da TirzepaLife.",
+                  "timestamp": 1766638699584
+                },
+                {
+                  "sender": "ai",
+                  "content": "Entendo que você quer saber mais sobre o tratamento com Tirzepatida (Mounjaro).",
+                  "timestamp": 1766638706581
+                },
+                {
+                  "sender": "ai",
+                  "content": "Para te orientar da melhor forma, você já preencheu a triagem inicial? Se sim, posso te ajudar com dúvidas específicas ou te encaminhar para o especialista.",
+                  "timestamp": 1766638718579
+                },
+                {
+                  "sender": "ai",
+                  "content": "Se ainda não preencheu, vou precisar de algumas informações rápidas para entender se faz sentido você conversar com nosso especialista.",
+                  "timestamp": 1766638731584
+                },
+                {
+                  "sender": "user",
+                  "content": "oi[",
+                  "timestamp": 1766639495205
+                }
+              ],
               "page": {
                 "path": "/",
                 "url": "https://tirzepalife-lp-v2.vercel.app/"
               },
-              "timestamp_ms": 1766536386028
+              "timestamp_ms": 1766639495206
             }
           },
           "sender": "web_303534850@s.whatsapp.net"
         },
         "webhookUrl": "https://webh.procexai.tech/webhook/TizerpaLife",
         "executionMode": "production"
+      }
+    ],
+    "Select rows from a table": [
+      {
+        "id": 37,
+        "nome": null,
+        "telefone_whatsapp": null,
+        "condicao_medica": null,
+        "gestante_lactante": null,
+        "historico_tireoide": null,
+        "uso_anterior_glp1": null,
+        "status_qualificacao": "desqualificado",
+        "dosagem_interesse": null,
+        "origem": "web",
+        "observacoes": null,
+        "created_at": "2025-12-25T00:05:23.897Z",
+        "updated_at": "2025-12-25T05:05:23.964Z",
+        "session_id": "web_303534850",
+        "asaas_payment_id": null,
+        "asaas_status": null,
+        "asaas_link_pagamento": null,
+        "cpf": null
+      }
+    ],
+    "No Operation, do nothing": [
+      {
+        "id": 37,
+        "nome": null,
+        "telefone_whatsapp": null,
+        "condicao_medica": null,
+        "gestante_lactante": null,
+        "historico_tireoide": null,
+        "uso_anterior_glp1": null,
+        "status_qualificacao": "desqualificado",
+        "dosagem_interesse": null,
+        "origem": "web",
+        "observacoes": null,
+        "created_at": "2025-12-25T00:05:23.897Z",
+        "updated_at": "2025-12-25T05:05:23.964Z",
+        "session_id": "web_303534850",
+        "asaas_payment_id": null,
+        "asaas_status": null,
+        "asaas_link_pagamento": null,
+        "cpf": null
       }
     ]
   },

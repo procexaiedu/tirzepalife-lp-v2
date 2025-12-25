@@ -327,7 +327,7 @@ export const AIChatButton = () => {
 
     try {
       const startId = `start_${Date.now()}`;
-      const bootstrap = (isTriageCompleted() && getStoredTriage()) ? "__resume__" : "__start__";
+      const bootstrap = "__start__";
       const payload = construirPayloadBase(startId, bootstrap, undefined, []);
       const json = await chamarWebhook(payload);
       await processarRespostasBot(json);
